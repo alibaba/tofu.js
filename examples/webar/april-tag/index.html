@@ -1,0 +1,157 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+    <title>DEMO AR</title>
+    <style>
+        * {
+            margin: 0;
+        }
+        body {
+            position: relative;
+        }
+        #v {
+            display: none;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: auto;
+        }
+        #webar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: auto;
+        }
+    </style>
+  </head>
+  <body>
+
+  <script src="../../lib/three.js"></script>
+  <script src="../../lib/shaders/FXAAShader.js"></script>
+  <script src="../../lib/shaders/HorizontalBlurShader.js"></script>
+  <script src="../../lib/shaders/VerticalBlurShader.js"></script>
+  <script src="../../../build/tofu.js"></script>
+  <script src="./js/artoolkit.debug.js"></script>
+  <script src="./js/artoolkit.api.js"></script>
+
+  <video id="v" src="video/output_4.ogg" width="640" height="480" loop="" controls="" autoplay webkit-playsinline>不支持</video>
+  <canvas id="webar"></canvas>
+  <script>
+  var glue = new Tofu.ARGlue({
+    name: 'one',
+    autoHide: false,
+  });
+  var mixer = null;
+  var glftMagic = new Tofu.GltfMagic({
+    url: '../../model/squirrel/scrat/scrat.gltf',
+  });
+  glftMagic.on('loaded', function() {
+    glftMagic.scene.scale.set(0.0004, 0.0004, 0.0004);
+    glftMagic.scene.children[0].position.set(0, 0, 0);
+    glftMagic.scene.rotateY(Math.PI / 2);
+    glftMagic.scene.rotateZ(Math.PI / 2);
+    glue.add(glftMagic.scene);
+  });
+
+  var WIDTH = window.innerWidth;
+  var HEIGHT = window.innerHeight;
+  var arViewer = new Tofu.ARViewer({
+    canvas: 'webar',
+    width: WIDTH,
+    height: HEIGHT,
+    frameWidth: 640,
+    frameHeight: 480,
+  });
+
+  var fxaaPass = new Tofu.ShaderPass( THREE.FXAAShader );
+  fxaaPass.uniforms[ "resolution" ].value = new THREE.Vector2( 1 / WIDTH, 1 / HEIGHT );
+  // var hBlur = new Tofu.ShaderPass( THREE.HorizontalBlurShader );
+  // var vBlur = new Tofu.ShaderPass( THREE.VerticalBlurShader );
+  // hBlur.uniforms[ "h" ].value = 1 / WIDTH;
+  // vBlur.uniforms[ "v" ].value = 1 / HEIGHT;
+
+  var effectBloom = new Tofu.BloomPass( 0.75 );
+  var effectFilm = new Tofu.FilmPass( 0.5, 0.5, 1500, false );
+
+  effectFocus = new Tofu.ShaderPass( Tofu.FocusShader );
+  effectFocus.uniforms[ "screenWidth" ].value = 640;
+  effectFocus.uniforms[ "screenHeight" ].value = 480;
+
+  arViewer.compositor.addPass( fxaaPass );
+  // arViewer.compositor.addPass( hBlur );
+  // arViewer.compositor.addPass( vBlur );
+
+  arViewer.compositor.addPass( effectBloom );
+  arViewer.compositor.addPass( effectFilm );
+  arViewer.compositor.addPass( effectFocus );
+
+
+  var viewMatrixTmp = new Float64Array(12);
+  var viewMatrix = new Float64Array(16);
+
+
+  var light = new THREE.PointLight(0xffffff);
+  light.position.set(400, 500, 100);
+  arViewer.add(light);
+  var light = new THREE.PointLight(0xffffff);
+  light.position.set(-400, -500, -100);
+  arViewer.add(light);
+
+  arViewer.add(glue);
+
+  var arController = null;
+  var video = document.getElementById('v');
+
+  arViewer.addPrimer(new Tofu.TexturePrimer(video, { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat }));
+
+  function tick() {
+    if (!arController) {
+      return;
+    }
+
+    arController.detectMarker(video);
+    var markerNum = arController.getMarkerNum();
+    if (markerNum > 0) {
+      if (arViewer.tracking) {
+        arController.getTransMatSquareCont(0, 1, viewMatrixTmp, viewMatrixTmp);
+      } else {
+        arController.getTransMatSquare(0 /* Marker index */, 1 /* Marker width */, viewMatrixTmp);
+      }
+      arViewer.tracking = true;
+      arController.transMatToGLMat(viewMatrixTmp, viewMatrix);
+      arViewer.updatePoses([ { name: 'one', matrix: viewMatrix } ]);
+    } else {
+      arViewer.tracking = false;
+    }
+  }
+
+  arViewer.start();
+  arViewer.on('prerender', function() {
+    glftMagic.update(arViewer.snippet);
+    tick();
+  })
+
+  var cameraParam = new ARCameraParam();
+  cameraParam.onload = function() {
+    arController = new ARController(640, 480, cameraParam);
+    arViewer.updateCameraMatrix(arController.getCameraMatrix());
+  };
+  cameraParam.load('video/camera_para.dat');
+
+  window.addEventListener('resize', onWindowResize, false);
+  function onWindowResize() {
+    WIDTH = window.innerWidth;
+    HEIGHT = window.innerHeight;
+    effectFocus.uniforms[ "screenWidth" ].value = WIDTH;
+    effectFocus.uniforms[ "screenHeight" ].value = HEIGHT;
+    arViewer.renderer.setSize(WIDTH, HEIGHT);
+    arViewer.updateViewport();
+  }
+  </script>
+
+  </body>
+  </html>

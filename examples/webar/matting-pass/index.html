@@ -1,0 +1,133 @@
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Cache-Control" content="no-cache">
+  <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+  <title>DEMO AR</title>
+  <style>
+    * {
+      margin: 0;
+    }
+
+    body {
+      position: relative;
+    }
+
+    #v {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: auto;
+      border: none;
+      outline: none;
+    }
+
+    #webar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: auto;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <video id="v" src="./video/fordemo.mov" width="320" loop="" controls="" autoplay webkit-playsinline playsinline></video>
+  <canvas id="webar"></canvas>
+  <script src="../../lib/three.js"></script>
+  <script src="../../../build/three.tofu.js"></script>
+  <script src="//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
+  <script>
+    // new VConsole();
+    window.K_UCKUIWebViewVideoFinder = 0;
+    function DisplayTarget(arSession) {
+      this.arSession = arSession;
+    }
+    DisplayTarget.prototype.getFrames = function() {
+      return this.arSession.getCurrentFrame();
+    }
+    Object.defineProperty(DisplayTarget.prototype, 'isRunning', {
+      get() {
+        return this.arSession.isRunning();
+      },
+    });
+    Object.defineProperty(DisplayTarget.prototype, 'isDirty', {
+      get() {
+        return this.arSession.isDirty();
+      },
+    });
+
+    function start(cb) {
+      if (window.ARSession) {
+        main(window.ARSession, cb);
+        return;
+      }
+
+      window.addEventListener('ARSessionDidInit', () => {
+        main(window.ARSession, cb);
+      });
+    }
+
+    function main(arSession, cb) {
+      arSession.start({
+        quality: 'LOW',
+        cameraPosition: 'BACK'
+      });
+      arSession.addEventListener('SessionStart', function (status) {
+        console.log(status);
+        cb(arSession);
+      });
+      arSession.addEventListener('SessionFail', function (error) {
+        console.log(error);
+      });
+    }
+
+    var primer = null;
+    var WIDTH = window.innerWidth;
+    var HEIGHT = window.innerHeight;
+    var arViewer = new Tofu.ARViewer({
+      canvas: 'webar',
+      width: WIDTH,
+      height: HEIGHT,
+      aeEnable: true,
+    });
+
+
+    start(function (arSession) {
+      var displayTarget = new DisplayTarget(arSession);
+      onWindowResize();
+
+      primer = new Tofu.CameraPrimer(displayTarget, { autoCover: true, targetAspect: WIDTH / HEIGHT });
+
+      var effectMatting = new Tofu.MattingPass(primer, { width: WIDTH, height: HEIGHT });
+      arViewer.composer.addPass( effectMatting );
+    });
+
+    var renderModel = new Tofu.RenderPass();
+    arViewer.composer.addPass( renderModel );
+    arViewer.start();
+
+    arViewer.renderer.domElement.addEventListener('touchend', function() {
+      document.querySelector('#v').play();
+    })
+
+
+    window.addEventListener('resize', onWindowResize, false);
+
+    function onWindowResize() {
+      WIDTH = window.innerWidth;
+      HEIGHT = window.innerHeight;
+      arViewer.renderer.setSize(WIDTH, HEIGHT);
+      primer && primer.setTargetAspect(WIDTH / HEIGHT);
+    }
+
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,137 @@
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Cache-Control" content="no-cache">
+  <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+  <title>DEMO AR</title>
+  <style>
+    * {
+      margin: 0;
+    }
+
+    body {
+      position: relative;
+    }
+
+    #v {
+      display: none;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: auto;
+    }
+
+    #webar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: auto;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <canvas id="webar"></canvas>
+  <script src="../../lib/stats.min.js"></script>
+  <script src="../../lib/three.js"></script>
+  <script src="../../../build/tofu.js"></script>
+  <script src="//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
+  <script>
+    // new VConsole();
+    function DisplayTarget(arSession) {
+      this.arSession = arSession;
+    }
+    DisplayTarget.prototype.getFrames = function() {
+      return this.arSession.getCurrentFrame();
+    }
+    Object.defineProperty(DisplayTarget.prototype, 'isRunning', {
+      get() {
+        return this.arSession.isRunning();
+      },
+    });
+    Object.defineProperty(DisplayTarget.prototype, 'isDirty', {
+      get() {
+        return this.arSession.isDirty();
+      },
+    });
+
+    function start(cb) {
+      if (window.ARSession) {
+        main(window.ARSession, cb);
+        return;
+      }
+
+      window.addEventListener('ARSessionDidInit', () => {
+        main(window.ARSession, cb);
+      });
+    }
+
+    function main(arSession, cb) {
+      arSession.start({
+        quality: 'LOW',
+        cameraPosition: 'BACK'
+      });
+      arSession.addEventListener('SessionStart', function (status) {
+        console.log(status);
+        cb(arSession);
+      });
+      arSession.addEventListener('SessionFail', function (error) {
+        console.log(error);
+      });
+    }
+
+    var primer = null;
+    var WIDTH = window.innerWidth;
+    var HEIGHT = window.innerHeight;
+    var xrViewer = new Tofu.XRViewer({
+      canvas: 'webar',
+      width: WIDTH,
+      height: HEIGHT,
+    });
+
+    start(function (arSession) {
+      var displayTarget = new DisplayTarget(arSession);
+      var frame = displayTarget.getFrames();
+      primer = new Tofu.CameraPrimer(displayTarget, {
+        autoCover: true,
+        targetAspect: WIDTH / HEIGHT,
+      });
+      xrViewer.addPrimer(primer);
+      onWindowResize();
+    });
+
+    xrViewer.start();
+
+    window.addEventListener('resize', onWindowResize, false);
+
+    function onWindowResize() {
+      WIDTH = window.innerWidth;
+      HEIGHT = window.innerHeight;
+      effectFocus.uniforms[ "screenWidth" ].value = WIDTH;
+      effectFocus.uniforms[ "screenHeight" ].value = HEIGHT;
+      xrViewer.camera.aspect = WIDTH / HEIGHT;
+      xrViewer.camera.updateProjectionMatrix();
+      xrViewer.renderer.setSize(WIDTH, HEIGHT);
+    }
+
+      /**
+       * 帧率监控工具
+       */
+      // var stats = new Stats();
+      // stats.domElement.style.position = 'absolute';
+      // stats.domElement.style.top = '0px';
+      // document.body.appendChild(stats.domElement);
+      // xrViewer.on('postrender', function () {
+      //   stats.update();
+      // })
+
+  </script>
+
+</body>
+
+</html>

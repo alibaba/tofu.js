@@ -1,0 +1,4175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>tofu.js API Documentation</title>
+    
+    <meta name="description" content="Documentation for tofu.js library" />
+    
+        <meta name="keywords" content="docs, documentation, pixi, tofu.js, renderer, html5, javascript, jsdoc" />
+        <meta name="keyword" content="docs, documentation, pixi, tofu.js, renderer, html5, javascript, jsdoc" />
+    
+    
+    
+    <meta property="og:title" content=""/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content=""/>
+    
+    <meta property="og:url" content=""/>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="https://fonts.googleapis.com/css?family=Libre+Franklin:400,700" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/main.css">
+    
+    
+    <script>
+    var config = {"monospaceLinks":false,"cleverLinks":false,"default":{"outputSourceFiles":true},"applicationName":"tofu.js","footer":"Made with ♥ by fish-ball","copyright":"tofu.js Copyright © 2016-2018 fish-ball.","disqus":"","googleAnalytics":"UA-103772589-5","openGraph":{"title":"","type":"website","image":"","site_name":"","url":""},"meta":{"title":"tofu.js API Documentation","description":"Documentation for tofu.js library","keyword":"docs, documentation, pixi, tofu.js, renderer, html5, javascript, jsdoc"},"linenums":true};
+    </script>
+    
+
+    
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', config.googleAnalytics]);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    
+</head>
+<body>
+<div id="wrap" class="clearfix">
+    
+<div class="navigation">
+    <h3 class="applicationName"><a href="index.html">tofu.js</a></h3>
+    <button id="menuToggle" class="btn btn-link btn-lg menu-toggle">
+        <span class="glyphicon glyphicon-menu-hamburger"></span>
+    </button>
+    <div class="search">
+        <input id="search" type="text" class="form-control input-md" placeholder="Search...">
+    </div>
+    <ul class="list">
+    
+        <li class="item" data-name="Tween">
+            <span class="title namespace">
+                
+                <span class="namespaceTag">
+                    <span class="glyphicon glyphicon-folder-open"></span>
+                </span>
+                
+                <a href="Tween.html">Tween</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="Utils">
+            <span class="title namespace">
+                
+                <span class="namespaceTag">
+                    <span class="glyphicon glyphicon-folder-open"></span>
+                </span>
+                
+                <a href="Utils.html">Utils</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent" data-name="Utils.clamp"><a href="Utils.html#.clamp">clamp</a></li>
+            
+                <li class="parent" data-name="Utils.codomainBounce"><a href="Utils.html#.codomainBounce">codomainBounce</a></li>
+            
+                <li class="parent" data-name="Utils.copyJSON"><a href="Utils.html#.copyJSON">copyJSON</a></li>
+            
+                <li class="parent" data-name="Utils.DTR"><a href="Utils.html#.DTR">DTR</a></li>
+            
+                <li class="parent" data-name="Utils.euclideanModulo"><a href="Utils.html#.euclideanModulo">euclideanModulo</a></li>
+            
+                <li class="parent" data-name="Utils.isArray"><a href="Utils.html#.isArray">isArray</a></li>
+            
+                <li class="parent" data-name="Utils.isBoolean"><a href="Utils.html#.isBoolean">isBoolean</a></li>
+            
+                <li class="parent" data-name="Utils.isFunction"><a href="Utils.html#.isFunction">isFunction</a></li>
+            
+                <li class="parent" data-name="Utils.isNumber"><a href="Utils.html#.isNumber">isNumber</a></li>
+            
+                <li class="parent" data-name="Utils.isObject"><a href="Utils.html#.isObject">isObject</a></li>
+            
+                <li class="parent" data-name="Utils.isString"><a href="Utils.html#.isString">isString</a></li>
+            
+                <li class="parent" data-name="Utils.isUndefined"><a href="Utils.html#.isUndefined">isUndefined</a></li>
+            
+                <li class="parent" data-name="Utils.linear"><a href="Utils.html#.linear">linear</a></li>
+            
+                <li class="parent" data-name="Utils.random"><a href="Utils.html#.random">random</a></li>
+            
+                <li class="parent" data-name="Utils.RTD"><a href="Utils.html#.RTD">RTD</a></li>
+            
+                <li class="parent" data-name="Utils.smootherstep"><a href="Utils.html#.smootherstep">smootherstep</a></li>
+            
+                <li class="parent" data-name="Utils.smoothstep"><a href="Utils.html#.smoothstep">smoothstep</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="AnchorBase">
+            <span class="title ">
+                
+                <a href="AnchorBase.html">AnchorBase</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent" data-name="AnchorBase#putHere"><a href="AnchorBase.html#putHere">putHere</a></li>
+            
+                <li class="parent" data-name="AnchorBase#putWhere"><a href="AnchorBase.html#putWhere">putWhere</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="AnchorRippling">
+            <span class="title ">
+                
+                <a href="AnchorRippling.html">AnchorRippling</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent" data-name="AnchorRippling#map"><a href="AnchorRippling.html#map">map</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="ARGlue">
+            <span class="title ">
+                
+                <a href="ARGlue.html">ARGlue</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent" data-name="ARGlue#autoHide"><a href="ARGlue.html#autoHide">autoHide</a></li>
+            
+                <li class="parent" data-name="ARGlue#matrixAutoUpdate"><a href="ARGlue.html#matrixAutoUpdate">matrixAutoUpdate</a></li>
+            
+                <li class="parent" data-name="ARGlue#name"><a href="ARGlue.html#name">name</a></li>
+            
+                <li class="parent" data-name="ARGlue#type"><a href="ARGlue.html#type">type</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent" data-name="ARGlue#updatePose"><a href="ARGlue.html#updatePose">updatePose</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="ARViewer">
+            <span class="title ">
+                
+                <a href="ARViewer.html">ARViewer</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent" data-name="ARViewer#ar_map"><a href="ARViewer.html#ar_map">ar_map</a></li>
+            
+                <li class="" data-name="ARViewer#autoClear"><a href="ARViewer.html#autoClear">autoClear</a></li>
+            
+                <li class="parent" data-name="ARViewer#camera"><a href="ARViewer.html#camera">camera</a></li>
+            
+                <li class="" data-name="ARViewer#compositor"><a href="ARViewer.html#compositor">compositor</a></li>
+            
+                <li class="" data-name="ARViewer#fps"><a href="ARViewer.html#fps">fps</a></li>
+            
+                <li class="parent" data-name="ARViewer#frameHeight"><a href="ARViewer.html#frameHeight">frameHeight</a></li>
+            
+                <li class="parent" data-name="ARViewer#frameWidth"><a href="ARViewer.html#frameWidth">frameWidth</a></li>
+            
+                <li class="" data-name="ARViewer#graphicsLayer"><a href="ARViewer.html#graphicsLayer">graphicsLayer</a></li>
+            
+                <li class="" data-name="ARViewer#primerLayer"><a href="ARViewer.html#primerLayer">primerLayer</a></li>
+            
+                <li class="" data-name="ARViewer#renderer"><a href="ARViewer.html#renderer">renderer</a></li>
+            
+                <li class="" data-name="ARViewer#ticking"><a href="ARViewer.html#ticking">ticking</a></li>
+            
+                <li class="" data-name="ARViewer#timeScale"><a href="ARViewer.html#timeScale">timeScale</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent" data-name="ARViewer#add"><a href="ARViewer.html#add">add</a></li>
+            
+                <li class="" data-name="ARViewer#addPrimer"><a href="ARViewer.html#addPrimer">addPrimer</a></li>
+            
+                <li class="parent" data-name="ARViewer#remove"><a href="ARViewer.html#remove">remove</a></li>
+            
+                <li class="" data-name="ARViewer#removePrimer"><a href="ARViewer.html#removePrimer">removePrimer</a></li>
+            
+                <li class="parent" data-name="ARViewer#render"><a href="ARViewer.html#render">render</a></li>
+            
+                <li class="" data-name="ARViewer#renderLayer"><a href="ARViewer.html#renderLayer">renderLayer</a></li>
+            
+                <li class="" data-name="ARViewer#start"><a href="ARViewer.html#start">start</a></li>
+            
+                <li class="" data-name="ARViewer#stop"><a href="ARViewer.html#stop">stop</a></li>
+            
+                <li class="" data-name="ARViewer#update"><a href="ARViewer.html#update">update</a></li>
+            
+                <li class="parent" data-name="ARViewer#updateCameraMatrix"><a href="ARViewer.html#updateCameraMatrix">updateCameraMatrix</a></li>
+            
+                <li class="parent" data-name="ARViewer#updatePoses"><a href="ARViewer.html#updatePoses">updatePoses</a></li>
+            
+                <li class="parent" data-name="ARViewer#updateViewport"><a href="ARViewer.html#updateViewport">updateViewport</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="BezierEasing">
+            <span class="title ">
+                
+                <a href="BezierEasing.html">BezierEasing</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent" data-name="BezierEasing#get"><a href="BezierEasing.html#get">get</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="CameraPrimer">
+            <span class="title ">
+                
+                <a href="CameraPrimer.html">CameraPrimer</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent" data-name="CameraPrimer#color"><a href="CameraPrimer.html#color">color</a></li>
+            
+                <li class="parent" data-name="CameraPrimer#displayTarget"><a href="CameraPrimer.html#displayTarget">displayTarget</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent" data-name="CameraPrimer#getFrames"><a href="CameraPrimer.html#getFrames">getFrames</a></li>
+            
+                <li class="parent" data-name="CameraPrimer#render"><a href="CameraPrimer.html#render">render</a></li>
+            
+                <li class="parent" data-name="CameraPrimer#update"><a href="CameraPrimer.html#update">update</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="Compositor">
+            <span class="title ">
+                
+                <a href="Compositor.html">Compositor</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent" data-name="Compositor#aeDelta"><a href="Compositor.html#aeDelta">aeDelta</a></li>
+            
+                <li class="parent" data-name="Compositor#afterEffects"><a href="Compositor.html#afterEffects">afterEffects</a></li>
+            
+                <li class="parent" data-name="Compositor#autoClear"><a href="Compositor.html#autoClear">autoClear</a></li>
+            
+                <li class="parent" data-name="Compositor#isAeOpen"><a href="Compositor.html#isAeOpen">isAeOpen</a></li>
+            
+                <li class="parent" data-name="Compositor#layers"><a href="Compositor.html#layers">layers</a></li>
+            
+                <li class="parent" data-name="Compositor#needSort"><a href="Compositor.html#needSort">needSort</a></li>
+            
+                <li class="parent" data-name="Compositor#renderer"><a href="Compositor.html#renderer">renderer</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent" data-name="Compositor#add"><a href="Compositor.html#add">add</a></li>
+            
+                <li class="parent" data-name="Compositor#addPass"><a href="Compositor.html#addPass">addPass</a></li>
+            
+                <li class="parent" data-name="Compositor#clear"><a href="Compositor.html#clear">clear</a></li>
+            
+                <li class="parent" data-name="Compositor#insertPass"><a href="Compositor.html#insertPass">insertPass</a></li>
+            
+                <li class="parent" data-name="Compositor#remove"><a href="Compositor.html#remove">remove</a></li>
+            
+                <li class="parent" data-name="Compositor#render"><a href="Compositor.html#render">render</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="CylinderWorld">
+            <span class="title ">
+                
+                <a href="CylinderWorld.html">CylinderWorld</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent" data-name="CylinderWorld#draggable"><a href="CylinderWorld.html#draggable">draggable</a></li>
+            
+                <li class="parent" data-name="CylinderWorld#draggable"><a href="CylinderWorld.html#draggable">draggable</a></li>
+            
+                <li class="parent" data-name="CylinderWorld#dragX"><a href="CylinderWorld.html#dragX">dragX</a></li>
+            
+                <li class="parent" data-name="CylinderWorld#dragX"><a href="CylinderWorld.html#dragX">dragX</a></li>
+            
+                <li class="parent" data-name="CylinderWorld#dragY"><a href="CylinderWorld.html#dragY">dragY</a></li>
+            
+                <li class="parent" data-name="CylinderWorld#dragY"><a href="CylinderWorld.html#dragY">dragY</a></li>
+            
+                <li class="parent" data-name="CylinderWorld#driftX"><a href="CylinderWorld.html#driftX">driftX</a></li>
+            
+                <li class="parent" data-name="CylinderWorld#driftX"><a href="CylinderWorld.html#driftX">driftX</a></li>
+            
+                <li class="parent" data-name="CylinderWorld#driftY"><a href="CylinderWorld.html#driftY">driftY</a></li>
+            
+                <li class="parent" data-name="CylinderWorld#driftY"><a href="CylinderWorld.html#driftY">driftY</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="GltfMagic">
+            <span class="title ">
+                
+                <a href="GltfMagic.html">GltfMagic</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="GraphicsLayer">
+            <span class="title ">
+                
+                <a href="GraphicsLayer.html">GraphicsLayer</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent" data-name="GraphicsLayer#graphics"><a href="GraphicsLayer.html#graphics">graphics</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent" data-name="GraphicsLayer#add"><a href="GraphicsLayer.html#add">add</a></li>
+            
+                <li class="parent" data-name="GraphicsLayer#remove"><a href="GraphicsLayer.html#remove">remove</a></li>
+            
+                <li class="parent" data-name="GraphicsLayer#render"><a href="GraphicsLayer.html#render">render</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="Layer">
+            <span class="title ">
+                
+                <a href="Layer.html">Layer</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent" data-name="Layer#aeDelta"><a href="Layer.html#aeDelta">aeDelta</a></li>
+            
+                <li class="parent" data-name="Layer#afterEffects"><a href="Layer.html#afterEffects">afterEffects</a></li>
+            
+                <li class="parent" data-name="Layer#autoClear"><a href="Layer.html#autoClear">autoClear</a></li>
+            
+                <li class="parent" data-name="Layer#camera"><a href="Layer.html#camera">camera</a></li>
+            
+                <li class="parent" data-name="Layer#isAeOpen"><a href="Layer.html#isAeOpen">isAeOpen</a></li>
+            
+                <li class="parent" data-name="Layer#isLayer"><a href="Layer.html#isLayer">isLayer</a></li>
+            
+                <li class="parent" data-name="Layer#parent"><a href="Layer.html#parent">parent</a></li>
+            
+                <li class="parent" data-name="Layer#quad"><a href="Layer.html#quad">quad</a></li>
+            
+                <li class="parent" data-name="Layer#renderer"><a href="Layer.html#renderer">renderer</a></li>
+            
+                <li class="parent" data-name="Layer#renderToScreen"><a href="Layer.html#renderToScreen">renderToScreen</a></li>
+            
+                <li class="parent" data-name="Layer#scene"><a href="Layer.html#scene">scene</a></li>
+            
+                <li class="parent" data-name="Layer#zIndex"><a href="Layer.html#zIndex">zIndex</a></li>
+            
+                <li class="parent" data-name="Layer#zIndex"><a href="Layer.html#zIndex">zIndex</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent" data-name="Layer#addPass"><a href="Layer.html#addPass">addPass</a></li>
+            
+                <li class="parent" data-name="Layer#clear"><a href="Layer.html#clear">clear</a></li>
+            
+                <li class="parent" data-name="Layer#insertPass"><a href="Layer.html#insertPass">insertPass</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="Primer">
+            <span class="title ">
+                
+                <a href="Primer.html">Primer</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent" data-name="Primer#autoCover"><a href="Primer.html#autoCover">autoCover</a></li>
+            
+                <li class="parent" data-name="Primer#autoCover"><a href="Primer.html#autoCover">autoCover</a></li>
+            
+                <li class="parent" data-name="Primer#autoCover"><a href="Primer.html#autoCover">autoCover</a></li>
+            
+                <li class="parent" data-name="Primer#enabled"><a href="Primer.html#enabled">enabled</a></li>
+            
+                <li class="parent" data-name="Primer#isPrimer"><a href="Primer.html#isPrimer">isPrimer</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent" data-name="Primer#_correctUv"><a href="Primer.html#_correctUv">_correctUv</a></li>
+            
+                <li class="parent" data-name="Primer#_setPositions"><a href="Primer.html#_setPositions">_setPositions</a></li>
+            
+                <li class="parent" data-name="Primer#render"><a href="Primer.html#render">render</a></li>
+            
+                <li class="parent" data-name="Primer#setTargetAspect"><a href="Primer.html#setTargetAspect">setTargetAspect</a></li>
+            
+                <li class="parent" data-name="Primer#updateTimeline"><a href="Primer.html#updateTimeline">updateTimeline</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="PrimerLayer">
+            <span class="title ">
+                
+                <a href="PrimerLayer.html">PrimerLayer</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent" data-name="PrimerLayer#isEmpty"><a href="PrimerLayer.html#isEmpty">isEmpty</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent" data-name="PrimerLayer#add"><a href="PrimerLayer.html#add">add</a></li>
+            
+                <li class="parent" data-name="PrimerLayer#remove"><a href="PrimerLayer.html#remove">remove</a></li>
+            
+                <li class="parent" data-name="PrimerLayer#render"><a href="PrimerLayer.html#render">render</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="SphereWorld">
+            <span class="title ">
+                
+                <a href="SphereWorld.html">SphereWorld</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent" data-name="SphereWorld#draggable"><a href="SphereWorld.html#draggable">draggable</a></li>
+            
+                <li class="parent" data-name="SphereWorld#draggable"><a href="SphereWorld.html#draggable">draggable</a></li>
+            
+                <li class="parent" data-name="SphereWorld#dragX"><a href="SphereWorld.html#dragX">dragX</a></li>
+            
+                <li class="parent" data-name="SphereWorld#dragX"><a href="SphereWorld.html#dragX">dragX</a></li>
+            
+                <li class="parent" data-name="SphereWorld#dragY"><a href="SphereWorld.html#dragY">dragY</a></li>
+            
+                <li class="parent" data-name="SphereWorld#dragY"><a href="SphereWorld.html#dragY">dragY</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent" data-name="SphereWorld#add"><a href="SphereWorld.html#add">add</a></li>
+            
+                <li class="parent" data-name="SphereWorld#remove"><a href="SphereWorld.html#remove">remove</a></li>
+            
+                <li class="parent" data-name="SphereWorld#setCamera"><a href="SphereWorld.html#setCamera">setCamera</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="TexturePrimer">
+            <span class="title ">
+                
+                <a href="TexturePrimer.html">TexturePrimer</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent" data-name="TexturePrimer#_gainFrameSize"><a href="TexturePrimer.html#_gainFrameSize">_gainFrameSize</a></li>
+            
+                <li class="parent" data-name="TexturePrimer#render"><a href="TexturePrimer.html#render">render</a></li>
+            
+                <li class="parent" data-name="TexturePrimer#update"><a href="TexturePrimer.html#update">update</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="Viewer">
+            <span class="title ">
+                
+                <a href="Viewer.html">Viewer</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent" data-name="Viewer#autoClear"><a href="Viewer.html#autoClear">autoClear</a></li>
+            
+                <li class="parent" data-name="Viewer#camera"><a href="Viewer.html#camera">camera</a></li>
+            
+                <li class="parent" data-name="Viewer#compositor"><a href="Viewer.html#compositor">compositor</a></li>
+            
+                <li class="parent" data-name="Viewer#fps"><a href="Viewer.html#fps">fps</a></li>
+            
+                <li class="parent" data-name="Viewer#graphicsLayer"><a href="Viewer.html#graphicsLayer">graphicsLayer</a></li>
+            
+                <li class="parent" data-name="Viewer#primerLayer"><a href="Viewer.html#primerLayer">primerLayer</a></li>
+            
+                <li class="parent" data-name="Viewer#renderer"><a href="Viewer.html#renderer">renderer</a></li>
+            
+                <li class="parent" data-name="Viewer#ticking"><a href="Viewer.html#ticking">ticking</a></li>
+            
+                <li class="parent" data-name="Viewer#timeScale"><a href="Viewer.html#timeScale">timeScale</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent" data-name="Viewer#addPrimer"><a href="Viewer.html#addPrimer">addPrimer</a></li>
+            
+                <li class="parent" data-name="Viewer#removePrimer"><a href="Viewer.html#removePrimer">removePrimer</a></li>
+            
+                <li class="parent" data-name="Viewer#render"><a href="Viewer.html#render">render</a></li>
+            
+                <li class="parent" data-name="Viewer#renderLayer"><a href="Viewer.html#renderLayer">renderLayer</a></li>
+            
+                <li class="parent" data-name="Viewer#start"><a href="Viewer.html#start">start</a></li>
+            
+                <li class="parent" data-name="Viewer#stop"><a href="Viewer.html#stop">stop</a></li>
+            
+                <li class="parent" data-name="Viewer#update"><a href="Viewer.html#update">update</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="XRViewer">
+            <span class="title ">
+                
+                <a href="XRViewer.html">XRViewer</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="" data-name="XRViewer#autoClear"><a href="XRViewer.html#autoClear">autoClear</a></li>
+            
+                <li class="parent" data-name="XRViewer#background"><a href="XRViewer.html#background">background</a></li>
+            
+                <li class="parent" data-name="XRViewer#background"><a href="XRViewer.html#background">background</a></li>
+            
+                <li class="parent" data-name="XRViewer#camera"><a href="XRViewer.html#camera">camera</a></li>
+            
+                <li class="" data-name="XRViewer#compositor"><a href="XRViewer.html#compositor">compositor</a></li>
+            
+                <li class="" data-name="XRViewer#fps"><a href="XRViewer.html#fps">fps</a></li>
+            
+                <li class="" data-name="XRViewer#graphicsLayer"><a href="XRViewer.html#graphicsLayer">graphicsLayer</a></li>
+            
+                <li class="parent" data-name="XRViewer#interactionManager"><a href="XRViewer.html#interactionManager">interactionManager</a></li>
+            
+                <li class="parent" data-name="XRViewer#interactive"><a href="XRViewer.html#interactive">interactive</a></li>
+            
+                <li class="parent" data-name="XRViewer#interactive"><a href="XRViewer.html#interactive">interactive</a></li>
+            
+                <li class="parent" data-name="XRViewer#interactive"><a href="XRViewer.html#interactive">interactive</a></li>
+            
+                <li class="" data-name="XRViewer#primerLayer"><a href="XRViewer.html#primerLayer">primerLayer</a></li>
+            
+                <li class="" data-name="XRViewer#renderer"><a href="XRViewer.html#renderer">renderer</a></li>
+            
+                <li class="parent" data-name="XRViewer#sensorCTL"><a href="XRViewer.html#sensorCTL">sensorCTL</a></li>
+            
+                <li class="parent" data-name="XRViewer#stereo"><a href="XRViewer.html#stereo">stereo</a></li>
+            
+                <li class="" data-name="XRViewer#ticking"><a href="XRViewer.html#ticking">ticking</a></li>
+            
+                <li class="" data-name="XRViewer#timeScale"><a href="XRViewer.html#timeScale">timeScale</a></li>
+            
+                <li class="parent" data-name="XRViewer#vrmode"><a href="XRViewer.html#vrmode">vrmode</a></li>
+            
+                <li class="parent" data-name="XRViewer#vrsensor"><a href="XRViewer.html#vrsensor">vrsensor</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent" data-name="XRViewer#add"><a href="XRViewer.html#add">add</a></li>
+            
+                <li class="" data-name="XRViewer#addPrimer"><a href="XRViewer.html#addPrimer">addPrimer</a></li>
+            
+                <li class="parent" data-name="XRViewer#remove"><a href="XRViewer.html#remove">remove</a></li>
+            
+                <li class="" data-name="XRViewer#removePrimer"><a href="XRViewer.html#removePrimer">removePrimer</a></li>
+            
+                <li class="parent" data-name="XRViewer#render"><a href="XRViewer.html#render">render</a></li>
+            
+                <li class="" data-name="XRViewer#renderLayer"><a href="XRViewer.html#renderLayer">renderLayer</a></li>
+            
+                <li class="parent" data-name="XRViewer#setSV"><a href="XRViewer.html#setSV">setSV</a></li>
+            
+                <li class="" data-name="XRViewer#start"><a href="XRViewer.html#start">start</a></li>
+            
+                <li class="" data-name="XRViewer#stop"><a href="XRViewer.html#stop">stop</a></li>
+            
+                <li class="" data-name="XRViewer#update"><a href="XRViewer.html#update">update</a></li>
+            
+                <li class="parent" data-name="XRViewer#updateStereo"><a href="XRViewer.html#updateStereo">updateStereo</a></li>
+            
+                <li class="parent" data-name="XRViewer#xrrender"><a href="XRViewer.html#xrrender">xrrender</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+    </ul>
+</div>
+    <div class="main">
+        <h1 class="page-title" data-filename="XRViewer.html">Class: XRViewer</h1>
+        
+
+
+
+<section>
+    
+<header>
+    <div class="header content-size">
+        <h2>XRViewer
+        </h2>
+        
+            <div class="class-description"><p><code>XR-Viewer</code> a <code>UC-VR</code> or <code>UC-3D</code> renderer framework</p></div>
+        
+    </div>
+</header>  
+
+<article class="content-size">
+    <div class="container-overview">
+    
+    
+    
+        
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="XRViewer">
+            <a class="share-icon" href="#XRViewer"><span class="glyphicon glyphicon-link"></span></a>
+            new XRViewer<span class="signature">(options)</span>
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="core_XRViewer.js.html#line36">XRViewer.js:36</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>config for <code>XR-Viewer</code> render view-port</p>
+                
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Default</th>
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>canvas</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">canvas</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                <p><code>canvas-dom</code> or canvas <code>css-selector</code></p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>width</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    300
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>init renderer width.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>height</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    150
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>init renderer height.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>updateStyle</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>auto update css style when setSize.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>fov</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    60
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>Camera frustum vertical field of view.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>aspect</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    width/height
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>Camera frustum aspect ratio.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>near</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    0.1
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>Camera frustum near plane.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>far</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    1000
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>Camera frustum far plane.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>vrmode</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>whether init with vrmode.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>stereoAspect</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    0.5
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>stereo camera aspect for vrmode.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>vrsensor</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>whether init with vrsensor.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>interactive</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>whether interactive with scene.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>fps</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    60
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>render frame rate.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>autoClear</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>whether the renderer should automatically clear its output before rendering a frame.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>alpha</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>whether the canvas contains an alpha (transparency) buffer or not.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>antialias</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>whether to perform antialiasing.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>precision</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    'highp'
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>Shader precision, Can be <code>highp</code>, <code>mediump</code> or <code>lowp</code>.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>premultipliedAlpha</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>whether the renderer will assume that colors have premultiplied alpha.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>stencil</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>whether the drawing buffer has a stencil buffer of at least 8 bits.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>preserveDrawingBuffer</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>whether to preserve the buffers until manually cleared or overwritten.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>depth</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>whether the drawing buffer has a depth buffer of at least 16 bits.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>logarithmicDepthBuffer</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>whether to use a logarithmic depth buffer.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+            </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+    
+    </div>
+    
+    
+        <h3 class="subsection-title">Extends</h3>
+        
+        <ul>
+            <li><a href="Viewer.html">Viewer</a></li>
+        </ul>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Members</h3>
+        
+        <dl class="list-members">
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="autoClear">
+            <a class="share-icon" href="#autoClear"><span class="glyphicon glyphicon-link"></span></a>
+            autoClear<span class="type-signature type">Boolean</span>
+            
+                <span class="access-signature inherited"><a href="Viewer.html#autoClear">inherited</a></span>
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>whether the renderer should automatically clear its output before rendering a frame.</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="background">
+            <a class="share-icon" href="#background"><span class="glyphicon glyphicon-link"></span></a>
+            background
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>set scene background</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="background">
+            <a class="share-icon" href="#background"><span class="glyphicon glyphicon-link"></span></a>
+            background
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>scene background</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="camera">
+            <a class="share-icon" href="#camera"><span class="glyphicon glyphicon-link"></span></a>
+            camera<span class="type-signature type">Camera</span>
+            
+            
+                <span class="access-signature overrides"><a href="Viewer.html#camera">overrides</a></span>
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>view-port camera object, a perspective camera</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="compositor">
+            <a class="share-icon" href="#compositor"><span class="glyphicon glyphicon-link"></span></a>
+            compositor<span class="type-signature type"><a href="Compositor.html">Compositor</a></span>
+            
+                <span class="access-signature inherited"><a href="Viewer.html#compositor">inherited</a></span>
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>compositor primerLayer and graphicsLayer with zIndex order</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="fps">
+            <a class="share-icon" href="#fps"><span class="glyphicon glyphicon-link"></span></a>
+            fps<span class="type-signature type">Number</span>
+            
+                <span class="access-signature inherited"><a href="Viewer.html#fps">inherited</a></span>
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>set it when you hope engine update at a fixed fps, default 60/fps</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="graphicsLayer">
+            <a class="share-icon" href="#graphicsLayer"><span class="glyphicon glyphicon-link"></span></a>
+            graphicsLayer<span class="type-signature type"><a href="GraphicsLayer.html">GraphicsLayer</a></span>
+            
+                <span class="access-signature inherited"><a href="Viewer.html#graphicsLayer">inherited</a></span>
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>3d Graphics layer, for render 3d scene</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="interactionManager">
+            <a class="share-icon" href="#interactionManager"><span class="glyphicon glyphicon-link"></span></a>
+            interactionManager
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>3d-view interaction manager
+TODO: should fix interaction bug when vrmode</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="interactive">
+            <a class="share-icon" href="#interactive"><span class="glyphicon glyphicon-link"></span></a>
+            interactive
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>setter whether scene interactively or not</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="interactive">
+            <a class="share-icon" href="#interactive"><span class="glyphicon glyphicon-link"></span></a>
+            interactive<span class="type-signature type">boolean</span>
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>whether all 3d-view is interactively or not</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="interactive">
+            <a class="share-icon" href="#interactive"><span class="glyphicon glyphicon-link"></span></a>
+            interactive
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>getter whether scene interactively or not</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="primerLayer">
+            <a class="share-icon" href="#primerLayer"><span class="glyphicon glyphicon-link"></span></a>
+            primerLayer<span class="type-signature type"><a href="PrimerLayer.html">PrimerLayer</a></span>
+            
+                <span class="access-signature inherited"><a href="Viewer.html#primerLayer">inherited</a></span>
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>primer paint a plane as a background or foreground</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="renderer">
+            <a class="share-icon" href="#renderer"><span class="glyphicon glyphicon-link"></span></a>
+            renderer<span class="type-signature type">WebGLRenderer</span>
+            
+                <span class="access-signature inherited"><a href="Viewer.html#renderer">inherited</a></span>
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p><code>WebGL</code> renderer object, base on <code>three.js</code> gl context</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="sensorCTL">
+            <a class="share-icon" href="#sensorCTL"><span class="glyphicon glyphicon-link"></span></a>
+            sensorCTL<span class="type-signature type">Orienter</span>
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>device orientation sensor, control camera look around</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="stereo">
+            <a class="share-icon" href="#stereo"><span class="glyphicon glyphicon-link"></span></a>
+            stereo<span class="type-signature type">StereoCamera</span>
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>stereo camera object</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="ticking">
+            <a class="share-icon" href="#ticking"><span class="glyphicon glyphicon-link"></span></a>
+            ticking<span class="type-signature type">Boolean</span>
+            
+                <span class="access-signature inherited"><a href="Viewer.html#ticking">inherited</a></span>
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>whether update is working or not</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="timeScale">
+            <a class="share-icon" href="#timeScale"><span class="glyphicon glyphicon-link"></span></a>
+            timeScale<span class="type-signature type">Number</span>
+            
+                <span class="access-signature inherited"><a href="Viewer.html#timeScale">inherited</a></span>
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>time-scale for timeline</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="vrmode">
+            <a class="share-icon" href="#vrmode"><span class="glyphicon glyphicon-link"></span></a>
+            vrmode<span class="type-signature type">Boolean</span>
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>enable vr-mode or not</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="vrsensor">
+            <a class="share-icon" href="#vrsensor"><span class="glyphicon glyphicon-link"></span></a>
+            vrsensor<span class="type-signature type">Boolean</span>
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>use orientation sensor or not</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl class="list-methods">
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="add">
+            <a class="share-icon" href="#add"><span class="glyphicon glyphicon-link"></span></a>
+            add<span class="signature">(child)</span><span class="type-signature">this</span>
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="core_XRViewer.js.html#line233">XRViewer.js:233</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>push a display object into graphicsLayer scene</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>child</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">THREE.Object3D</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>display object, which will be rendering</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        this
+                        
+                    
+            </td>
+            <td class="description last">this</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="addPrimer">
+            <a class="share-icon" href="#addPrimer"><span class="glyphicon glyphicon-link"></span></a>
+            addPrimer<span class="signature">()</span><span class="type-signature">this</span>
+            
+                <span class="access-signature inherited"><a href="Viewer.html#addPrimer">inherited</a></span>
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="core_Viewer.js.html#line243">Viewer.js:243</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>add a primer to primerLayer</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        this
+                        
+                    
+            </td>
+            <td class="description last">this</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="remove">
+            <a class="share-icon" href="#remove"><span class="glyphicon glyphicon-link"></span></a>
+            remove<span class="signature">(child)</span><span class="type-signature">this</span>
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="core_XRViewer.js.html#line244">XRViewer.js:244</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>remove a display object from graphicsLayer scene</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>child</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">THREE.Object3D</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>display object, which you had push it at before</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        this
+                        
+                    
+            </td>
+            <td class="description last">this</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="removePrimer">
+            <a class="share-icon" href="#removePrimer"><span class="glyphicon glyphicon-link"></span></a>
+            removePrimer<span class="signature">()</span><span class="type-signature">this</span>
+            
+                <span class="access-signature inherited"><a href="Viewer.html#removePrimer">inherited</a></span>
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="core_Viewer.js.html#line252">Viewer.js:252</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>remove a primer from primerLayer</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        this
+                        
+                    
+            </td>
+            <td class="description last">this</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="render">
+            <a class="share-icon" href="#render"><span class="glyphicon glyphicon-link"></span></a>
+            render<span class="signature">()</span>
+            
+            
+                <span class="access-signature overrides"><a href="Viewer.html#render">overrides</a></span>
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="core_XRViewer.js.html#line173">XRViewer.js:173</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>render all scene</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="renderLayer">
+            <a class="share-icon" href="#renderLayer"><span class="glyphicon glyphicon-link"></span></a>
+            renderLayer<span class="signature">(camera)</span>
+            
+                <span class="access-signature inherited"><a href="Viewer.html#renderLayer">inherited</a></span>
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="core_Viewer.js.html#line168">Viewer.js:168</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>render primerLayer and graphicsLayer, if you have not use primerLayer, we will direct render graphicsLayer</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>camera</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">PerspectiveCamera</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>use which perspective-camera</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="setSV">
+            <a class="share-icon" href="#setSV"><span class="glyphicon glyphicon-link"></span></a>
+            setSV<span class="signature">(x, y, width, height)</span>
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="core_XRViewer.js.html#line222">XRViewer.js:222</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>set render rectangle area</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>rectangle left-top point x-position</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>rectangle left-top point y-position</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>width</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>rectangle width</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>height</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>rectangle height</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="start">
+            <a class="share-icon" href="#start"><span class="glyphicon glyphicon-link"></span></a>
+            start<span class="signature">()</span><span class="type-signature">this</span>
+            
+                <span class="access-signature inherited"><a href="Viewer.html#start">inherited</a></span>
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="core_Viewer.js.html#line216">Viewer.js:216</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>start update engine</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        this
+                        
+                    
+            </td>
+            <td class="description last">this</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="stop">
+            <a class="share-icon" href="#stop"><span class="glyphicon glyphicon-link"></span></a>
+            stop<span class="signature">()</span><span class="type-signature">this</span>
+            
+                <span class="access-signature inherited"><a href="Viewer.html#stop">inherited</a></span>
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="core_Viewer.js.html#line232">Viewer.js:232</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>stop update engine</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        this
+                        
+                    
+            </td>
+            <td class="description last">this</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="update">
+            <a class="share-icon" href="#update"><span class="glyphicon glyphicon-link"></span></a>
+            update<span class="signature">()</span>
+            
+                <span class="access-signature inherited"><a href="Viewer.html#update">inherited</a></span>
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="core_Viewer.js.html#line126">Viewer.js:126</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>update timeline and update render</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="updateStereo">
+            <a class="share-icon" href="#updateStereo"><span class="glyphicon glyphicon-link"></span></a>
+            updateStereo<span class="signature">()</span>
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="core_XRViewer.js.html#line210">XRViewer.js:210</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>update stereo camera</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="xrrender">
+            <a class="share-icon" href="#xrrender"><span class="glyphicon glyphicon-link"></span></a>
+            xrrender<span class="signature">()</span>
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="core_XRViewer.js.html#line185">XRViewer.js:185</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>auto switch render-mode, use vrmode or not</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+    
+    
+
+    
+</article>
+
+</section>  
+
+
+
+
+
+        
+
+        <footer class="content-size">
+            <div class="footer">
+                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Feb 08 2018 14:31:57 GMT+0800 (CST)
+            </div>
+        </footer>
+    </div>
+</div>
+<script>prettyPrint();</script>
+<script src="scripts/main.js"></script>
+</body>
+</html>

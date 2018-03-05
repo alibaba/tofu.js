@@ -1,0 +1,214 @@
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Cache-Control" content="no-cache">
+  <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+  <title>DEMO VR</title>
+  <style>
+    * {
+      margin: 0;
+    }
+
+    body {
+      position: relative;
+    }
+
+    .position {
+      display: none;
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-size: 30px;
+    }
+
+    #webgl {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <canvas id="video"></canvas>
+  <canvas id="webgl"></canvas>
+  <script src="../../lib/three.js"></script>
+  <script src="../../lib/shaders/FXAAShader.js"></script>
+  <script src="../../lib/shaders/HorizontalBlurShader.js"></script>
+  <script src="../../lib/shaders/VerticalBlurShader.js"></script>
+  <script src="../../lib/dat.gui.min.js"></script>
+  <script src="../../../build/tofu.js"></script>
+  <script src="./js/imu.js"></script>
+  <script src="//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
+  <script>
+    // new VConsole();
+    function DisplayTarget(arSession) {
+      this.arSession = arSession;
+    }
+    DisplayTarget.prototype.getFrames = function() {
+      return this.arSession.getCurrentFrame();
+    }
+    Object.defineProperty(DisplayTarget.prototype, 'isRunning', {
+      get() {
+        return this.arSession.isRunning();
+      },
+    });
+    Object.defineProperty(DisplayTarget.prototype, 'isDirty', {
+      get() {
+        return this.arSession.isDirty();
+      },
+    });
+
+    function start(cb) {
+      if (window.ARSession) {
+        main(window.ARSession, cb);
+        return;
+      }
+
+      window.addEventListener('ARSessionDidInit', () => {
+        main(window.ARSession, cb);
+      });
+    }
+
+    function main(arSession, cb) {
+      arSession.start({
+        quality: 'LOW',
+        cameraPosition: 'BACK'
+      });
+      arSession.addEventListener('SessionStart', function (status) {
+        console.log(status);
+        cb(arSession);
+      });
+      arSession.addEventListener('SessionFail', function (error) {
+        console.log(error);
+      });
+    }
+
+    var WIDTH = window.innerWidth;
+    var HEIGHT = window.innerHeight;
+    var xrViewer = new Tofu.XRViewer({
+      canvas: '#webgl',
+      fov: 70,
+      width: WIDTH,
+      height: HEIGHT,
+      near: 0.01,
+      far: 1000,
+      vrmode: false,
+      vrsensor: true,
+    });
+
+    var fxaaPass = new Tofu.ShaderPass( THREE.FXAAShader );
+    fxaaPass.uniforms[ "resolution" ].value = new THREE.Vector2( 1 / WIDTH, 1 / HEIGHT );
+    // var hBlur = new Tofu.ShaderPass( THREE.HorizontalBlurShader );
+    // var vBlur = new Tofu.ShaderPass( THREE.VerticalBlurShader );
+    // hBlur.uniforms[ "h" ].value = 1 / WIDTH;
+    // vBlur.uniforms[ "v" ].value = 1 / HEIGHT;
+
+    var effectBloom = new Tofu.BloomPass( 0.75 );
+    var effectFilm = new Tofu.FilmPass( 0.5, 0.5, 1500, false );
+
+    effectFocus = new Tofu.ShaderPass( Tofu.FocusShader );
+    effectFocus.uniforms[ "screenWidth" ].value = 640;
+    effectFocus.uniforms[ "screenHeight" ].value = 480;
+
+    xrViewer.compositor.addPass( fxaaPass );
+    // xrViewer.compositor.addPass( hBlur );
+    // xrViewer.compositor.addPass( vBlur );
+
+    xrViewer.compositor.addPass( effectBloom );
+    xrViewer.compositor.addPass( effectFilm );
+    xrViewer.compositor.addPass( effectFocus );
+
+
+    start(function (arSession) {
+      var displayTarget = new DisplayTarget(arSession);
+      var frame = displayTarget.getFrames();
+      primer = new Tofu.CameraPrimer(displayTarget, {
+        autoCover: true,
+        targetAspect: WIDTH / HEIGHT,
+        color: 0xaaaaaa,
+      });
+      xrViewer.addPrimer(primer);
+      onWindowResize();
+    });
+
+    var light = new THREE.PointLight(0xb09060);
+    light.position.set(40, 50, 100);
+    xrViewer.add(light);
+
+    var panoramaCube = new THREE.Mesh(
+      new THREE.BoxGeometry(1000, 1000, 1000),
+      new THREE.MeshBasicMaterial({
+        transparent: true,
+        opacity: 0,
+        side: THREE.DoubleSide,
+      })
+    );
+    xrViewer.add(panoramaCube);
+    panoramaCube.on('pointerdown', function (ev) {
+      var point = ev.intersect.point;
+      console.log('listener a pointerdown fired');
+      var cube = new THREE.Mesh(
+        new THREE.BoxGeometry(50, 50, 50),
+        new THREE.MeshPhongMaterial({
+          color: 0xaaaaaa,
+          wireframe: false
+        })
+      );
+      cube.animate({
+        to: {
+          'scale.x': 2,
+          'scale.y': 2,
+          'scale.z': 2,
+        },
+        ease: Tofu.Tween.Elastic.Out,
+        duration: 1000,
+        infinite: true,
+        alternate: true,
+      });
+      var scale = Tofu.Utils.random(0.3, 1);
+      var position = new THREE.Vector3().copy(point).multiplyScalar(scale);
+      position.applyMatrix4(new THREE.Matrix4().getInverse(panoramaCube.matrixWorld));
+      cube.position.set(position.x, position.y, position.z);
+      panoramaCube.add(cube);
+
+    });
+
+
+    var glftMagic = new Tofu.GltfMagic({
+      url: '../../model/squirrel/scrat/scrat.gltf',
+    });
+    glftMagic.on('loaded', function () {
+      console.log(glftMagic);
+      glftMagic.scene.children[0].position.set(0, 0, 0);
+      glftMagic.scene.position.y = -160;
+      glftMagic.scene.position.z = -210;
+      glftMagic.scene.scale.set(0.02, 0.02, 0.02);
+      glftMagic.scene.rotateY(Math.PI);
+      // glftMagic.scene.rotateZ(Math.PI / 2);
+      panoramaCube.add(glftMagic.scene);
+    });
+    xrViewer.on('prerender', function (ev) {
+      glftMagic.update(ev.snippet);
+    })
+    xrViewer.start();
+
+    function onWindowResize() {
+      WIDTH = window.innerWidth;
+      HEIGHT = window.innerHeight;
+      effectFocus.uniforms[ "screenWidth" ].value = WIDTH;
+      effectFocus.uniforms[ "screenHeight" ].value = HEIGHT;
+      xrViewer.camera.aspect = WIDTH / HEIGHT;
+      xrViewer.camera.updateProjectionMatrix();
+      xrViewer.renderer.setSize(WIDTH, HEIGHT);
+    }
+    window.addEventListener('resize', onWindowResize, false);
+
+  </script>
+
+</body>
+
+</html>

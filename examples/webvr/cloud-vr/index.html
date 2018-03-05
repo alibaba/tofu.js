@@ -1,0 +1,139 @@
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Cache-Control" content="no-cache">
+  <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+  <title>DEMO VR</title>
+  <style>
+    * {
+      margin: 0;
+    }
+
+    body {
+      position: relative;
+    }
+
+    #v {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: auto;
+    }
+
+    #webar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: auto;
+    }
+
+    .vr-btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 20;
+      min-width: .5rem;
+      min-height: .3rem;
+      padding-right: 5%;
+      padding-top: 4%;
+      background: url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20245.82%20141.73%22%3E%3Cdefs%3E%3Cstyle%3E.a%7Bfill%3A%23fff%3Bfill-rule%3Aevenodd%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Ctitle%3Emask%3C%2Ftitle%3E%3Cpath%20class%3D%22a%22%20d%3D%22M175.56%2C111.37c-22.52%2C0-40.77-18.84-40.77-42.07S153%2C27.24%2C175.56%2C27.24s40.77%2C18.84%2C40.77%2C42.07S198.08%2C111.37%2C175.56%2C111.37ZM26.84%2C69.31c0-23.23%2C18.25-42.07%2C40.77-42.07s40.77%2C18.84%2C40.77%2C42.07-18.26%2C42.07-40.77%2C42.07S26.84%2C92.54%2C26.84%2C69.31ZM27.27%2C0C11.54%2C0%2C0%2C12.34%2C0%2C28.58V110.9c0%2C16.24%2C11.54%2C30.83%2C27.27%2C30.83H99.57c2.17%2C0%2C4.19-1.83%2C5.4-3.7L116.47%2C118a8%2C8%2C0%2C0%2C1%2C12.52-.18l11.51%2C20.34c1.2%2C1.86%2C3.22%2C3.61%2C5.39%2C3.61h72.29c15.74%2C0%2C27.63-14.6%2C27.63-30.83V28.58C245.82%2C12.34%2C233.93%2C0%2C218.19%2C0H27.27Z%22%2F%3E%3C%2Fsvg%3E) 50% 50%/70% 70% no-repeat rgba(0, 0, 0, .35);
+    }
+
+    .go-btn {
+      position: absolute;
+      bottom: 20%;
+      left: 50%;
+      width: 100px;
+      height: 30px;
+      margin-left: -50px;
+      background-color: #ff0;
+      border-radius: 6px;
+      line-height: 30px;
+      text-align: center;
+      z-index: 2;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <canvas id="webgl"></canvas>
+  <div class="vr-btn" id="vrBtn"></div>
+  <script src="../../lib/three.js"></script>
+  <script src="../../lib/loaders/MTLLoader.js"></script>
+  <script src="../../lib/loaders/OBJLoader.js"></script>
+  <script src="./js/cloud.js"></script>
+  <script src="../../../build/tofu.js"></script>
+  <script>
+    window.addEventListener('resize', onWindowResize, false);
+
+    var WIDTH = window.innerWidth;
+    var HEIGHT = window.innerHeight;
+    var vrViewer = new Tofu.XRViewer({
+      canvas: '#webgl',
+      width: WIDTH,
+      fov: 30,
+      height: HEIGHT,
+      near: 0.01,
+      far: 100,
+    });
+
+    vrViewer.camera.position.set(0, 0, -10);
+    vrViewer.camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+    vrViewer.renderer.setClearColor(0xb9dfee);
+
+    var skySpace = new THREE.Group();
+    var earth = new THREE.Group();
+    vrViewer.add(skySpace, earth);
+
+    var cc = new Cloud();
+    skySpace.add(cc.mesh);
+
+    var ambient = new THREE.AmbientLight(0xababaa);
+    vrViewer.add(ambient);
+
+    var directionalLight = new THREE.DirectionalLight(0xffffd3);
+    directionalLight.castShadow = true;
+    directionalLight.position.set(0, 10, 10).normalize();
+    vrViewer.add(directionalLight);
+
+    var mtlLoader = new THREE.MTLLoader();
+    mtlLoader.setPath('./model/');
+    mtlLoader.load('earth.mtl', function (materials) {
+      materials.preload();
+      var objLoader = new THREE.OBJLoader();
+      objLoader.setMaterials(materials);
+      objLoader.setPath('./model/');
+      objLoader.load('earth.obj', function (object) {
+        object.scale.set(0.6, 0.6, 0.6);
+        earth.add(object);
+      });
+    });
+
+    vrViewer.start();
+    function onWindowResize() {
+      vrViewer.camera.aspect = window.innerWidth / window.innerHeight;
+      vrViewer.camera.updateProjectionMatrix();
+      vrViewer.renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function animate() {
+      skySpace.rotation.y += 0.001;
+    }
+
+    vrViewer.on('prerender', animate);
+
+    var btn = document.querySelector('#vrBtn');
+    btn.addEventListener('click', function() {
+      vrViewer.vrmode = btn.vrmode = !btn.vrmode;
+    });
+  </script>
+
+</body>
+
+</html>

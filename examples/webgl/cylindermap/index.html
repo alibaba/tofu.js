@@ -1,0 +1,145 @@
+<html>
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+    <title>DEMO VR</title>
+    <style>
+      * {
+        margin: 0;
+      }
+
+      body {
+        position: relative;
+      }
+    </style>
+    <!-- <script src="//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
+    <script>
+      new VConsole();
+    </script> -->
+  </head>
+
+  <body>
+
+    <canvas id="webgl"></canvas>
+    <script src="../../lib/three.js"></script>
+    <!-- <script src="../../lib/stats.min.js"></script> -->
+    <script src="../../lib/dat.gui.min.js"></script>
+    <script src="../../../build/tofu.js"></script>
+    <script>
+      window.addEventListener('resize', onWindowResize, false);
+
+      var WIDTH = window.innerWidth;
+      var HEIGHT = window.innerHeight;
+      var xrViewer = new Tofu.XRViewer({
+        canvas: '#webgl',
+        fov: 50,
+        aspect: WIDTH / HEIGHT,
+        near: 0.01,
+        far: 1000,
+        vrmode: false,
+        vrsensor: false,
+      });
+      xrViewer.renderer.setSize(WIDTH, HEIGHT);
+
+      var driftX = -15;
+      var driftY = 0;
+      var cylinderWorld = new Tofu.CylinderWorld({
+        url: './images/space.jpg',
+        height: 603.18578,
+        driftX: driftX,
+        driftY: driftY
+      });
+      xrViewer.add(cylinderWorld);
+
+      var light = new THREE.PointLight(0xf9cb89);
+      light.position.set(40, 50, 100);
+      xrViewer.add(light);
+
+      cylinderWorld.on('click', function(ev) {
+        var point = ev.intersect.point;
+        var originalEvent = ev.data.originalEvent;
+        if (originalEvent.shiftKey) {
+          var cube = new Tofu.AnchorRippling({
+            image: './images/exclamatory.png',
+            width: 32,
+            height: 32,
+          });
+
+          console.log('照相机投影空间的坐标点', point);
+          console.log('相对于全景图空间的坐标点', cube.putWhere(point, cylinderWorld));
+
+          cube.on('click', function() {
+            console.log('this anchor on click');
+          });
+
+          cylinderWorld.add(cube);
+        }
+      });
+
+      var circle = new THREE.Mesh( new THREE.CircleGeometry( 544, 32 ), new THREE.MeshBasicMaterial( { color: 0x92b0d2 } ));
+      circle.rotation.x = Math.PI/2;
+      circle.position.y = 310;
+      var circle1 = new THREE.Mesh( new THREE.CircleGeometry( 544, 32 ), new THREE.MeshBasicMaterial( { color: 0x171c22 } ));
+      circle1.rotation.x = -Math.PI/2;
+      circle1.position.y = -310;
+      cylinderWorld.add( circle,circle1 );
+
+      // 双指缩放
+      var canvasDom = document.querySelector('#webgl');
+      var startVec = new THREE.Vector2(0, 0);
+      var scaleBase = 0;
+      var preZoom = 0;
+      var ratio = 1; // 缩放比例
+      xrViewer.interactionManager.on('touchstart', start);
+      xrViewer.interactionManager.on('touchmove', move);
+      xrViewer.interactionManager.on('touchend', end);
+      function start(ev) {
+        const originalEvent = ev.data.originalEvent;
+        if (originalEvent.touches && originalEvent.touches.length < 2) return;
+        startVec.x = originalEvent.touches[0].pageX - originalEvent.touches[1].pageX;
+        startVec.y = originalEvent.touches[0].pageY - originalEvent.touches[1].pageY;
+        scaleBase = startVec.length();
+        preZoom = xrViewer.camera.zoom;
+      }
+      function move(ev) {
+        const originalEvent = ev.data.originalEvent;
+        if (originalEvent.touches && originalEvent.touches.length < 2) return;
+        originalEvent.preventDefault();
+        var nowVec = new THREE.Vector2(0, 0);
+        nowVec.x = originalEvent.touches[0].pageX - originalEvent.touches[1].pageX;
+        nowVec.y = originalEvent.touches[0].pageY - originalEvent.touches[1].pageY;
+        var scale = nowVec.length() / scaleBase;
+
+        xrViewer.camera.zoom = Tofu.Utils.clamp(preZoom * scale * ratio, 1, 2); // 可以限制缩放只允许在[1, 2]区间内
+        xrViewer.camera.updateProjectionMatrix(); // 记得更新相机矩阵，生效缩放参数
+      }
+      function end() {
+        preZoom = xrViewer.camera.zoom;
+      }
+
+      xrViewer.start();
+
+      function onWindowResize() {
+        xrViewer.camera.aspect = window.innerWidth / window.innerHeight;
+        xrViewer.camera.updateProjectionMatrix();
+        xrViewer.renderer.setSize(window.innerWidth, window.innerHeight);
+      }
+
+      /**
+       * 帧率监控工具
+       */
+      // var stats = new Stats();
+      // stats.domElement.style.position = 'absolute';
+      // stats.domElement.style.top = '0px';
+      // document.body.appendChild(stats.domElement);
+      // xrViewer.on('postrender', function () {
+      //   stats.update();
+      // })
+
+    </script>
+
+  </body>
+
+  </html>

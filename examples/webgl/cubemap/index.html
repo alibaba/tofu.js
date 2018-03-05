@@ -1,0 +1,99 @@
+<html>
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+    <title>DEMO VR</title>
+    <style>
+      * {
+        margin: 0;
+      }
+
+      body {
+        position: relative;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <canvas id="webgl"></canvas>
+    <script src="../../lib/three.js"></script>
+    <script src="../../lib/dat.gui.min.js"></script>
+    <script src="../../../build/tofu.js"></script>
+    <script>
+      window.addEventListener('resize', onWindowResize, false);
+
+      var WIDTH = window.innerWidth;
+      var HEIGHT = window.innerHeight;
+      var xrViewer = new Tofu.XRViewer({
+        canvas: '#webgl',
+        fov: 30,
+        aspect: WIDTH / HEIGHT,
+        near: 0.01,
+        far: 100,
+        vrmode: false,
+        vrsensor: true,
+      });
+
+      xrViewer.renderer.setSize(WIDTH, HEIGHT);
+
+
+      var paths = {
+        space: "./images/space/",
+        park: "./images/park/",
+        room: "./images/room/",
+      };
+
+      var cubeMap = new THREE.CubeTextureLoader().load(getUrls('./images/park/'));
+      cubeMap.format = THREE.RGBFormat;
+      xrViewer.scene.background = cubeMap;
+
+      function MapControl(paths, cb) {
+        Object.keys(paths).forEach(function(it) {
+          var urls = getUrls(paths[it]);
+          this[it] = (function(urls) {
+            var cubeMap = new THREE.CubeTextureLoader().load(urls);
+            cubeMap.format = THREE.RGBFormat;
+            console.log(urls);
+            return function() {
+              cb(cubeMap);
+            };
+          })(urls);
+        }, this);
+      }
+      var gui = new dat.GUI();
+      var mapControl = new MapControl(paths, function(cubemap){
+        xrViewer.scene.background = cubemap;
+      });
+      var folder = gui.addFolder('stage');
+      Object.keys(paths).forEach(function(it) {
+        folder.add(mapControl, it);
+      });
+
+
+      xrViewer.start();
+      function onWindowResize() {
+        xrViewer.camera.aspect = window.innerWidth / window.innerHeight;
+        xrViewer.camera.updateProjectionMatrix();
+        xrViewer.renderer.setSize(window.innerWidth, window.innerHeight);
+      }
+      xrViewer.on('prerender', function() {
+        // xrViewer.camera.rotation.y += 0.001;
+      });
+
+      function getUrls(path) {
+        var format = '.jpg';
+        return [
+          path + 'px' + format, path + 'nx' + format,
+          path + 'py' + format, path + 'ny' + format,
+          path + 'pz' + format, path + 'nz' + format
+        ];
+      }
+
+    </script>
+
+  </body>
+
+  </html>
