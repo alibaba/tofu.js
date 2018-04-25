@@ -10,7 +10,7 @@
   "scripts": {
     "build": "rollup -c",
     "build:dev": "rollup -c -w",
-    "prever": "npm run build && git add -A && git commit -m 'release: release a new version'",
+    "prever": "npm run build && npm run extract && git add -A && git commit -m 'release: release a new version'",
     "ver": "standard-version -m 'chore(release): v%s'",
     "postver": "git push --follow-tags origin master && npm publish",
     "extract": "npmsrcify extract",
