@@ -43,9 +43,11 @@
         far: 1000,
         vrmode: false,
         vrsensor: true,
+        width: WIDTH,
+        height: HEIGHT,
       });
       xrViewer.camera.position.set(0, 0, 300);
-      xrViewer.renderer.setSize(WIDTH, HEIGHT);
+      // xrViewer.renderer.setSize(WIDTH, HEIGHT);
 
       var global = new THREE.Group();
       var positions = [

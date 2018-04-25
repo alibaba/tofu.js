@@ -29,6 +29,7 @@ export { default as FocusShader } from './shader/FocusShader';
 export { default as ARViewer } from './core/ARViewer';
 export { default as XRViewer } from './core/XRViewer';
 
+export { default as Primer } from './extras/primers/Primer';
 export { default as CameraPrimer } from './extras/primers/CameraPrimer';
 export { default as TexturePrimer } from './extras/primers/TexturePrimer';
 

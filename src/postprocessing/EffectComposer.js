@@ -73,7 +73,7 @@ export default class EffectComposer {
     let maskActive = false;
     const il = this.passes.length;
 
-    this.setRTS();
+    if (this.autoToScreen) this.setRTS();
 
     for (let i = 0; i < il; i++) {
       const pass = this.passes[i];

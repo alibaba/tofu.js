@@ -59,7 +59,7 @@ class Compositor {
   renderLayers(camera) {
     for (let i = 0; i < this.layers.length; i++) {
       const layer = this.layers[i];
-      layer.render(camera);
+      if (!layer.isEmpty) layer.render(camera);
     }
   }
 
@@ -72,7 +72,7 @@ class Compositor {
 
     for (let i = 0; i < this.layers.length; i++) {
       const layer = this.layers[i];
-      layer.draw(renderTarget);
+      if (!layer.isEmpty) layer.draw(renderTarget);
     }
 
     if (isAeOpen) {

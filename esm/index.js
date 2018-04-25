@@ -2956,7 +2956,7 @@ var EffectComposer = function () {
       var maskActive = false;
       var il = this.passes.length;
 
-      this.setRTS();
+      if (this.autoToScreen) this.setRTS();
 
       for (var i = 0; i < il; i++) {
         var pass = this.passes[i];
@@ -3308,6 +3308,16 @@ var GraphicsLayer = function (_Layer) {
       this.graphics.remove.apply(this.graphics, arguments);
       return this;
     }
+
+    /**
+     * get primers status
+     */
+
+  }, {
+    key: 'isEmpty',
+    get: function get$$1() {
+      return this.graphics.children.length === 0;
+    }
   }]);
   return GraphicsLayer;
 }(Layer);
@@ -3518,7 +3528,7 @@ var Compositor = function () {
     value: function renderLayers(camera) {
       for (var i = 0; i < this.layers.length; i++) {
         var layer = this.layers[i];
-        layer.render(camera);
+        if (!layer.isEmpty) layer.render(camera);
       }
     }
   }, {
@@ -3532,7 +3542,7 @@ var Compositor = function () {
 
       for (var i = 0; i < this.layers.length; i++) {
         var layer = this.layers[i];
-        layer.draw(renderTarget);
+        if (!layer.isEmpty) layer.draw(renderTarget);
       }
 
       if (isAeOpen) {
@@ -10293,6 +10303,6 @@ var GltfMagic = function (_EventDispatcher) {
   return GltfMagic;
 }(EventDispatcher);
 
-export { Utils, Tween, Smooth, Orienter, ARGlue, ViewPort, BloomPass, ClearMaskPass, FilmPass, GlitchPass, MaskPass, MattingPass, RenderPass, ShaderPass, ConvolutionShader, CopyShader, FilmShader, FocusShader, ARViewer, XRViewer, CameraPrimer, TexturePrimer, AnchorRippling, SphereWorld, CylinderWorld, GltfMagic };
+export { Utils, Tween, Smooth, Orienter, ARGlue, ViewPort, BloomPass, ClearMaskPass, FilmPass, GlitchPass, MaskPass, MattingPass, RenderPass, ShaderPass, ConvolutionShader, CopyShader, FilmShader, FocusShader, ARViewer, XRViewer, Primer, CameraPrimer, TexturePrimer, AnchorRippling, SphereWorld, CylinderWorld, GltfMagic };
 export { EventDispatcher } from 'three';
 //# sourceMappingURL=index.js.map

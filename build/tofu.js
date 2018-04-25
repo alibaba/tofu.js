@@ -2960,7 +2960,7 @@ var EffectComposer = function () {
       var maskActive = false;
       var il = this.passes.length;
 
-      this.setRTS();
+      if (this.autoToScreen) this.setRTS();
 
       for (var i = 0; i < il; i++) {
         var pass = this.passes[i];
@@ -3312,6 +3312,16 @@ var GraphicsLayer = function (_Layer) {
       this.graphics.remove.apply(this.graphics, arguments);
       return this;
     }
+
+    /**
+     * get primers status
+     */
+
+  }, {
+    key: 'isEmpty',
+    get: function get$$1() {
+      return this.graphics.children.length === 0;
+    }
   }]);
   return GraphicsLayer;
 }(Layer);
@@ -3522,7 +3532,7 @@ var Compositor = function () {
     value: function renderLayers(camera) {
       for (var i = 0; i < this.layers.length; i++) {
         var layer = this.layers[i];
-        layer.render(camera);
+        if (!layer.isEmpty) layer.render(camera);
       }
     }
   }, {
@@ -3536,7 +3546,7 @@ var Compositor = function () {
 
       for (var i = 0; i < this.layers.length; i++) {
         var layer = this.layers[i];
-        layer.draw(renderTarget);
+        if (!layer.isEmpty) layer.draw(renderTarget);
       }
 
       if (isAeOpen) {
@@ -10318,6 +10328,7 @@ exports.FilmShader = FilmShader;
 exports.FocusShader = FocusShader;
 exports.ARViewer = ARViewer;
 exports.XRViewer = XRViewer;
+exports.Primer = Primer;
 exports.CameraPrimer = CameraPrimer;
 exports.TexturePrimer = TexturePrimer;
 exports.AnchorRippling = AnchorRippling;

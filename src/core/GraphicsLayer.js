@@ -67,6 +67,13 @@ class GraphicsLayer extends Layer {
     this.graphics.remove.apply(this.graphics, arguments);
     return this;
   }
+
+  /**
+   * get primers status
+   */
+  get isEmpty() {
+    return this.graphics.children.length === 0;
+  }
 }
 
 export default GraphicsLayer;
