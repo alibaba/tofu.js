@@ -20,10 +20,10 @@
           "outputSourceFiles" : true
       },
       "applicationName": "tofu.js",
-      "footer"        : "Made with ♥ by fish-ball",
-      "copyright"     : "tofu.js Copyright © 2016-2018 fish-ball.",
+      "footer"        : "Made with ♥ by ferrum-team",
+      "copyright"     : "tofu.js Copyright © 2016-2018 ferrum-team.",
       "disqus": "",
-      "googleAnalytics": "UA-103772589-5",
+      "googleAnalytics": "",
       "openGraph": {
           "title": "",
           "type": "website",
@@ -34,7 +34,7 @@
       "meta": {
           "title": "tofu.js API Documentation",
           "description": "Documentation for tofu.js library",
-          "keyword": "docs, documentation, pixi, tofu.js, renderer, html5, javascript, jsdoc"
+          "keyword": "docs, documentation, three, tofu.js, renderer, html5, javascript, jsdoc"
       },
       "linenums"      : true
   },

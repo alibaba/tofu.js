@@ -15,8 +15,8 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'examples/lib/three.js',
-      'build/three.tofu.js',
+      'examples/lib/three/build/three.js',
+      'build/tofu.js',
       'test/**/**.js'
     ],
 

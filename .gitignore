@@ -94,5 +94,4 @@ jspm_packages
 *.tgz
 
 # just for myself
-.sublimelinterrc
 .vscode
