@@ -19,7 +19,7 @@ export default {
   plugins: [
     resolve(),
     babel({
-      // exclude: 'node_modules/**', // direct dependencies three.interaction source code
+      // exclude: 'node_modules/**', // direct dependencies three.interaction source code from node_modules
     }),
   ],
   extend: true,

@@ -32,7 +32,7 @@ describe('TOFU.Utils.copyJSON', function () {
 
 });
 
-describe('JS.Utils.isArray', function () {
+describe('TOFU.Utils.isArray', function () {
 
   it('should work', function () {
     expect(TOFU.Utils.isArray([])).to.be.true;
@@ -42,7 +42,7 @@ describe('JS.Utils.isArray', function () {
 
 });
 
-describe('JS.Utils.isObject', function () {
+describe('TOFU.Utils.isObject', function () {
 
   it('should work', function () {
     expect(TOFU.Utils.isObject({})).to.be.true;
@@ -54,7 +54,7 @@ describe('JS.Utils.isObject', function () {
 
 });
 
-describe('JS.Utils.isString', function () {
+describe('TOFU.Utils.isString', function () {
 
   it('should work', function () {
     expect(TOFU.Utils.isString('')).to.be.true;
@@ -64,7 +64,7 @@ describe('JS.Utils.isString', function () {
 
 });
 
-describe('JS.Utils.isNumber', function () {
+describe('TOFU.Utils.isNumber', function () {
 
   it('should work', function () {
     expect(TOFU.Utils.isNumber(0)).to.be.true;
@@ -75,7 +75,7 @@ describe('JS.Utils.isNumber', function () {
 
 });
 
-describe('JS.Utils.isFunction', function () {
+describe('TOFU.Utils.isFunction', function () {
 
   it('should work', function () {
     var test1 = function test1() {};

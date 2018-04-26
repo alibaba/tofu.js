@@ -1,4 +1,4 @@
-tofu.js — The AR building helper
+tofu.js — The 3D building framework
 =============
 
 The official web framework for UC WebAR.
