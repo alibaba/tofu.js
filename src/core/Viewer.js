@@ -1,7 +1,8 @@
 import { WebGLRenderer, EventDispatcher } from 'three';
-import GraphicsLayer from './GraphicsLayer';
-import PrimerLayer from './PrimerLayer';
-import Compositor from './Compositor';
+import EffectComposer from '../postprocessing/EffectComposer';
+// import GraphicsLayer from './GraphicsLayer';
+// import PrimerLayer from './PrimerLayer';
+import LayerCompositor from './LayerCompositor';
 import ViewPort from './ViewPort';
 import Utils from '../utils/Utils';
 
@@ -29,10 +30,10 @@ class Viewer extends EventDispatcher {
 
     /**
      * view-port camera object, a perspective camera
-     *
+     * TODO: move camera to layer
      * @member {Camera}
      */
-    this.camera = null;
+    // this.camera = null;
 
     /**
      * `WebGL` renderer object, base on `three.js` gl context
@@ -60,7 +61,7 @@ class Viewer extends EventDispatcher {
     this.autoClear = Utils.isBoolean(options.autoClear) ? options.autoClear : true;
 
     /**
-     * whether update is working or not
+     * whether update ticker is working or not
      *
      * @member {Boolean}
      */
@@ -100,24 +101,30 @@ class Viewer extends EventDispatcher {
      * primer paint a plane as a background or foreground
      * @member {PrimerLayer}
      */
-    this.primerLayer = new PrimerLayer(this.renderer);
+    // this.primerLayer = new PrimerLayer(this.renderer);
 
     /**
      * 3d Graphics layer, for render 3d scene
      * @member {GraphicsLayer}
      */
-    this.graphicsLayer = new GraphicsLayer(this.renderer);
+    // this.graphicsLayer = new GraphicsLayer(this.renderer);
+
+    /**
+     * effect composer, for postprogressing
+     * @member {EffectComposer}
+     */
+    this.effectComposer = new EffectComposer(options);
 
     /**
      * compositor primerLayer and graphicsLayer with zIndex order
-     * @member {Compositor}
+     * @member {LayerCompositor}
      */
-    this.compositor = new Compositor(this.renderer);
+    this.layerCompositor = new LayerCompositor(options);
 
     /**
      * add primerLayer and graphicsLayer to compositor
      */
-    this.compositor.add(this.primerLayer, this.graphicsLayer);
+    // this.compositor.add(this.primerLayer, this.graphicsLayer);
   }
 
   /**
@@ -159,6 +166,17 @@ class Viewer extends EventDispatcher {
    */
   render() {
     console.warn('should be overwrite by sub-class');
+  }
+
+  /**
+   * @param {WebGLRender} renderer render
+   */
+  doPass(renderer) {
+    const ll = this.layers.length;
+    for (let i = 0; i < ll; i++) {
+      const layer = this.layers[i];
+      layer.render(renderer);
+    }
   }
 
   /**
@@ -240,18 +258,79 @@ class Viewer extends EventDispatcher {
    * add a primer to primerLayer
    * @return {this} this
    */
-  addPrimer() {
-    this.primerLayer.add.apply(this.primerLayer, arguments);
-    return this;
-  }
+  // addPrimer() {
+  //   this.primerLayer.add.apply(this.primerLayer, arguments);
+  //   return this;
+  // }
 
   /**
    * remove a primer from primerLayer
    * @return {this} this
    */
-  removePrimer() {
-    this.primerLayer.remove.apply(this.primerLayer, arguments);
+  // removePrimer() {
+  //   this.primerLayer.remove.apply(this.primerLayer, arguments);
+  //   return this;
+  // }
+
+  /**
+   * add a layer into layer compositor
+   *
+   * @param {Layer} layer primerLayer or graphicsLayer
+   * @return {this} this
+   */
+  add(layer) {
+    if (arguments.length > 1) {
+      for (let i = 0; i < arguments.length; i++) {
+        this.add(arguments[ i ]);
+      }
+      return this;
+    }
+
+    if ((layer && layer.isLayer)) {
+      if (layer.parent !== null) {
+        layer.parent.remove(layer);
+      }
+
+      layer.parent = this;
+
+      this.layers.push(layer);
+      this.needSort = true;
+    } else {
+      console.error('Compositor.add: layer not an instance of PrimerLayer or GraphicsLayer.', layer);
+    }
     return this;
+  }
+
+  /**
+   * remove a layer from compositor
+   *
+   * @param {Layer} layer primerLayer or graphicsLayer
+   * @return {this} this
+   */
+  remove(layer) {
+    if (arguments.length > 1) {
+      for (let i = 0; i < arguments.length; i++) {
+        this.remove(arguments[ i ]);
+      }
+      return this;
+    }
+    const index = this.layers.indexOf(layer);
+
+    if (index !== -1) {
+      layer.parent = null;
+      this.layers.splice(index, 1);
+    }
+    return this;
+  }
+
+  /**
+   * resize window when viewport has change
+   * @param {number} width render buffer width
+   * @param {number} height render buffer height
+   */
+  setSize(width, height) {
+    this.renderer.setSize(width, height);
+    this.effectComposer.setSize(width, height);
   }
 }
 

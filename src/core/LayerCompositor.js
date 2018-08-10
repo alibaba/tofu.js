@@ -1,25 +1,25 @@
-import EffectComposer from '../postprocessing/EffectComposer';
+import { Mesh, PlaneBufferGeometry, MeshBasicMaterial, OrthographicCamera, Scene } from 'three';
+// import EffectComposer from '../postprocessing/EffectComposer';
 
 /**
- * compositor, use to merge primerLayer and graphicsLayer
+ * layer compositor, use to merge primerLayer and graphicsLayer
  */
-class Compositor {
+class LayerCompositor {
   /**
-   * compositor required a renderer
-   * @param {WebGLRenderer} renderer webgl renderer
+   * layer compositor required a options
    */
-  constructor(renderer) {
+  constructor() {
     /**
      * cache renderer object in local
      * @member {WebGLRenderer}
      */
-    this.renderer = renderer;
+    // this.renderer = renderer;
 
     /**
      * whether sort layers or not
      * @member {Boolean}
      */
-    this.needSort = false;
+    // this.needSort = false;
 
     /**
      * framebuffer will auto clear
@@ -31,19 +31,44 @@ class Compositor {
      * store layers
      * @member {Array}
      */
-    this.layers = [];
+    // this.layers = [];
 
     /**
      * effect composer, for postprogressing
      * @member {EffectComposer}
      */
-    this.afterEffects = new EffectComposer(this.renderer, true);
+    // this.afterEffects = new EffectComposer(this.renderer, true);
 
     /**
      * after effect update delta
      * @member {Number}
      */
-    this.aeDelta = 0;
+    // this.aeDelta = 0;
+
+    /**
+     * orthographic camera, for composite draw
+     * @member {OrthographicCamera}
+     */
+    this.camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+    /**
+     * scene, for composite draw
+     * @member {Scene}
+     */
+    this.scene = new Scene();
+
+    /**
+     * quad, for composite draw
+     * @member {Mesh}
+     */
+    this.quad = new Mesh(
+      new PlaneBufferGeometry(2, 2),
+      new MeshBasicMaterial({
+        transparent: true,
+        depthTest: false,
+        depthWrite: false,
+      })
+    );
   }
 
   /**
@@ -90,7 +115,7 @@ class Compositor {
   }
 
   /**
-   * add a layer into compositor
+   * add a layer into layer compositor
    *
    * @param {Layer} layer primerLayer or graphicsLayer
    * @return {this} this
@@ -186,6 +211,15 @@ class Compositor {
   get isAeOpen() {
     return this.afterEffects.isActive;
   }
+
+  /**
+   * resize window when viewport has change
+   * @param {number} width render buffer width
+   * @param {number} height render buffer height
+   */
+  setSize(width, height) {
+    console.log(width, height);
+  }
 }
 
-export default Compositor;
+export default LayerCompositor;

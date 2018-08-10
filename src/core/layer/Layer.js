@@ -1,5 +1,21 @@
-import { OrthographicCamera, Scene, Mesh, PlaneBufferGeometry, MeshBasicMaterial } from 'three';
-import EffectComposer from '../postprocessing/EffectComposer';
+import {
+  LinearFilter,
+  RGBAFormat,
+  OrthographicCamera,
+  Scene,
+  WebGLRenderTarget,
+  Mesh,
+  PlaneBufferGeometry,
+  MeshBasicMaterial,
+} from 'three';
+// import EffectComposer from '../postprocessing/EffectComposer';
+
+const parameters = {
+  minFilter: LinearFilter,
+  magFilter: LinearFilter,
+  format: RGBAFormat,
+  stencilBuffer: false,
+};
 
 /**
  * render layer, for multi-function render pipeline, support after-effects
@@ -7,10 +23,15 @@ import EffectComposer from '../postprocessing/EffectComposer';
 class Layer {
   /**
    * layer required a renderer
-   * @param {WebGLRenderer} renderer webgl renderer
    * @param {Object} options options
    */
-  constructor(renderer) {
+  constructor(options) {
+    const { width = 300, height = 150 } = options;
+
+    this.width = width;
+
+    this.height = height;
+
     /**
      * the parent of this layer, sometime was compositor
      * @member {Compositor}
@@ -34,32 +55,37 @@ class Layer {
      * cache renderer object in local
      * @member {WebGLRenderer}
      */
-    this.renderer = renderer;
+    // this.renderer = renderer;
 
     /**
      * Not Recommend set it to true, if it was true, this layer will forced rendering to the screen,
      * you should make sure why you set renderToScreen with true.
      * @member {Boolean}
      */
-    this.renderToScreen = false;
+    // this.renderToScreen = false;
 
     /**
      * framebuffer will auto clear
      * @member {Boolean}
      */
-    this.autoClear = true;
+    // this.autoClear = true;
 
     /**
      * effect composer, for postprogressing
      * @member {EffectComposer}
      */
-    this.afterEffects = new EffectComposer(this.renderer);
+    // this.afterEffects = new EffectComposer(this.renderer);
 
     /**
      * after effect update delta
      * @member {Number}
      */
     this.aeDelta = 0;
+
+    /**
+     * render buffer to carry render content
+     */
+    this.renderTarget = new WebGLRenderTarget(this.width, this.height, parameters);
 
     /**
      * orthographic camera, for composite draw
@@ -73,7 +99,12 @@ class Layer {
      */
     this.scene = new Scene();
 
-    const readBuffer = this.afterEffects.readBuffer;
+    /**
+     * store pass array, all effect pass list
+     * @member {pass}
+     */
+    this.passes = [];
+
     /**
      * quad, for composite draw
      * @member {Mesh}
@@ -82,37 +113,50 @@ class Layer {
       new PlaneBufferGeometry(2, 2),
       new MeshBasicMaterial({
         transparent: true,
-        map: readBuffer.texture,
+        map: this.renderTarget.texture,
         depthTest: false,
         depthWrite: false,
-      }));
+      })
+    );
+  }
 
-    this.scene.add(this.quad);
+  /**
+   * update timeline
+   * @param {Number} snippet time snippet
+   * @private
+   */
+  updateTimeline(snippet) {
+    this.scene.updateTimeline(snippet);
+  }
+
+  render(renderer) {
+    renderer.render(this.scene, this.camera, this.renderTarget);
   }
 
   /**
    * clear framebuffer
    */
-  clear() {
-    this.renderer.setRenderTarget(this.afterEffects.readBuffer);
-    this.renderer.clear(this.renderer.autoClearColor, this.renderer.autoClearDepth, this.renderer.autoClearStencil);
-  }
+  // clear() {
+  //   this.renderer.setRenderTarget(this.afterEffects.readBuffer);
+  //   this.renderer.clear(this.renderer.autoClearColor, this.renderer.autoClearDepth, this.renderer.autoClearStencil);
+  // }
 
   /**
    * composite draw, use it when need composition
    * @param {WebGLRenderTarget} renderTarget render to which buffer
    * @private
    */
-  draw(renderTarget) {
-    this.renderer.render(this.scene, this.camera, renderTarget);
-  }
+  // draw(renderTarget) {
+  //   this.renderer.render(this.scene, this.camera, renderTarget);
+  // }
 
   /**
    * add a after-effects pass to this layer
    * @param {Pass} pass pass process
    */
   addPass(pass) {
-    this.afterEffects.addPass(pass);
+    this.passes.push(pass);
+    pass.setSize(this.width, this.height);
   }
 
   /**
@@ -121,7 +165,7 @@ class Layer {
    * @param {Number} index insert which position
    */
   insertPass(pass, index) {
-    this.afterEffects.insertPass(pass, index);
+    this.passes.splice(index, 0, pass);
   }
 
   /**
