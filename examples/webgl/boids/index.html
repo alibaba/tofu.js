@@ -1,0 +1,165 @@
+<html>
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+    <title>DEMO VR</title>
+    <style>
+      * {
+        margin: 0;
+      }
+
+      body {
+        position: relative;
+        background: #41b882;
+      }
+    </style>
+    <!-- <script src="//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
+    <script>
+      new VConsole();
+    </script> -->
+  </head>
+
+  <body>
+
+    <canvas id="webgl"></canvas>
+    <script src="../../lib/three/build/three.js"></script>
+    <script src="../../lib/stats.js/build/stats.min.js"></script>
+    <script src="../../lib/dat.gui/build/dat.gui.js"></script>
+    <script src="../../../build/tofu.js"></script>
+    <script>
+      window.addEventListener('resize', onWindowResize, false);
+
+      var ARC_SEGMENTS = 200;
+      var COLOURS = [0x69D2E7, 0xE0E4CC, 0xF38630, 0xFF4E50, 0xF9D423];
+      var WIDTH = window.innerWidth;
+      var HEIGHT = window.innerHeight;
+      var xrViewer = new Tofu.XRViewer({
+        canvas: '#webgl',
+        fov: 70,
+        aspect: WIDTH / HEIGHT,
+        near: 0.01,
+        far: 1000,
+        vrmode: false,
+        vrsensor: true,
+        width: WIDTH,
+        height: HEIGHT,
+      });
+      xrViewer.camera.position.set(0, 0, 300);
+      // xrViewer.renderer.setSize(WIDTH, HEIGHT);
+
+      var global = new THREE.Group();
+      var positions = [
+        new THREE.Vector3(-140, 50, 0),
+        new THREE.Vector3(-70, -50, 0),
+        new THREE.Vector3(0, 50, 0),
+        new THREE.Vector3(70, -50, 0),
+        new THREE.Vector3(140, 50, 0),
+      ];
+      var curve = new THREE.CatmullRomCurve3( positions );
+
+      for (var i = 0; i < positions.length; i++) {
+        var point = new THREE.Mesh(
+          new THREE.SphereBufferGeometry(5),
+          new THREE.MeshPhongMaterial({ color: COLOURS[i] })
+        );
+        point.position.copy(positions[i]);
+        global.add(point);
+      }
+
+      var lineGeo = new THREE.Geometry();
+      for ( var i = 0; i < ARC_SEGMENTS; i ++ ) {
+        var t = i /  ( ARC_SEGMENTS - 1 );
+        var p = curve.getPoint( t );
+        lineGeo.vertices.push(p);
+      }
+			var lineMesh = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({
+        color: 0xff0000,
+        opacity: 0.4,
+        linewidth: 1
+      }));
+      global.add(lineMesh);
+
+      var cube = new THREE.Mesh(
+        new THREE.BoxGeometry(20, 20, 20),
+        new THREE.MeshPhongMaterial({ color: 0xffffff })
+      );
+      cube.motion({
+        path: curve,
+        duration: 5000,
+        infinite: true,
+        alternate: true,
+        attachTangent: true,
+      });
+      global.add(cube);
+      global.animate({
+        to: { 'rotation.y': Math.PI * 2 },
+        duration: 10000,
+        infinite: true,
+        ease: Tofu.Tween.Linear.None,
+      })
+      xrViewer.add( global );
+
+      var ambient = new THREE.AmbientLight(0x888888);
+      xrViewer.add( ambient );
+      var light = new THREE.PointLight(0xffffff);
+      light.position.set(20, 50, 10);
+      xrViewer.add(light);
+
+      // 双指缩放
+      var canvasDom = document.querySelector('#webgl');
+      var startVec = new THREE.Vector2(0, 0);
+      var scaleBase = 0;
+      var preZoom = 0;
+      var ratio = 1; // 缩放比例
+      xrViewer.interactionManager.on('touchstart', start);
+      xrViewer.interactionManager.on('touchmove', move);
+      xrViewer.interactionManager.on('touchend', end);
+      function start(ev) {
+        const originalEvent = ev.data.originalEvent;
+        if (originalEvent.touches && originalEvent.touches.length < 2) return;
+        startVec.x = originalEvent.touches[0].pageX - originalEvent.touches[1].pageX;
+        startVec.y = originalEvent.touches[0].pageY - originalEvent.touches[1].pageY;
+        scaleBase = startVec.length();
+        preZoom = xrViewer.camera.zoom;
+      }
+      function move(ev) {
+        const originalEvent = ev.data.originalEvent;
+        if (originalEvent.touches && originalEvent.touches.length < 2) return;
+        originalEvent.preventDefault();
+        var nowVec = new THREE.Vector2(0, 0);
+        nowVec.x = originalEvent.touches[0].pageX - originalEvent.touches[1].pageX;
+        nowVec.y = originalEvent.touches[0].pageY - originalEvent.touches[1].pageY;
+        var scale = nowVec.length() / scaleBase;
+
+        xrViewer.camera.zoom = Tofu.Utils.clamp(preZoom * scale * ratio, 1, 2); // 可以限制缩放只允许在[1, 2]区间内
+        xrViewer.camera.updateProjectionMatrix(); // 记得更新相机矩阵，生效缩放参数
+      }
+      function end() {
+        preZoom = xrViewer.camera.zoom;
+      }
+
+      xrViewer.start();
+
+      function onWindowResize() {
+        xrViewer.camera.aspect = window.innerWidth / window.innerHeight;
+        xrViewer.camera.updateProjectionMatrix();
+        xrViewer.renderer.setSize(window.innerWidth, window.innerHeight);
+      }
+
+      /**
+       * 帧率监控工具
+       */
+      var stats = new Stats();
+      stats.domElement.style.position = 'absolute';
+      stats.domElement.style.top = '0px';
+      document.body.appendChild(stats.domElement);
+      xrViewer.on('postrender', function () {
+        stats.update();
+      })
+    </script>
+
+  </body>
+
+  </html>
