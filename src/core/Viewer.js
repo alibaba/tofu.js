@@ -1,9 +1,13 @@
-import { WebGLRenderer, EventDispatcher } from 'three';
+import {
+  WebGLRenderer,
+  EventDispatcher,
+} from 'three';
 import EffectComposer from '../postprocessing/EffectComposer';
 // import GraphicsLayer from './GraphicsLayer';
 // import PrimerLayer from './PrimerLayer';
 import LayerCompositor from './LayerCompositor';
 import ViewPort from './ViewPort';
+import EffectPack from './EffectPack';
 import Utils from '../utils/Utils';
 
 /**
@@ -28,12 +32,13 @@ class Viewer extends EventDispatcher {
 
     super();
 
+    this.width = width;
+    this.height = height;
+
     /**
-     * view-port camera object, a perspective camera
-     * TODO: move camera to layer
-     * @member {Camera}
+     * render effect kit to carry render content and some data
      */
-    // this.camera = null;
+    this.effectPack = new EffectPack({ width, height });
 
     /**
      * `WebGL` renderer object, base on `three.js` gl context
@@ -98,18 +103,6 @@ class Viewer extends EventDispatcher {
     this.timeScale = 1;
 
     /**
-     * primer paint a plane as a background or foreground
-     * @member {PrimerLayer}
-     */
-    // this.primerLayer = new PrimerLayer(this.renderer);
-
-    /**
-     * 3d Graphics layer, for render 3d scene
-     * @member {GraphicsLayer}
-     */
-    // this.graphicsLayer = new GraphicsLayer(this.renderer);
-
-    /**
      * effect composer, for postprogressing
      * @member {EffectComposer}
      */
@@ -122,9 +115,10 @@ class Viewer extends EventDispatcher {
     this.layerCompositor = new LayerCompositor(options);
 
     /**
-     * add primerLayer and graphicsLayer to compositor
+     * store layers array, all content layer list
+     * @member {layer}
      */
-    // this.compositor.add(this.primerLayer, this.graphicsLayer);
+    this.layers = [];
   }
 
   /**
@@ -157,8 +151,23 @@ class Viewer extends EventDispatcher {
    * @private
    */
   updateTimeline(snippet) {
-    this.primerLayer.updateTimeline(snippet);
-    this.graphicsLayer.updateTimeline(snippet);
+    snippet = this.timeScale * snippet;
+
+    this.emit('pretimeline', {
+      snippet,
+    });
+
+    let i = 0;
+    const layers = this.layers;
+    const length = layers.length;
+    while (i < length) {
+      layers[i].updateTimeline(snippet);
+      i++;
+    }
+
+    this.emit('posttimeline', {
+      snippet,
+    });
   }
 
   /**
@@ -169,22 +178,56 @@ class Viewer extends EventDispatcher {
   }
 
   /**
-   * @param {WebGLRender} renderer render
+   * render every layer to it's render buffer
+   *
+   * @private
    */
-  doPass(renderer) {
-    const ll = this.layers.length;
-    for (let i = 0; i < ll; i++) {
+  renderLayers() {
+    if (this.needSort) {
+      this._sortList();
+      this._sortLayerQuad();
+      this.needSort = false;
+    }
+    for (let i = 0; i < this.layers.length; i++) {
       const layer = this.layers[i];
-      layer.render(renderer);
+      if (!layer.isEmpty) layer.render(this.renderer);
     }
   }
 
   /**
-   * render primerLayer and graphicsLayer, if you have not use primerLayer, we will direct render graphicsLayer
-   * @param {PerspectiveCamera} camera use which perspective-camera
+   * process every layer effect magic
+   *
+   * @private
    */
-  renderLayer(camera) {
-    this.compositor.render(camera);
+  layerEffect() {
+    const ll = this.layers.length;
+    for (let i = 0; i < ll; i++) {
+      const layer = this.layers[i];
+      if (layer.effectPack.isAeOpen) this.effectComposer.render(this.renderer, layer.effectPack);
+    }
+  }
+
+  /**
+   * composition every layer to a single layer or render to screen
+   *
+   * @private
+   */
+  composition() {
+    const isAeOpen = this.effectPack.isAeOpen;
+    const renderTarget = isAeOpen ? this.effectPack.renderTarget : null;
+    this.layerCompositor.composition(this.renderer, renderTarget);
+    if (isAeOpen) {
+      this.viewEffect();
+    }
+  }
+
+  /**
+   * if this view has pass effect, do magic again
+   *
+   * @private
+   */
+  viewEffect() {
+    this.effectComposer.render(this.renderer, this.effectPack, true);
   }
 
   /**
@@ -255,22 +298,48 @@ class Viewer extends EventDispatcher {
   }
 
   /**
-   * add a primer to primerLayer
-   * @return {this} this
+   * sort layer, because array.sort was not stable-sort, so use bubble sort
+   *
+   * @private
    */
-  // addPrimer() {
-  //   this.primerLayer.add.apply(this.primerLayer, arguments);
-  //   return this;
-  // }
+  _sortList() {
+    const layers = this.layers;
+    const length = layers.length;
+    let i;
+    let j;
+    let temp;
+    for (i = 0; i < length - 1; i++) {
+      for (j = 0; j < length - 1 - i; j++) {
+        if (layers[j].zIndex > layers[j + 1].zIndex) {
+          temp = layers[j];
+          layers[j] = layers[j + 1];
+          layers[j + 1] = temp;
+        }
+      }
+    }
+  }
 
   /**
-   * remove a primer from primerLayer
-   * @return {this} this
+   * sort layer's quad order, mapping with layerCompositor.scene
+   *
+   * @private
    */
-  // removePrimer() {
-  //   this.primerLayer.remove.apply(this.primerLayer, arguments);
-  //   return this;
-  // }
+  _sortLayerQuad() {
+    const quads = this.layerCompositor.scene.children;
+    const length = quads.length;
+    let i;
+    let j;
+    let temp;
+    for (i = 0; i < length - 1; i++) {
+      for (j = 0; j < length - 1 - i; j++) {
+        if (quads[j].root.zIndex > quads[j + 1].root.zIndex) {
+          temp = quads[j];
+          quads[j] = quads[j + 1];
+          quads[j + 1] = temp;
+        }
+      }
+    }
+  }
 
   /**
    * add a layer into layer compositor
@@ -292,8 +361,8 @@ class Viewer extends EventDispatcher {
       }
 
       layer.parent = this;
-
       this.layers.push(layer);
+      this.layerCompositor.scene.add(layer.quad);
       this.needSort = true;
     } else {
       console.error('Compositor.add: layer not an instance of PrimerLayer or GraphicsLayer.', layer);
@@ -319,8 +388,26 @@ class Viewer extends EventDispatcher {
     if (index !== -1) {
       layer.parent = null;
       this.layers.splice(index, 1);
+      this.layerCompositor.scene.remove(layer.quad);
     }
     return this;
+  }
+
+  /**
+   * add a after-effects pass to this layer
+   * @param {Pass} pass pass process
+   */
+  addPass() {
+    this.effectPack.addPass.apply(this.effectPack, arguments);
+  }
+
+  /**
+   * insert a after-effects pass to this layer
+   * @param {Pass} pass pass process
+   * @param {Number} index insert which position
+   */
+  insertPass() {
+    this.effectPack.insertPass.apply(this.effectPack, arguments);
   }
 
   /**
@@ -329,8 +416,23 @@ class Viewer extends EventDispatcher {
    * @param {number} height render buffer height
    */
   setSize(width, height) {
-    this.renderer.setSize(width, height);
+    this.width = width;
+    this.height = height;
     this.effectComposer.setSize(width, height);
+    this.layerCompositor.setSize(width, height);
+  }
+
+  /**
+   * get after-effects was active
+   * @return {Boolean} active or not
+   */
+  get isAeOpen() {
+    const length = this.passes.length;
+    if (length === 0) return false;
+    for (let i = 0; i < length; i++) {
+      if (this.passes[i].enabled) return true;
+    }
+    return false;
   }
 }
 

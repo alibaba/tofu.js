@@ -38,8 +38,9 @@ export default class EffectComposer {
     this.writeBuffer = tmp;
   }
 
-  render(renderer, layer, delta) {
+  render(renderer, layer, toScreen) {
     const il = layer.passes.length;
+    const delta = layer.delta || 10;
 
     // copy content to readBuffer
     this.copyPass.render(renderer, this.readBuffer, layer.renderTarget);
@@ -57,15 +58,15 @@ export default class EffectComposer {
     }
 
     // copy content back to layer buffer
-    this.copyPass.render(renderer, layer.renderTarget, this.readBuffer);
+    const renderTarget = toScreen ? null : layer.renderTarget;
+    this.copyPass.render(renderer, renderTarget, this.readBuffer);
   }
 
   setSize(width, height) {
-    this.renderTarget1.setSize(width, height);
-    this.renderTarget2.setSize(width, height);
-
     this.width = width;
     this.height = height;
+    this.renderTarget1.setSize(width, height);
+    this.renderTarget2.setSize(width, height);
   }
 
 }

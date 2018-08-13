@@ -1,21 +1,11 @@
 import {
-  LinearFilter,
-  RGBAFormat,
-  OrthographicCamera,
-  Scene,
-  WebGLRenderTarget,
   Mesh,
+  Scene,
+  OrthographicCamera,
   PlaneBufferGeometry,
   MeshBasicMaterial,
 } from 'three';
-// import EffectComposer from '../postprocessing/EffectComposer';
-
-const parameters = {
-  minFilter: LinearFilter,
-  magFilter: LinearFilter,
-  format: RGBAFormat,
-  stencilBuffer: false,
-};
+import EffectPack from '../EffectPack';
 
 /**
  * render layer, for multi-function render pipeline, support after-effects
@@ -52,29 +42,17 @@ class Layer {
     this.isLayer = true;
 
     /**
-     * cache renderer object in local
-     * @member {WebGLRenderer}
-     */
-    // this.renderer = renderer;
-
-    /**
-     * Not Recommend set it to true, if it was true, this layer will forced rendering to the screen,
-     * you should make sure why you set renderToScreen with true.
-     * @member {Boolean}
-     */
-    // this.renderToScreen = false;
-
-    /**
      * framebuffer will auto clear
      * @member {Boolean}
      */
-    // this.autoClear = true;
+    this.autoClear = true;
 
     /**
-     * effect composer, for postprogressing
-     * @member {EffectComposer}
+     * time-scale for timeline
+     *
+     * @member {Number}
      */
-    // this.afterEffects = new EffectComposer(this.renderer);
+    this.timeScale = 1;
 
     /**
      * after effect update delta
@@ -83,9 +61,9 @@ class Layer {
     this.aeDelta = 0;
 
     /**
-     * render buffer to carry render content
+     * render effect kit to carry render content and some data
      */
-    this.renderTarget = new WebGLRenderTarget(this.width, this.height, parameters);
+    this.effectPack = new EffectPack({ width, height });
 
     /**
      * orthographic camera, for composite draw
@@ -100,12 +78,6 @@ class Layer {
     this.scene = new Scene();
 
     /**
-     * store pass array, all effect pass list
-     * @member {pass}
-     */
-    this.passes = [];
-
-    /**
      * quad, for composite draw
      * @member {Mesh}
      */
@@ -118,6 +90,30 @@ class Layer {
         depthWrite: false,
       })
     );
+
+    this.quad.root = this;
+  }
+
+  /**
+   * push a display object into scene
+   *
+   * @param {THREE.Object3D} child display object, which will be rendering
+   * @return {this} this
+   */
+  add() {
+    this.scene.add.apply(this.scene, arguments);
+    return this;
+  }
+
+  /**
+   * remove a display object from scene
+   *
+   * @param {THREE.Object3D} child display object, which you had push it at before
+   * @return {this} this
+   */
+  remove() {
+    this.scene.remove.apply(this.scene, arguments);
+    return this;
   }
 
   /**
@@ -126,37 +122,20 @@ class Layer {
    * @private
    */
   updateTimeline(snippet) {
+    snippet = this.timeScale * snippet;
     this.scene.updateTimeline(snippet);
   }
 
   render(renderer) {
-    renderer.render(this.scene, this.camera, this.renderTarget);
+    renderer.render(this.scene, this.camera, this.effectPack.renderTarget);
   }
-
-  /**
-   * clear framebuffer
-   */
-  // clear() {
-  //   this.renderer.setRenderTarget(this.afterEffects.readBuffer);
-  //   this.renderer.clear(this.renderer.autoClearColor, this.renderer.autoClearDepth, this.renderer.autoClearStencil);
-  // }
-
-  /**
-   * composite draw, use it when need composition
-   * @param {WebGLRenderTarget} renderTarget render to which buffer
-   * @private
-   */
-  // draw(renderTarget) {
-  //   this.renderer.render(this.scene, this.camera, renderTarget);
-  // }
 
   /**
    * add a after-effects pass to this layer
    * @param {Pass} pass pass process
    */
-  addPass(pass) {
-    this.passes.push(pass);
-    pass.setSize(this.width, this.height);
+  addPass() {
+    this.effectPack.addPass.apply(this.effectPack, arguments);
   }
 
   /**
@@ -164,8 +143,8 @@ class Layer {
    * @param {Pass} pass pass process
    * @param {Number} index insert which position
    */
-  insertPass(pass, index) {
-    this.passes.splice(index, 0, pass);
+  insertPass() {
+    this.effectPack.insertPass.apply(this.effectPack, arguments);
   }
 
   /**
@@ -190,11 +169,10 @@ class Layer {
   }
 
   /**
-   * get after-effects was active
-   * @return {Boolean} active or not
+   * get primers status
    */
-  get isAeOpen() {
-    return this.afterEffects.isActive;
+  get isEmpty() {
+    return this.scene.children.length === 0;
   }
 }
 
