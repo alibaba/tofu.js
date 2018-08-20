@@ -3,10 +3,11 @@ import {
   EventDispatcher,
 } from 'three';
 import EffectComposer from '../postprocessing/EffectComposer';
+// import InteractionManager from 'three.interaction/src/interaction/InteractionManager';
 // import GraphicsLayer from './GraphicsLayer';
 // import PrimerLayer from './PrimerLayer';
 import LayerCompositor from './LayerCompositor';
-import ViewPort from './ViewPort';
+import ViewConfig from './ViewConfig';
 import EffectPack from './EffectPack';
 import Utils from '../utils/Utils';
 
@@ -28,29 +29,38 @@ import Utils from '../utils/Utils';
 class Viewer extends EventDispatcher {
   constructor(options) {
 
-    const { width = 300, height = 150, updateStyle = false } = options;
-
     super();
 
+    const { pixelRatio = 1, width = 300, height = 150, updateStyle = false } = options;
+
     this.width = width;
+
     this.height = height;
 
-    /**
-     * render effect kit to carry render content and some data
-     */
-    this.effectPack = new EffectPack({ width, height });
+    this.viewBox = { width: width * pixelRatio, height: height * pixelRatio };
 
     /**
      * `WebGL` renderer object, base on `three.js` gl context
      * @member {WebGLRenderer}
      */
-    this.renderer = new WebGLRenderer(new ViewPort(options));
+    this.renderer = new WebGLRenderer(new ViewConfig(options));
+
+    /**
+     * init set pixelRatio
+     * @private
+     */
+    this.renderer.setPixelRatio(pixelRatio);
 
     /**
      * init set renderer size
      * @private
      */
     this.renderer.setSize(width, height, updateStyle);
+
+    /**
+     * render effect kit to carry render content and some data
+     */
+    this.effectPack = new EffectPack(this.viewBox);
 
     /**
      * close auto-clear, and change
@@ -106,13 +116,13 @@ class Viewer extends EventDispatcher {
      * effect composer, for postprogressing
      * @member {EffectComposer}
      */
-    this.effectComposer = new EffectComposer(options);
+    this.effectComposer = new EffectComposer(this.viewBox);
 
     /**
      * compositor primerLayer and graphicsLayer with zIndex order
      * @member {LayerCompositor}
      */
-    this.layerCompositor = new LayerCompositor(options);
+    this.layerCompositor = new LayerCompositor();
 
     /**
      * store layers array, all content layer list
@@ -174,15 +184,32 @@ class Viewer extends EventDispatcher {
    * render all 3d stage, should be overwrite by sub-class
    */
   render() {
-    console.warn('should be overwrite by sub-class');
+    const size = this.viewBox;
+    if (this.vrmode) {
+      const hw = size.width / 2;
+      this.updateStereo();
+
+      this.renderer.setScissorTest(true);
+
+      this.setSV(0, 0, hw, size.height);
+      this.renderLayers({ mode: 'VR', eye: 'LEFT' });
+
+      this.setSV(hw, 0, hw, size.height);
+      this.renderLayers({ mode: 'VR', eye: 'RIGHT' });
+
+      this.renderer.setScissorTest(false);
+    } else {
+      this.setSV(0, 0, size.width, size.height);
+      this.renderLayers({ mode: 'NORMAL' });
+    }
   }
 
   /**
    * render every layer to it's render buffer
-   *
+   * @param {object} session a renderer session
    * @private
    */
-  renderLayers() {
+  renderLayers(session) {
     if (this.needSort) {
       this._sortList();
       this._sortLayerQuad();
@@ -190,7 +217,7 @@ class Viewer extends EventDispatcher {
     }
     for (let i = 0; i < this.layers.length; i++) {
       const layer = this.layers[i];
-      if (!layer.isEmpty) layer.render(this.renderer);
+      if (!layer.isEmpty) layer.render(this.renderer, session);
     }
   }
 
@@ -362,10 +389,10 @@ class Viewer extends EventDispatcher {
 
       layer.parent = this;
       this.layers.push(layer);
-      this.layerCompositor.scene.add(layer.quad);
+      this.layerCompositor.add(layer.quad);
       this.needSort = true;
     } else {
-      console.error('Compositor.add: layer not an instance of PrimerLayer or GraphicsLayer.', layer);
+      console.error('Compositor.add: layer not an instance of Layer.', layer);
     }
     return this;
   }
@@ -388,7 +415,7 @@ class Viewer extends EventDispatcher {
     if (index !== -1) {
       layer.parent = null;
       this.layers.splice(index, 1);
-      this.layerCompositor.scene.remove(layer.quad);
+      this.layerCompositor.remove(layer.quad);
     }
     return this;
   }
@@ -410,29 +437,30 @@ class Viewer extends EventDispatcher {
     this.effectPack.insertPass.apply(this.effectPack, arguments);
   }
 
+  setLayersSize(width, height) {
+    const l = this.layers.length;
+    for (let i = 0; i < l; i++) {
+      this.layers[i].setSize(width, height);
+    }
+  }
+
   /**
    * resize window when viewport has change
    * @param {number} width render buffer width
    * @param {number} height render buffer height
+   * @param {boolean} updateStyle update style or not
    */
-  setSize(width, height) {
-    this.width = width;
-    this.height = height;
-    this.effectComposer.setSize(width, height);
-    this.layerCompositor.setSize(width, height);
+  setSize(width, height, updateStyle = false) {
+    this.renderer.setSize(width, height, updateStyle);
+    this.viewBox = this.renderer.getDrawingBufferSize();
+
+    this.effectComposer.setSize(this.viewBox.width, this.viewBox.height);
+    this.setLayersSize(this.viewBox.width, this.viewBox.height);
   }
 
-  /**
-   * get after-effects was active
-   * @return {Boolean} active or not
-   */
-  get isAeOpen() {
-    const length = this.passes.length;
-    if (length === 0) return false;
-    for (let i = 0; i < length; i++) {
-      if (this.passes[i].enabled) return true;
-    }
-    return false;
+  setPixelRatio(pixelRatio) {
+    this.renderer.setPixelRatio(pixelRatio);
+    this.setSize(this.width, this.height);
   }
 }
 

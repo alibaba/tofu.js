@@ -13,7 +13,7 @@ const parameters = {
 
 class EffectPack {
   constructor(options) {
-    const { width = 300, height = 150 } = options;
+    const { width, height } = options;
 
     this.width = width;
 
@@ -28,7 +28,7 @@ class EffectPack {
      * after effect update delta
      * @member {Number}
      */
-    this.aeDelta = 0;
+    this.delta = 0;
 
     /**
      * store pass array, all effect pass list
@@ -53,6 +53,22 @@ class EffectPack {
    */
   insertPass(pass, index) {
     this.passes.splice(index, 0, pass);
+  }
+
+  /**
+   * resize buffer size and pass size when viewport has change
+   * @param {number} width render buffer width
+   * @param {number} height render buffer height
+   */
+  setSize(width, height) {
+    this.width = width;
+    this.height = height;
+    this.renderTarget.setSize(width, height);
+
+    const length = this.passes.length;
+    for (let i = 0; i < length; i++) {
+      this.passes[i].setSize(width, height);
+    }
   }
 
   /**

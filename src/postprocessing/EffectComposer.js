@@ -15,15 +15,13 @@ const parameters = {
  */
 export default class EffectComposer {
   constructor(options) {
-    const { width = 300, height = 150 } = options;
-    this.width = width;
-    this.height = height;
+    const { width, height } = options;
 
-    this.renderTarget1 = new WebGLRenderTarget(this.width, this.height, parameters);
-    this.renderTarget1.texture.name = 'EffectComposer.rt1';
+    this.renderTarget1 = new WebGLRenderTarget(width, height, parameters);
+    this.renderTarget1.texture.name = 'RT1';
 
     this.renderTarget2 = this.renderTarget1.clone();
-    this.renderTarget2.texture.name = 'EffectComposer.rt2';
+    this.renderTarget2.texture.name = 'RT2';
 
     this.writeBuffer = this.renderTarget1;
     this.readBuffer = this.renderTarget2;
@@ -38,16 +36,16 @@ export default class EffectComposer {
     this.writeBuffer = tmp;
   }
 
-  render(renderer, layer, toScreen) {
-    const il = layer.passes.length;
-    const delta = layer.delta || 10;
+  render(renderer, effectPack, toScreen) {
+    const il = effectPack.passes.length;
+    const delta = effectPack.delta || 10;
 
     // copy content to readBuffer
-    this.copyPass.render(renderer, this.readBuffer, layer.renderTarget);
+    this.copyPass.render(renderer, this.readBuffer, effectPack.renderTarget);
 
     // add effect like yoyo
     for (let i = 0; i < il; i++) {
-      const pass = layer.passes[i];
+      const pass = effectPack.passes[i];
       if (pass.enabled === false) continue;
 
       pass.render(renderer, this.writeBuffer, this.readBuffer, delta);
@@ -58,13 +56,16 @@ export default class EffectComposer {
     }
 
     // copy content back to layer buffer
-    const renderTarget = toScreen ? null : layer.renderTarget;
+    const renderTarget = toScreen ? null : effectPack.renderTarget;
     this.copyPass.render(renderer, renderTarget, this.readBuffer);
   }
 
+  /**
+   * resize buffer size when viewport has change
+   * @param {number} width render buffer width
+   * @param {number} height render buffer height
+   */
   setSize(width, height) {
-    this.width = width;
-    this.height = height;
     this.renderTarget1.setSize(width, height);
     this.renderTarget2.setSize(width, height);
   }

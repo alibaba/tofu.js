@@ -7,11 +7,7 @@ import {
  * layer compositor, use to merge primerLayer and graphicsLayer
  */
 class LayerCompositor {
-  constructor(options) {
-    const { width = 300, height = 150 } = options;
-    this.width = width;
-    this.height = height;
-
+  constructor() {
     /**
      * framebuffer will auto clear
      * @member {Boolean}
@@ -31,6 +27,28 @@ class LayerCompositor {
     this.scene = new Scene();
   }
 
+  /**
+   * push a display object into scene
+   *
+   * @param {THREE.Object3D} child display object, which will be rendering
+   * @return {this} this
+   */
+  add() {
+    this.scene.add.apply(this.scene, arguments);
+    return this;
+  }
+
+  /**
+   * remove a display object from scene
+   *
+   * @param {THREE.Object3D} child display object, which you had push it at before
+   * @return {this} this
+   */
+  remove() {
+    this.scene.remove.apply(this.scene, arguments);
+    return this;
+  }
+
   composition(renderer, renderTarget) {
     if (this.autoClear) this.clear(renderer, renderTarget);
     renderer.render(this.scene, this.camera, renderTarget);
@@ -44,15 +62,6 @@ class LayerCompositor {
   clear(renderer, renderTarget) {
     renderer.setRenderTarget(renderTarget);
     renderer.clear(renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil);
-  }
-
-  /**
-   * resize window when viewport has change
-   * @param {number} width render buffer width
-   * @param {number} height render buffer height
-   */
-  setSize(width, height) {
-    console.log(width, height);
   }
 }
 

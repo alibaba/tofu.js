@@ -1,7 +1,6 @@
 import {
   Mesh,
   Scene,
-  OrthographicCamera,
   PlaneBufferGeometry,
   MeshBasicMaterial,
 } from 'three';
@@ -16,11 +15,7 @@ class Layer {
    * @param {Object} options options
    */
   constructor(options) {
-    const { width = 300, height = 150 } = options;
-
-    this.width = width;
-
-    this.height = height;
+    const { width, height } = options;
 
     /**
      * the parent of this layer, sometime was compositor
@@ -66,10 +61,10 @@ class Layer {
     this.effectPack = new EffectPack({ width, height });
 
     /**
-     * orthographic camera, for composite draw
-     * @member {OrthographicCamera}
+     * camera, for composite draw
+     * @member {Camera}
      */
-    this.camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    this.camera = null;
 
     /**
      * scene, for composite draw
@@ -127,6 +122,10 @@ class Layer {
   }
 
   render(renderer) {
+    if (this.autoClear) {
+      renderer.setRenderTarget(this.effectPack.renderTarget);
+      renderer.clear(renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil);
+    }
     renderer.render(this.scene, this.camera, this.effectPack.renderTarget);
   }
 
@@ -145,6 +144,15 @@ class Layer {
    */
   insertPass() {
     this.effectPack.insertPass.apply(this.effectPack, arguments);
+  }
+
+  /**
+   * resize layer size when viewport has change
+   * @param {number} width layer buffer width
+   * @param {number} height layer buffer height
+   */
+  setSize(width, height) {
+    this.effectPack.setSize(width, height);
   }
 
   /**
