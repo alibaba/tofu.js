@@ -1,0 +1,103 @@
+<html>
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+    <title>DEMO VR</title>
+    <style>
+      * {
+        margin: 0;
+      }
+
+      body {
+        position: relative;
+        background: #41b882;
+      }
+    </style>
+    <!-- <script src="//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
+    <script>
+      new VConsole();
+    </script> -->
+  </head>
+
+  <body>
+
+    <canvas id="webgl"></canvas>
+    <script src="../../lib/three/build/three.js"></script>
+    <script src="../../lib/shaders/FXAAShader.js"></script>
+    <script src="../../lib/stats.js/build/stats.min.js"></script>
+    <script src="../../lib/dat.gui/build/dat.gui.js"></script>
+    <script src="../../../build/tofu.js"></script>
+    <script>
+      window.addEventListener('resize', onWindowResize, false);
+
+      var WIDTH = window.innerWidth;
+      var HEIGHT = window.innerHeight;
+      var xrViewer = new Tofu.Viewer({
+        canvas: '#webgl',
+        width: WIDTH,
+        height: HEIGHT,
+      });
+      const layer3d = xrViewer.createLayer(Tofu.XRLayer, {
+        fov: 70,
+        near: 0.01,
+        far: 1000,
+      });
+      layer3d.camera.position.set(0, 10, 50);
+
+      var panoramaCube = new THREE.Mesh(
+        new THREE.BoxGeometry(10, 10, 10),
+        new THREE.MeshBasicMaterial({
+          color: 0xaaaaaa,
+        })
+      );
+      // panoramaCube.animate({
+      //   to: {
+      //     'position.y': 20,
+      //   },
+      //   ease: Tofu.Tween.Ease.InOut,
+      //   duration: 2000,
+      //   infinite: true,
+      //   alternate: true,
+      // });
+      layer3d.add(panoramaCube);
+      layer3d.scene.background = new THREE.Color( 0x05050c );
+      layer3d.scene.fog = new THREE.FogExp2(0x05050c, 0.004);
+
+      var fxaaPass = new Tofu.ShaderPass( THREE.FXAAShader );
+      fxaaPass.uniforms[ "resolution" ].value = new THREE.Vector2( 1 / WIDTH, 1 / HEIGHT );
+
+      var effectBloom = new Tofu.BloomPass( 0.75 );
+      var effectFilm = new Tofu.FilmPass( 0.5, 0.5, 1500, false );
+
+      effectFocus = new Tofu.ShaderPass( Tofu.FocusShader );
+      effectFocus.uniforms[ "screenWidth" ].value = WIDTH;
+      effectFocus.uniforms[ "screenHeight" ].value = HEIGHT;
+
+      xrViewer.addPass( fxaaPass );
+      xrViewer.addPass( effectBloom );
+      xrViewer.addPass( effectFilm );
+      xrViewer.addPass( effectFocus );
+
+      xrViewer.start();
+
+      function onWindowResize() {
+        xrViewer.setSize(window.innerWidth, window.innerHeight);
+      }
+
+      /**
+       * 帧率监控工具
+       */
+      var stats = new Stats();
+      stats.domElement.style.position = 'absolute';
+      stats.domElement.style.top = '0px';
+      document.body.appendChild(stats.domElement);
+      xrViewer.on('postrender', function () {
+        stats.update();
+      })
+    </script>
+
+  </body>
+
+  </html>

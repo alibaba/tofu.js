@@ -80,7 +80,7 @@ class Layer {
       new PlaneBufferGeometry(2, 2),
       new MeshBasicMaterial({
         transparent: true,
-        map: this.renderTarget.texture,
+        map: this.effectPack.renderTarget.texture,
         depthTest: false,
         depthWrite: false,
       })

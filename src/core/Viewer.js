@@ -2,8 +2,8 @@ import {
   WebGLRenderer,
   EventDispatcher,
 } from 'three';
-import EffectComposer from '../postprocessing/EffectComposer';
-// import InteractionManager from 'three.interaction/src/interaction/InteractionManager';
+import EffectComposer from './EffectComposer';
+import InteractionManager from 'three.interaction/src/interaction/InteractionManager';
 // import GraphicsLayer from './GraphicsLayer';
 // import PrimerLayer from './PrimerLayer';
 import LayerCompositor from './LayerCompositor';
@@ -129,6 +129,12 @@ class Viewer extends EventDispatcher {
      * @member {layer}
      */
     this.layers = [];
+
+    /**
+     * 3d-view interaction manager
+     * TODO: should fix interaction bug when vrmode
+     */
+    this.interactionManager = new InteractionManager(this.renderer, this.layers, this.camera);
   }
 
   /**
@@ -202,6 +208,21 @@ class Viewer extends EventDispatcher {
       this.setSV(0, 0, size.width, size.height);
       this.renderLayers({ mode: 'NORMAL' });
     }
+
+    this.layerEffect();
+    this.composition();
+  }
+
+  /**
+   * set render rectangle area
+   * @param {number} x rectangle left-top point x-position
+   * @param {number} y rectangle left-top point y-position
+   * @param {number} width rectangle width
+   * @param {number} height rectangle height
+   */
+  setSV(x, y, width, height) {
+    this.renderer.setScissor(x, y, width, height);
+    this.renderer.setViewport(x, y, width, height);
   }
 
   /**
@@ -292,9 +313,13 @@ class Viewer extends EventDispatcher {
    * @private
    */
   timeline() {
-    const snippet = Date.now() - this.pt;
+    let snippet = Date.now() - this.pt;
+    if (!this.pt || snippet > 200) {
+      this.pt = Date.now();
+      snippet = Date.now() - this.pt;
+    }
     this.pt += snippet;
-    this.snippet = snippet * this.timeScale;
+    this.snippet = snippet;
   }
 
   /**
@@ -461,6 +486,13 @@ class Viewer extends EventDispatcher {
   setPixelRatio(pixelRatio) {
     this.renderer.setPixelRatio(pixelRatio);
     this.setSize(this.width, this.height);
+  }
+
+  createLayer(type, options) {
+    options = Object.assign({ width: this.width, height: this.height }, options);
+    const layer = new type(options);
+    this.add(layer);
+    return layer;
   }
 }
 

@@ -1,13 +1,13 @@
 import { PerspectiveCamera, StereoCamera } from 'three';
 // import InteractionManager from 'three.interaction/src/interaction/InteractionManager';
-import Orienter from '../utils/Orienter';
+import Orienter from '../../utils/Orienter';
 // import Utils from '../utils/Utils';
 import Layer from './Layer';
 
 class XRLayer extends Layer {
   constructor(options) {
     super(options);
-    const { vrsensor, fov = 60, aspect = this.width / this.height, near = 0.1, far = 1000 } = options;
+    const { width, height, vrsensor, fov = 60, aspect = width / height, near = 0.1, far = 1000 } = options;
     /**
      * view-port camera object, a perspective camera
      *
@@ -73,16 +73,14 @@ class XRLayer extends Layer {
   }
 
   /**
-   * set render rectangle area
-   * @param {WebGLRender} renderer rectangle left-top point x-position
-   * @param {number} x rectangle left-top point x-position
-   * @param {number} y rectangle left-top point y-position
-   * @param {number} width rectangle width
-   * @param {number} height rectangle height
+   * resize layer size when viewport has change
+   * @param {number} width layer buffer width
+   * @param {number} height layer buffer height
    */
-  setSV(renderer, x, y, width, height) {
-    renderer.setScissor(x, y, width, height);
-    renderer.setViewport(x, y, width, height);
+  setSize(width, height) {
+    this.effectPack.setSize(width, height);
+    this.camera.aspect = width / height;
+    this.camera.updateProjectionMatrix();
   }
 
   /**
