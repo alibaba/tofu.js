@@ -86,8 +86,6 @@ class Layer {
       })
     );
 
-    this.quad.root = this;
-
     this.interactive = false;
   }
 
@@ -180,6 +178,7 @@ class Layer {
   set zIndex(index) {
     if (this._zIndex !== index) {
       this._zIndex = index;
+      this.quad.renderOrder = index;
       if (this.parent) {
         this.parent.needSort = true;
       }

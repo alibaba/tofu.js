@@ -107,34 +107,42 @@ class ARLayer extends Layer {
 
   /**
    * adjust viewport, when frameWidth frameHeight or renderer.getSize had change
+   * @return {Object} view port
    */
   updateViewport() {
-    const { width, height } = this.renderer.getSize();
+    const { width, height } = this.effectPack;
     const rw = width / this.frameWidth;
     const rh = height / this.frameHeight;
     const ratio = Math.max(rw, rh);
     const rtw = this.frameWidth * ratio;
     const rth = this.frameHeight * ratio;
 
-    let x = 0;
-    let y = 0;
+    let sx = 0;
+    let sy = 0;
 
     if (rw < rh) {
-      x = -(rtw - width) / 2;
+      sx = -(rtw - width) / 2;
     } else if (rw > rh) {
-      y = -(rth - height) / 2;
+      sy = -(rth - height) / 2;
     }
 
-    this.renderer.setViewport(x, y, rtw, rth);
+    // this.renderer.setViewport(sx, sy, rtw, rth);
+    return { sx, sy, rtw, rth };
   }
 
   /**
    * render all scene
    * @param {WebGLRender} renderer renderer context
+   * @param {object} session renderer session
    */
-  render(renderer) {
+  render(renderer, session) {
     if (this.autoClear) this.clear(renderer, this.effectPack.renderTarget);
+    const { sx, sy, rtw, rth } = this.updateViewport();
+    const { x, y, z, w } = session.viewport;
+
+    renderer.setViewport(sx, sy, rtw, rth);
     renderer.render(this.scene, this.camera, this.effectPack.renderTarget);
+    renderer.setViewport(x, y, z, w);
   }
 
   /**

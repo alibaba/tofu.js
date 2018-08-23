@@ -31,6 +31,7 @@ export { default as Viewer } from './core/Viewer';
 // export { default as XRViewer } from './core/XRViewer';
 export { default as Layer } from './core/layer/Layer';
 export { default as ARLayer } from './core/layer/ARLayer';
+export { default as PrimerLayer } from './core/layer/PrimerLayer';
 export { default as XRLayer } from './core/layer/XRLayer';
 
 export { default as Primer } from './extras/primers/Primer';

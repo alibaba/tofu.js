@@ -45,7 +45,7 @@
     name: 'one',
     autoHide: false,
   });
-  var mixer = null;
+
   var glftMagic = new Tofu.GltfMagic({
     url: '../../model/squirrel/scrat/scrat.gltf',
   });
@@ -59,35 +59,36 @@
 
   var WIDTH = window.innerWidth;
   var HEIGHT = window.innerHeight;
-  var arViewer = new Tofu.ARViewer({
-    canvas: 'webar',
+  var arViewer = new Tofu.Viewer({
+    canvas: '#webar',
     width: WIDTH,
     height: HEIGHT,
+  });
+
+  var layer2d = arViewer.createLayer(Tofu.PrimerLayer, {
+    frameWidth: 640,
+    frameHeight: 480,
+  });
+  var layerAr = arViewer.createLayer(Tofu.ARLayer, {
+    fov: 75,
+    near: 0.01,
+    far: 3000,
     frameWidth: 640,
     frameHeight: 480,
   });
 
   var fxaaPass = new Tofu.ShaderPass( THREE.FXAAShader );
-  fxaaPass.uniforms[ "resolution" ].value = new THREE.Vector2( 1 / WIDTH, 1 / HEIGHT );
-  // var hBlur = new Tofu.ShaderPass( THREE.HorizontalBlurShader );
-  // var vBlur = new Tofu.ShaderPass( THREE.VerticalBlurShader );
-  // hBlur.uniforms[ "h" ].value = 1 / WIDTH;
-  // vBlur.uniforms[ "v" ].value = 1 / HEIGHT;
-
+  fxaaPass.uniforms.resolution.value = new THREE.Vector2( 1 / WIDTH, 1 / HEIGHT );
   var effectBloom = new Tofu.BloomPass( 0.75 );
   var effectFilm = new Tofu.FilmPass( 0.5, 0.5, 1500, false );
-
   effectFocus = new Tofu.ShaderPass( Tofu.FocusShader );
-  effectFocus.uniforms[ "screenWidth" ].value = 640;
-  effectFocus.uniforms[ "screenHeight" ].value = 480;
+  effectFocus.uniforms.screenWidth.value = 640;
+  effectFocus.uniforms.screenHeight.value = 480;
 
-  arViewer.compositor.addPass( fxaaPass );
-  // arViewer.compositor.addPass( hBlur );
-  // arViewer.compositor.addPass( vBlur );
-
-  arViewer.compositor.addPass( effectBloom );
-  arViewer.compositor.addPass( effectFilm );
-  arViewer.compositor.addPass( effectFocus );
+  arViewer.addPass( fxaaPass );
+  arViewer.addPass( effectBloom );
+  arViewer.addPass( effectFilm );
+  arViewer.addPass( effectFocus );
 
 
   var viewMatrixTmp = new Float64Array(12);
@@ -96,17 +97,18 @@
 
   var light = new THREE.PointLight(0xffffff);
   light.position.set(400, 500, 100);
-  arViewer.add(light);
+  layerAr.add(light);
   var light = new THREE.PointLight(0xffffff);
   light.position.set(-400, -500, -100);
-  arViewer.add(light);
+  layerAr.add(light);
 
-  arViewer.add(glue);
+  layerAr.add(glue);
 
   var arController = null;
   var video = document.getElementById('v');
 
-  arViewer.addPrimer(new Tofu.TexturePrimer(video, { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat }));
+  var aaa = new Tofu.TexturePrimer(video, { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat });
+  layer2d.add(aaa.pigment);
 
   function tick() {
     if (!arController) {
@@ -116,16 +118,16 @@
     arController.detectMarker(video);
     var markerNum = arController.getMarkerNum();
     if (markerNum > 0) {
-      if (arViewer.tracking) {
+      if (layerAr.tracking) {
         arController.getTransMatSquareCont(0, 1, viewMatrixTmp, viewMatrixTmp);
       } else {
         arController.getTransMatSquare(0 /* Marker index */, 1 /* Marker width */, viewMatrixTmp);
       }
-      arViewer.tracking = true;
+      layerAr.tracking = true;
       arController.transMatToGLMat(viewMatrixTmp, viewMatrix);
-      arViewer.updatePoses([ { name: 'one', matrix: viewMatrix } ]);
+      layerAr.updatePoses([ { name: 'one', matrix: viewMatrix } ]);
     } else {
-      arViewer.tracking = false;
+      layerAr.tracking = false;
     }
   }
 
@@ -138,7 +140,7 @@
   var cameraParam = new ARCameraParam();
   cameraParam.onload = function() {
     arController = new ARController(640, 480, cameraParam);
-    arViewer.updateCameraMatrix(arController.getCameraMatrix());
+    layerAr.updateCameraMatrix(arController.getCameraMatrix());
   };
   cameraParam.load('video/camera_para.dat');
 
@@ -146,10 +148,10 @@
   function onWindowResize() {
     WIDTH = window.innerWidth;
     HEIGHT = window.innerHeight;
-    effectFocus.uniforms[ "screenWidth" ].value = WIDTH;
-    effectFocus.uniforms[ "screenHeight" ].value = HEIGHT;
-    arViewer.renderer.setSize(WIDTH, HEIGHT);
-    arViewer.updateViewport();
+    effectFocus.uniforms.screenWidth.value = WIDTH;
+    effectFocus.uniforms.screenHeight.value = HEIGHT;
+    arViewer.setSize(WIDTH, HEIGHT);
+    // arViewer.updateViewport();
   }
   </script>
 

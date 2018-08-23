@@ -1,6 +1,7 @@
 import {
   WebGLRenderer,
   EventDispatcher,
+  Vector4,
 } from 'three';
 import EffectComposer from './EffectComposer';
 import InteractionLayer from 'three.interaction/src/interaction/InteractionLayer';
@@ -51,13 +52,13 @@ class Viewer extends EventDispatcher {
      * init set pixelRatio
      * @private
      */
-    this.renderer.setPixelRatio(pixelRatio);
+    // this.renderer.setPixelRatio(pixelRatio);
 
     /**
      * init set renderer size
      * @private
      */
-    this.renderer.setSize(width, height, updateStyle);
+    // this.renderer.setSize(width, height, updateStyle);
 
     /**
      * render effect kit to carry render content and some data
@@ -138,6 +139,10 @@ class Viewer extends EventDispatcher {
      */
     this.interactionLayer = new InteractionLayer(this.renderer);
 
+    this.setPixelRatio(pixelRatio, updateStyle);
+
+    this.viewport = new Vector4();
+
     this._vrmode = null;
 
     this.vrmodeOnChange = () => {
@@ -148,6 +153,10 @@ class Viewer extends EventDispatcher {
     };
 
     this.vrmode = vrmode;
+
+    this.session = {
+      viewport: this.viewport,
+    };
   }
 
   /**
@@ -216,6 +225,7 @@ class Viewer extends EventDispatcher {
    * @param {number} height rectangle height
    */
   setSV(x, y, width, height) {
+    this.viewport.set(x, y, width, height);
     this.renderer.setScissor(x, y, width, height);
     this.renderer.setViewport(x, y, width, height);
   }
@@ -228,30 +238,34 @@ class Viewer extends EventDispatcher {
     const size = this.viewBox;
     if (this.vrmode) {
       const hw = size.width / 2;
+      this.session.mode = 'VR';
 
       this.renderer.setScissorTest(true);
 
       this.setSV(0, 0, hw, size.height);
-      this.xrRender({ mode: 'VR', eye: 'LEFT' });
+      this.session.eye = 'LEFT';
+      this.xrRender();
 
       this.setSV(hw, 0, hw, size.height);
-      this.xrRender({ mode: 'VR', eye: 'RIGHT' });
+      this.session.eye = 'RIGHT';
+      this.xrRender();
 
       this.renderer.setScissorTest(false);
     } else {
+      this.session.mode = 'NORMAL';
+      this.session.eye = '';
       this.setSV(0, 0, size.width, size.height);
-      this.xrRender({ mode: 'NORMAL' });
+      this.xrRender();
     }
 
   }
 
   /**
    * render every layer to it's render buffer
-   * @param {object} session a renderer session
    * @private
    */
-  xrRender(session) {
-    this.renderLayers(session);
+  xrRender() {
+    this.renderLayers(this.session);
     this.layerEffect();
     this.composition();
   }
@@ -264,10 +278,10 @@ class Viewer extends EventDispatcher {
   renderLayers(session) {
     if (this.needSort) {
       this._sortList();
-      this._sortLayerQuad();
       this.needSort = false;
     }
-    for (let i = 0; i < this.layers.length; i++) {
+    const ll = this.layers.length;
+    for (let i = 0; i < ll; i++) {
       const layer = this.layers[i];
       if (!layer.isEmpty) layer.render(this.renderer, session);
     }
@@ -361,7 +375,7 @@ class Viewer extends EventDispatcher {
     if (this.ticking) return;
     this.ticking = true;
     this.pt = Date.now();
-    if (this.fps === 60) {
+    if (this.fps >= 60) {
       this.tick();
     } else {
       this.tickFixedFPS();
@@ -386,42 +400,7 @@ class Viewer extends EventDispatcher {
    * @private
    */
   _sortList() {
-    const layers = this.layers;
-    const length = layers.length;
-    let i;
-    let j;
-    let temp;
-    for (i = 0; i < length - 1; i++) {
-      for (j = 0; j < length - 1 - i; j++) {
-        if (layers[j].zIndex > layers[j + 1].zIndex) {
-          temp = layers[j];
-          layers[j] = layers[j + 1];
-          layers[j + 1] = temp;
-        }
-      }
-    }
-  }
-
-  /**
-   * sort layer's quad order, mapping with layerCompositor.scene
-   *
-   * @private
-   */
-  _sortLayerQuad() {
-    const quads = this.layerCompositor.scene.children;
-    const length = quads.length;
-    let i;
-    let j;
-    let temp;
-    for (i = 0; i < length - 1; i++) {
-      for (j = 0; j < length - 1 - i; j++) {
-        if (quads[j].root.zIndex > quads[j + 1].root.zIndex) {
-          temp = quads[j];
-          quads[j] = quads[j + 1];
-          quads[j + 1] = temp;
-        }
-      }
-    }
+    Utils.bubbleSort(this.layers, el => el.zIndex);
   }
 
   /**
@@ -527,7 +506,7 @@ class Viewer extends EventDispatcher {
   }
 
   /**
-   * resize window when viewport has change
+   * resize window when view box has change
    * @param {number} width render buffer width
    * @param {number} height render buffer height
    * @param {boolean} updateStyle update style or not
@@ -543,9 +522,9 @@ class Viewer extends EventDispatcher {
     this.setLayersSize();
   }
 
-  setPixelRatio(pixelRatio) {
+  setPixelRatio(pixelRatio, updateStyle) {
     this.renderer.setPixelRatio(pixelRatio);
-    this.setSize(this.width, this.height);
+    this.setSize(this.width, this.height, updateStyle);
   }
 
   createLayer(layerClass, options) {

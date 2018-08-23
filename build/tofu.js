@@ -321,6 +321,30 @@ var Utils = {
     if (x >= max) return 1;
     x = (x - min) / (max - min);
     return x * x * x * (x * (x * 6 - 15) + 10);
+  },
+
+
+  /**
+   * sort list use bubble sort
+   * @param {array} list list array
+   * @param {function} fn list array
+   */
+  bubbleSort: function bubbleSort(list, fn) {
+    var length = list.length;
+    var i = void 0;
+    var j = void 0;
+    var temp = void 0;
+    for (i = 0; i < length - 1; i++) {
+      for (j = 0; j < length - 1 - i; j++) {
+        var m1 = fn(list[j]);
+        var m2 = fn(list[j + 1]);
+        if (m1 > m2) {
+          temp = list[j];
+          list[j] = list[j + 1];
+          list[j + 1] = temp;
+        }
+      }
+    }
   }
 };
 
@@ -5476,13 +5500,13 @@ var Viewer = function (_EventDispatcher) {
      * init set pixelRatio
      * @private
      */
-    _this.renderer.setPixelRatio(pixelRatio);
+    // this.renderer.setPixelRatio(pixelRatio);
 
     /**
      * init set renderer size
      * @private
      */
-    _this.renderer.setSize(width, height, updateStyle);
+    // this.renderer.setSize(width, height, updateStyle);
 
     /**
      * render effect kit to carry render content and some data
@@ -5563,6 +5587,10 @@ var Viewer = function (_EventDispatcher) {
      */
     _this.interactionLayer = new InteractionLayer(_this.renderer);
 
+    _this.setPixelRatio(pixelRatio, updateStyle);
+
+    _this.viewport = new three.Vector4();
+
     _this._vrmode = null;
 
     _this.vrmodeOnChange = function () {
@@ -5573,6 +5601,10 @@ var Viewer = function (_EventDispatcher) {
     };
 
     _this.vrmode = vrmode;
+
+    _this.session = {
+      viewport: _this.viewport
+    };
     return _this;
   }
 
@@ -5655,6 +5687,7 @@ var Viewer = function (_EventDispatcher) {
   }, {
     key: 'setSV',
     value: function setSV(x, y, width, height) {
+      this.viewport.set(x, y, width, height);
       this.renderer.setScissor(x, y, width, height);
       this.renderer.setViewport(x, y, width, height);
     }
@@ -5670,32 +5703,36 @@ var Viewer = function (_EventDispatcher) {
       var size = this.viewBox;
       if (this.vrmode) {
         var hw = size.width / 2;
+        this.session.mode = 'VR';
 
         this.renderer.setScissorTest(true);
 
         this.setSV(0, 0, hw, size.height);
-        this.xrRender({ mode: 'VR', eye: 'LEFT' });
+        this.session.eye = 'LEFT';
+        this.xrRender();
 
         this.setSV(hw, 0, hw, size.height);
-        this.xrRender({ mode: 'VR', eye: 'RIGHT' });
+        this.session.eye = 'RIGHT';
+        this.xrRender();
 
         this.renderer.setScissorTest(false);
       } else {
+        this.session.mode = 'NORMAL';
+        this.session.eye = '';
         this.setSV(0, 0, size.width, size.height);
-        this.xrRender({ mode: 'NORMAL' });
+        this.xrRender();
       }
     }
 
     /**
      * render every layer to it's render buffer
-     * @param {object} session a renderer session
      * @private
      */
 
   }, {
     key: 'xrRender',
-    value: function xrRender(session) {
-      this.renderLayers(session);
+    value: function xrRender() {
+      this.renderLayers(this.session);
       this.layerEffect();
       this.composition();
     }
@@ -5711,10 +5748,10 @@ var Viewer = function (_EventDispatcher) {
     value: function renderLayers(session) {
       if (this.needSort) {
         this._sortList();
-        this._sortLayerQuad();
         this.needSort = false;
       }
-      for (var i = 0; i < this.layers.length; i++) {
+      var ll = this.layers.length;
+      for (var i = 0; i < ll; i++) {
         var layer = this.layers[i];
         if (!layer.isEmpty) layer.render(this.renderer, session);
       }
@@ -5829,7 +5866,7 @@ var Viewer = function (_EventDispatcher) {
       if (this.ticking) return;
       this.ticking = true;
       this.pt = Date.now();
-      if (this.fps === 60) {
+      if (this.fps >= 60) {
         this.tick();
       } else {
         this.tickFixedFPS();
@@ -5860,45 +5897,9 @@ var Viewer = function (_EventDispatcher) {
   }, {
     key: '_sortList',
     value: function _sortList() {
-      var layers = this.layers;
-      var length = layers.length;
-      var i = void 0;
-      var j = void 0;
-      var temp = void 0;
-      for (i = 0; i < length - 1; i++) {
-        for (j = 0; j < length - 1 - i; j++) {
-          if (layers[j].zIndex > layers[j + 1].zIndex) {
-            temp = layers[j];
-            layers[j] = layers[j + 1];
-            layers[j + 1] = temp;
-          }
-        }
-      }
-    }
-
-    /**
-     * sort layer's quad order, mapping with layerCompositor.scene
-     *
-     * @private
-     */
-
-  }, {
-    key: '_sortLayerQuad',
-    value: function _sortLayerQuad() {
-      var quads = this.layerCompositor.scene.children;
-      var length = quads.length;
-      var i = void 0;
-      var j = void 0;
-      var temp = void 0;
-      for (i = 0; i < length - 1; i++) {
-        for (j = 0; j < length - 1 - i; j++) {
-          if (quads[j].root.zIndex > quads[j + 1].root.zIndex) {
-            temp = quads[j];
-            quads[j] = quads[j + 1];
-            quads[j + 1] = temp;
-          }
-        }
-      }
+      Utils.bubbleSort(this.layers, function (el) {
+        return el.zIndex;
+      });
     }
 
     /**
@@ -6036,7 +6037,7 @@ var Viewer = function (_EventDispatcher) {
     }
 
     /**
-     * resize window when viewport has change
+     * resize window when view box has change
      * @param {number} width render buffer width
      * @param {number} height render buffer height
      * @param {boolean} updateStyle update style or not
@@ -6058,9 +6059,9 @@ var Viewer = function (_EventDispatcher) {
     }
   }, {
     key: 'setPixelRatio',
-    value: function setPixelRatio(pixelRatio) {
+    value: function setPixelRatio(pixelRatio, updateStyle) {
       this.renderer.setPixelRatio(pixelRatio);
-      this.setSize(this.width, this.height);
+      this.setSize(this.width, this.height, updateStyle);
     }
   }, {
     key: 'createLayer',
@@ -6182,8 +6183,6 @@ var Layer = function () {
       depthWrite: false
     }));
 
-    this.quad.root = this;
-
     this.interactive = false;
   }
 
@@ -6303,6 +6302,7 @@ var Layer = function () {
     set: function set$$1(index) {
       if (this._zIndex !== index) {
         this._zIndex = index;
+        this.quad.renderOrder = index;
         if (this.parent) {
           this.parent.needSort = true;
         }
@@ -6456,14 +6456,15 @@ var ARLayer = function (_Layer) {
 
     /**
      * adjust viewport, when frameWidth frameHeight or renderer.getSize had change
+     * @return {Object} view port
      */
 
   }, {
     key: 'updateViewport',
     value: function updateViewport() {
-      var _renderer$getSize = this.renderer.getSize(),
-          width = _renderer$getSize.width,
-          height = _renderer$getSize.height;
+      var _effectPack = this.effectPack,
+          width = _effectPack.width,
+          height = _effectPack.height;
 
       var rw = width / this.frameWidth;
       var rh = height / this.frameHeight;
@@ -6471,28 +6472,46 @@ var ARLayer = function (_Layer) {
       var rtw = this.frameWidth * ratio;
       var rth = this.frameHeight * ratio;
 
-      var x = 0;
-      var y = 0;
+      var sx = 0;
+      var sy = 0;
 
       if (rw < rh) {
-        x = -(rtw - width) / 2;
+        sx = -(rtw - width) / 2;
       } else if (rw > rh) {
-        y = -(rth - height) / 2;
+        sy = -(rth - height) / 2;
       }
 
-      this.renderer.setViewport(x, y, rtw, rth);
+      // this.renderer.setViewport(sx, sy, rtw, rth);
+      return { sx: sx, sy: sy, rtw: rtw, rth: rth };
     }
 
     /**
      * render all scene
      * @param {WebGLRender} renderer renderer context
+     * @param {object} session renderer session
      */
 
   }, {
     key: 'render',
-    value: function render(renderer) {
+    value: function render(renderer, session) {
       if (this.autoClear) this.clear(renderer, this.effectPack.renderTarget);
+
+      var _updateViewport = this.updateViewport(),
+          sx = _updateViewport.sx,
+          sy = _updateViewport.sy,
+          rtw = _updateViewport.rtw,
+          rth = _updateViewport.rth;
+
+      var _session$viewport = session.viewport,
+          x = _session$viewport.x,
+          y = _session$viewport.y,
+          z = _session$viewport.z,
+          w = _session$viewport.w;
+
+
+      renderer.setViewport(sx, sy, rtw, rth);
       renderer.render(this.scene, this.camera, this.effectPack.renderTarget);
+      renderer.setViewport(x, y, z, w);
     }
 
     /**
@@ -6510,6 +6529,120 @@ var ARLayer = function (_Layer) {
     }
   }]);
   return ARLayer;
+}(Layer);
+
+var PrimerLayer = function (_Layer) {
+  inherits(PrimerLayer, _Layer);
+
+  function PrimerLayer(options) {
+    classCallCheck(this, PrimerLayer);
+
+    var _this = possibleConstructorReturn(this, (PrimerLayer.__proto__ || Object.getPrototypeOf(PrimerLayer)).call(this, options));
+
+    var _options$frameWidth = options.frameWidth,
+        frameWidth = _options$frameWidth === undefined ? 480 : _options$frameWidth,
+        _options$frameHeight = options.frameHeight,
+        frameHeight = _options$frameHeight === undefined ? 640 : _options$frameHeight;
+
+    /**
+     * video frame width
+     * @member {Number}
+     */
+
+    _this.frameWidth = frameWidth;
+
+    /**
+     * video frame height
+     * @member {Number}
+     */
+    _this.frameHeight = frameHeight;
+
+    // init update viewport for ar-video-frame
+    _this.updateViewport();
+
+    /**
+     * camera for this 2D context
+     *
+     * @member {OrthographicCamera}
+     */
+    _this.camera = new three.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    return _this;
+  }
+
+  /**
+   * adjust viewport, when frameWidth frameHeight or renderer.getSize had change
+   * @return {Object} view port
+   */
+
+
+  createClass(PrimerLayer, [{
+    key: 'updateViewport',
+    value: function updateViewport() {
+      var _effectPack = this.effectPack,
+          width = _effectPack.width,
+          height = _effectPack.height;
+
+      var rw = width / this.frameWidth;
+      var rh = height / this.frameHeight;
+      var ratio = Math.max(rw, rh);
+      var rtw = this.frameWidth * ratio;
+      var rth = this.frameHeight * ratio;
+
+      var sx = 0;
+      var sy = 0;
+
+      if (rw < rh) {
+        sx = -(rtw - width) / 2;
+      } else if (rw > rh) {
+        sy = -(rth - height) / 2;
+      }
+
+      // this.renderer.setViewport(sx, sy, rtw, rth);
+      return { sx: sx, sy: sy, rtw: rtw, rth: rth };
+    }
+
+    /**
+     * render all scene
+     * @param {WebGLRender} renderer renderer context
+     * @param {object} session renderer session
+     */
+
+  }, {
+    key: 'render',
+    value: function render(renderer, session) {
+      if (this.autoClear) this.clear(renderer, this.effectPack.renderTarget);
+
+      var _updateViewport = this.updateViewport(),
+          sx = _updateViewport.sx,
+          sy = _updateViewport.sy,
+          rtw = _updateViewport.rtw,
+          rth = _updateViewport.rth;
+
+      var _session$viewport = session.viewport,
+          x = _session$viewport.x,
+          y = _session$viewport.y,
+          z = _session$viewport.z,
+          w = _session$viewport.w;
+
+
+      renderer.setViewport(sx, sy, rtw, rth);
+      renderer.render(this.scene, this.camera, this.effectPack.renderTarget);
+      renderer.setViewport(x, y, z, w);
+    }
+
+    /**
+     * resize layer size when viewport has change
+     * @param {number} width layer buffer width
+     * @param {number} height layer buffer height
+     */
+
+  }, {
+    key: 'setSize',
+    value: function setSize(width, height) {
+      this.effectPack.setSize(width, height);
+    }
+  }]);
+  return PrimerLayer;
 }(Layer);
 
 var XRLayer = function (_Layer) {
@@ -10093,6 +10226,7 @@ exports.ARGlue = ARGlue;
 exports.Viewer = Viewer;
 exports.Layer = Layer;
 exports.ARLayer = ARLayer;
+exports.PrimerLayer = PrimerLayer;
 exports.XRLayer = XRLayer;
 exports.Primer = Primer;
 exports.CameraPrimer = CameraPrimer;
