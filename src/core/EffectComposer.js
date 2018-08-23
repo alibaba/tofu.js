@@ -38,13 +38,8 @@ export default class EffectComposer {
   }
 
   render(renderer, effectPack, toScreen) {
-    if (this.autoClear) {
-      renderer.setRenderTarget(this.readBuffer);
-      renderer.clear(renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil);
-    }
-
     const il = effectPack.passes.length;
-    const delta = effectPack.delta || 10;
+    const delta = effectPack.delta;
 
     // copy content to readBuffer
     this.copyPass.render(renderer, this.readBuffer, effectPack.renderTarget);

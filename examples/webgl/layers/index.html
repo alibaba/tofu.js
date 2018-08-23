@@ -38,6 +38,7 @@
         canvas: '#webgl',
         width: WIDTH,
         height: HEIGHT,
+        vrmode: true,
       });
       const layer3d = xrViewer.createLayer(Tofu.XRLayer, {
         fov: 70,
@@ -52,17 +53,17 @@
           color: 0xaaaaaa,
         })
       );
-      // panoramaCube.animate({
-      //   to: {
-      //     'position.y': 20,
-      //   },
-      //   ease: Tofu.Tween.Ease.InOut,
-      //   duration: 2000,
-      //   infinite: true,
-      //   alternate: true,
-      // });
+      panoramaCube.animate({
+        to: {
+          'position.y': 20,
+        },
+        ease: Tofu.Tween.Ease.InOut,
+        duration: 2000,
+        infinite: true,
+        alternate: true,
+      });
       layer3d.add(panoramaCube);
-      layer3d.scene.background = new THREE.Color( 0x05050c );
+      layer3d.scene.background = new THREE.Color( 0x050511 );
       layer3d.scene.fog = new THREE.FogExp2(0x05050c, 0.004);
 
       var fxaaPass = new Tofu.ShaderPass( THREE.FXAAShader );

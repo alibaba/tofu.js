@@ -16,6 +16,9 @@ import Utils from '../utils/Utils';
  * @extends EventDispatcher
  * @param {Object} options config for `Viewer` render view-port
  * @param {canvas} options.canvas `canvas-dom` or canvas `css-selector`
+ * @param {Number} [options.vrmode=false] whether init with vrmode.
+ * @param {Number} [options.updateStyle=false] need update canvas style size.
+ * @param {Number} [options.pixelRatio=1] render buffer resolution.
  * @param {Boolean} [options.autoClear=true] whether the renderer should automatically clear its output before rendering a frame.
  * @param {Boolean} [options.alpha=false] whether the canvas contains an alpha (transparency) buffer or not.
  * @param {Boolean} [options.antialias=false] whether to perform antialiasing.
@@ -28,10 +31,9 @@ import Utils from '../utils/Utils';
  */
 class Viewer extends EventDispatcher {
   constructor(options) {
-
     super();
 
-    const { pixelRatio = 1, width = 300, height = 150, updateStyle = false } = options;
+    const { pixelRatio = 1, width = 300, height = 150, updateStyle = false, vrmode = false } = options;
 
     this.width = width;
 
@@ -135,6 +137,15 @@ class Viewer extends EventDispatcher {
      * TODO: should fix interaction bug when vrmode
      */
     this.interactionManager = new InteractionManager(this.renderer, this.layers, this.camera);
+
+    this._vrmode = null;
+
+    this.vrmodeOnChange = () => {
+      this.setComposerSize();
+      this.setLayersSize();
+    };
+
+    this.vrmode = vrmode;
   }
 
   /**
@@ -187,30 +198,12 @@ class Viewer extends EventDispatcher {
   }
 
   /**
-   * render all 3d stage, should be overwrite by sub-class
+   * clear framebuffer
+   * @param {WebGLRenderTarget} renderTarget clear which render target
    */
-  render() {
-    const size = this.viewBox;
-    if (this.vrmode) {
-      const hw = size.width / 2;
-      this.updateStereo();
-
-      this.renderer.setScissorTest(true);
-
-      this.setSV(0, 0, hw, size.height);
-      this.renderLayers({ mode: 'VR', eye: 'LEFT' });
-
-      this.setSV(hw, 0, hw, size.height);
-      this.renderLayers({ mode: 'VR', eye: 'RIGHT' });
-
-      this.renderer.setScissorTest(false);
-    } else {
-      this.setSV(0, 0, size.width, size.height);
-      this.renderLayers({ mode: 'NORMAL' });
-    }
-
-    this.layerEffect();
-    this.composition();
+  clear(renderTarget) {
+    this.renderer.setRenderTarget(renderTarget);
+    this.renderer.clear(this.renderer.autoClearColor, this.renderer.autoClearDepth, this.renderer.autoClearStencil);
   }
 
   /**
@@ -223,6 +216,42 @@ class Viewer extends EventDispatcher {
   setSV(x, y, width, height) {
     this.renderer.setScissor(x, y, width, height);
     this.renderer.setViewport(x, y, width, height);
+  }
+
+  /**
+   * render all 3d stage, should be overwrite by sub-class
+   */
+  render() {
+    if (this.autoClear) this.clear(null);
+    const size = this.viewBox;
+    if (this.vrmode) {
+      const hw = size.width / 2;
+
+      this.renderer.setScissorTest(true);
+
+      this.setSV(0, 0, hw, size.height);
+      this.xrRender({ mode: 'VR', eye: 'LEFT' });
+
+      this.setSV(hw, 0, hw, size.height);
+      this.xrRender({ mode: 'VR', eye: 'RIGHT' });
+
+      this.renderer.setScissorTest(false);
+    } else {
+      this.setSV(0, 0, size.width, size.height);
+      this.xrRender({ mode: 'NORMAL' });
+    }
+
+  }
+
+  /**
+   * render every layer to it's render buffer
+   * @param {object} session a renderer session
+   * @private
+   */
+  xrRender(session) {
+    this.renderLayers(session);
+    this.layerEffect();
+    this.composition();
   }
 
   /**
@@ -415,6 +444,7 @@ class Viewer extends EventDispatcher {
       layer.parent = this;
       this.layers.push(layer);
       this.layerCompositor.add(layer.quad);
+      this.setLayerSize(layer);
       this.needSort = true;
     } else {
       console.error('Compositor.add: layer not an instance of Layer.', layer);
@@ -462,11 +492,32 @@ class Viewer extends EventDispatcher {
     this.effectPack.insertPass.apply(this.effectPack, arguments);
   }
 
-  setLayersSize(width, height) {
+  getPortSize() {
+    let { width, height } = this.viewBox;
+    if (this.vrmode) {
+      width = width / 2;
+      height = height / 2;
+    }
+    return { width, height };
+  }
+
+  setLayersSize() {
+    const { width, height } = this.getPortSize();
     const l = this.layers.length;
     for (let i = 0; i < l; i++) {
-      this.layers[i].setSize(width, height);
+      const layer = this.layers[i];
+      layer.setSize(width, height);
     }
+  }
+
+  setLayerSize(layer) {
+    const { width, height } = this.getPortSize();
+    layer.setSize(width, height);
+  }
+
+  setComposerSize() {
+    const { width, height } = this.getPortSize();
+    this.effectComposer.setSize(width, height);
   }
 
   /**
@@ -476,11 +527,13 @@ class Viewer extends EventDispatcher {
    * @param {boolean} updateStyle update style or not
    */
   setSize(width, height, updateStyle = false) {
+    this.width = width;
+    this.height = height;
     this.renderer.setSize(width, height, updateStyle);
     this.viewBox = this.renderer.getDrawingBufferSize();
 
-    this.effectComposer.setSize(this.viewBox.width, this.viewBox.height);
-    this.setLayersSize(this.viewBox.width, this.viewBox.height);
+    this.setComposerSize();
+    this.setLayersSize();
   }
 
   setPixelRatio(pixelRatio) {
@@ -488,11 +541,30 @@ class Viewer extends EventDispatcher {
     this.setSize(this.width, this.height);
   }
 
-  createLayer(type, options) {
-    options = Object.assign({ width: this.width, height: this.height }, options);
-    const layer = new type(options);
+  createLayer(layerClass, options) {
+    const { width, height } = this.getPortSize();
+    options = Object.assign({ width, height }, options);
+    const layer = new layerClass(options);
     this.add(layer);
     return layer;
+  }
+
+  /**
+   * getter whether scene interactively or not
+   */
+  get vrmode() {
+    return this._vrmode;
+  }
+
+  /**
+   * setter whether scene interactively or not
+   * @param {Boolean} value is interactively ?
+   */
+  set vrmode(value) {
+    if (value !== this.vrmode) {
+      this._vrmode = value;
+      this.vrmodeOnChange();
+    }
   }
 }
 

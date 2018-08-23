@@ -59,12 +59,10 @@ class XRLayer extends Layer {
    * @param {object} session renderer session
    */
   render(renderer, session) {
-    if (this.autoClear) {
-      renderer.setRenderTarget(this.effectPack.renderTarget);
-      renderer.clear(renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil);
-    }
+    if (this.autoClear) this.clear(renderer, this.effectPack.renderTarget);
 
     if (session.mode === 'VR') {
+      this.updateStereo();
       const camera = session.eye === 'LEFT' ? this.stereo.cameraL : this.stereo.cameraR;
       renderer.render(this.scene, camera, this.effectPack.renderTarget);
     } else {

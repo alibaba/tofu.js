@@ -122,11 +122,19 @@ class Layer {
   }
 
   render(renderer) {
-    if (this.autoClear) {
-      renderer.setRenderTarget(this.effectPack.renderTarget);
-      renderer.clear(renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil);
-    }
+    if (this.autoClear) this.clear(renderer, this.effectPack.renderTarget);
+
     renderer.render(this.scene, this.camera, this.effectPack.renderTarget);
+  }
+
+  /**
+   * clear framebuffer
+   * @param {WebGLRender} renderer renderer from view
+   * @param {WebGLRenderTarget} renderTarget clear which render target
+   */
+  clear(renderer, renderTarget) {
+    renderer.setRenderTarget(renderTarget);
+    renderer.clear(renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil);
   }
 
   /**

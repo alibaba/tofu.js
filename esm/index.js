@@ -1770,71 +1770,6 @@ var Orienter = function (_EventDispatcher) {
   return Orienter;
 }(EventDispatcher);
 
-var ARGlue = function (_Object3D) {
-  inherits(ARGlue, _Object3D);
-
-  function ARGlue(options) {
-    classCallCheck(this, ARGlue);
-
-    var _this = possibleConstructorReturn(this, (ARGlue.__proto__ || Object.getPrototypeOf(ARGlue)).call(this));
-
-    options = options || {};
-
-    /**
-     * unique name in all ar-glue object
-     *
-     * @member {String}
-     */
-    _this.name = options.name;
-
-    /**
-     * whether auto-hide when marker have not detected
-     *
-     * @member {Boolean}
-     */
-    _this.autoHide = Utils.isBoolean(options.autoHide) ? options.autoHide : true;
-
-    /**
-     * close this object matrixAutoUpdate, just recive matrix from `UC-AR`
-     *
-     * @member {Boolean}
-     */
-    _this.matrixAutoUpdate = false;
-
-    /**
-     * class type, a mark to distinguish ar-glue and normal display-object
-     *
-     * @member {String}
-     */
-    _this.type = 'ARGlue';
-
-    if (!options.name) {
-      console.error('ARGlue: this glue must have a name');
-    }
-    return _this;
-  }
-
-  /**
-   * update this glue pose matrix
-   * @param {Array} matrix pose matrix
-   * @param {Boolean} isDetected whether detected at this tick
-   */
-
-
-  createClass(ARGlue, [{
-    key: 'updatePose',
-    value: function updatePose(matrix, isDetected) {
-      if (this.autoHide && !isDetected) {
-        this.visible = false;
-      } else {
-        this.visible = true;
-      }
-      this.matrix.fromArray(matrix);
-    }
-  }]);
-  return ARGlue;
-}(Object3D);
-
 /* eslint no-unused-vars: 0 */
 
 var Pass = function () {
@@ -2700,6 +2635,71 @@ var FocusShader = {
   fragmentShader: "\n  uniform float screenWidth;\n  uniform float screenHeight;\n  uniform float sampleDistance;\n  uniform float waveFactor;\n\n  uniform sampler2D tDiffuse;\n\n  varying vec2 vUv;\n\n  void main() {\n\n    vec4 color, org, tmp, add;\n    float sample_dist, f;\n    vec2 vin;\n    vec2 uv = vUv;\n\n    add = color = org = texture2D( tDiffuse, uv );\n\n    vin = ( uv - vec2( 0.5 ) ) * vec2( 1.4 );\n    sample_dist = dot( vin, vin ) * 2.0;\n\n    f = ( waveFactor * 100.0 + sample_dist ) * sampleDistance * 4.0;\n\n    vec2 sampleSize = vec2(  1.0 / screenWidth, 1.0 / screenHeight ) * vec2( f );\n\n    add += tmp = texture2D( tDiffuse, uv + vec2( 0.111964, 0.993712 ) * sampleSize );\n    if( tmp.b < color.b ) color = tmp;\n\n    add += tmp = texture2D( tDiffuse, uv + vec2( 0.846724, 0.532032 ) * sampleSize );\n    if( tmp.b < color.b ) color = tmp;\n\n    add += tmp = texture2D( tDiffuse, uv + vec2( 0.943883, -0.330279 ) * sampleSize );\n    if( tmp.b < color.b ) color = tmp;\n\n    add += tmp = texture2D( tDiffuse, uv + vec2( 0.330279, -0.943883 ) * sampleSize );\n    if( tmp.b < color.b ) color = tmp;\n\n    add += tmp = texture2D( tDiffuse, uv + vec2( -0.532032, -0.846724 ) * sampleSize );\n    if( tmp.b < color.b ) color = tmp;\n\n    add += tmp = texture2D( tDiffuse, uv + vec2( -0.993712, -0.111964 ) * sampleSize );\n    if( tmp.b < color.b ) color = tmp;\n\n    add += tmp = texture2D( tDiffuse, uv + vec2( -0.707107, 0.707107 ) * sampleSize );\n    if( tmp.b < color.b ) color = tmp;\n\n    color = color * vec4( 2.0 ) - ( add / vec4( 8.0 ) );\n    color = color + ( add / vec4( 8.0 ) - color ) * ( vec4( 1.0 ) - vec4( sample_dist * 0.5 ) );\n\n    gl_FragColor = vec4( color.rgb * color.rgb * vec3( 0.95 ) + color.rgb, 1.0 );\n\n  }"
 };
 
+var ARGlue = function (_Object3D) {
+  inherits(ARGlue, _Object3D);
+
+  function ARGlue(options) {
+    classCallCheck(this, ARGlue);
+
+    var _this = possibleConstructorReturn(this, (ARGlue.__proto__ || Object.getPrototypeOf(ARGlue)).call(this));
+
+    options = options || {};
+
+    /**
+     * unique name in all ar-glue object
+     *
+     * @member {String}
+     */
+    _this.name = options.name;
+
+    /**
+     * whether auto-hide when marker have not detected
+     *
+     * @member {Boolean}
+     */
+    _this.autoHide = Utils.isBoolean(options.autoHide) ? options.autoHide : true;
+
+    /**
+     * close this object matrixAutoUpdate, just recive matrix from `UC-AR`
+     *
+     * @member {Boolean}
+     */
+    _this.matrixAutoUpdate = false;
+
+    /**
+     * class type, a mark to distinguish ar-glue and normal display-object
+     *
+     * @member {String}
+     */
+    _this.type = 'ARGlue';
+
+    if (!options.name) {
+      console.error('ARGlue: this glue must have a name');
+    }
+    return _this;
+  }
+
+  /**
+   * update this glue pose matrix
+   * @param {Array} matrix pose matrix
+   * @param {Boolean} isDetected whether detected at this tick
+   */
+
+
+  createClass(ARGlue, [{
+    key: 'updatePose',
+    value: function updatePose(matrix, isDetected) {
+      if (this.autoHide && !isDetected) {
+        this.visible = false;
+      } else {
+        this.visible = true;
+      }
+      this.matrix.fromArray(matrix);
+    }
+  }]);
+  return ARGlue;
+}(Object3D);
+
 var parameters = {
   minFilter: LinearFilter,
   magFilter: LinearFilter,
@@ -2743,13 +2743,8 @@ var EffectComposer = function () {
   }, {
     key: 'render',
     value: function render(renderer, effectPack, toScreen) {
-      if (this.autoClear) {
-        renderer.setRenderTarget(this.readBuffer);
-        renderer.clear(renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil);
-      }
-
       var il = effectPack.passes.length;
-      var delta = effectPack.delta || 10;
+      var delta = effectPack.delta;
 
       // copy content to readBuffer
       this.copyPass.render(renderer, this.readBuffer, effectPack.renderTarget);
@@ -5406,6 +5401,27 @@ var EffectPack = function () {
   return EffectPack;
 }();
 
+// import GraphicsLayer from './GraphicsLayer';
+// import PrimerLayer from './PrimerLayer';
+/**
+ * a `UC-AR` renderer framework, help you building AR-APP fastly
+ * @extends EventDispatcher
+ * @param {Object} options config for `Viewer` render view-port
+ * @param {canvas} options.canvas `canvas-dom` or canvas `css-selector`
+ * @param {Number} [options.vrmode=false] whether init with vrmode.
+ * @param {Number} [options.updateStyle=false] need update canvas style size.
+ * @param {Number} [options.pixelRatio=1] render buffer resolution.
+ * @param {Boolean} [options.autoClear=true] whether the renderer should automatically clear its output before rendering a frame.
+ * @param {Boolean} [options.alpha=false] whether the canvas contains an alpha (transparency) buffer or not.
+ * @param {Boolean} [options.antialias=false] whether to perform antialiasing.
+ * @param {String} [options.precision='highp'] Shader precision, Can be `highp`, `mediump` or `lowp`.
+ * @param {Boolean} [options.premultipliedAlpha=true] whether the renderer will assume that colors have premultiplied alpha.
+ * @param {Boolean} [options.stencil=true] whether the drawing buffer has a stencil buffer of at least 8 bits.
+ * @param {Boolean} [options.preserveDrawingBuffer=false] whether to preserve the buffers until manually cleared or overwritten.
+ * @param {Boolean} [options.depth=true] whether the drawing buffer has a depth buffer of at least 16 bits.
+ * @param {Boolean} [options.logarithmicDepthBuffer] whether to use a logarithmic depth buffer.
+ */
+
 var Viewer = function (_EventDispatcher) {
   inherits(Viewer, _EventDispatcher);
 
@@ -5421,7 +5437,9 @@ var Viewer = function (_EventDispatcher) {
         _options$height = options.height,
         height = _options$height === undefined ? 150 : _options$height,
         _options$updateStyle = options.updateStyle,
-        updateStyle = _options$updateStyle === undefined ? false : _options$updateStyle;
+        updateStyle = _options$updateStyle === undefined ? false : _options$updateStyle,
+        _options$vrmode = options.vrmode,
+        vrmode = _options$vrmode === undefined ? false : _options$vrmode;
 
 
     _this.width = width;
@@ -5526,6 +5544,15 @@ var Viewer = function (_EventDispatcher) {
      * TODO: should fix interaction bug when vrmode
      */
     _this.interactionManager = new InteractionManager(_this.renderer, _this.layers, _this.camera);
+
+    _this._vrmode = null;
+
+    _this.vrmodeOnChange = function () {
+      _this.setComposerSize();
+      _this.setLayersSize();
+    };
+
+    _this.vrmode = vrmode;
     return _this;
   }
 
@@ -5586,33 +5613,15 @@ var Viewer = function (_EventDispatcher) {
     }
 
     /**
-     * render all 3d stage, should be overwrite by sub-class
+     * clear framebuffer
+     * @param {WebGLRenderTarget} renderTarget clear which render target
      */
 
   }, {
-    key: 'render',
-    value: function render() {
-      var size = this.viewBox;
-      if (this.vrmode) {
-        var hw = size.width / 2;
-        this.updateStereo();
-
-        this.renderer.setScissorTest(true);
-
-        this.setSV(0, 0, hw, size.height);
-        this.renderLayers({ mode: 'VR', eye: 'LEFT' });
-
-        this.setSV(hw, 0, hw, size.height);
-        this.renderLayers({ mode: 'VR', eye: 'RIGHT' });
-
-        this.renderer.setScissorTest(false);
-      } else {
-        this.setSV(0, 0, size.width, size.height);
-        this.renderLayers({ mode: 'NORMAL' });
-      }
-
-      this.layerEffect();
-      this.composition();
+    key: 'clear',
+    value: function clear(renderTarget) {
+      this.renderer.setRenderTarget(renderTarget);
+      this.renderer.clear(this.renderer.autoClearColor, this.renderer.autoClearDepth, this.renderer.autoClearStencil);
     }
 
     /**
@@ -5628,6 +5637,47 @@ var Viewer = function (_EventDispatcher) {
     value: function setSV(x, y, width, height) {
       this.renderer.setScissor(x, y, width, height);
       this.renderer.setViewport(x, y, width, height);
+    }
+
+    /**
+     * render all 3d stage, should be overwrite by sub-class
+     */
+
+  }, {
+    key: 'render',
+    value: function render() {
+      if (this.autoClear) this.clear(null);
+      var size = this.viewBox;
+      if (this.vrmode) {
+        var hw = size.width / 2;
+
+        this.renderer.setScissorTest(true);
+
+        this.setSV(0, 0, hw, size.height);
+        this.xrRender({ mode: 'VR', eye: 'LEFT' });
+
+        this.setSV(hw, 0, hw, size.height);
+        this.xrRender({ mode: 'VR', eye: 'RIGHT' });
+
+        this.renderer.setScissorTest(false);
+      } else {
+        this.setSV(0, 0, size.width, size.height);
+        this.xrRender({ mode: 'NORMAL' });
+      }
+    }
+
+    /**
+     * render every layer to it's render buffer
+     * @param {object} session a renderer session
+     * @private
+     */
+
+  }, {
+    key: 'xrRender',
+    value: function xrRender(session) {
+      this.renderLayers(session);
+      this.layerEffect();
+      this.composition();
     }
 
     /**
@@ -5856,6 +5906,7 @@ var Viewer = function (_EventDispatcher) {
         layer.parent = this;
         this.layers.push(layer);
         this.layerCompositor.add(layer.quad);
+        this.setLayerSize(layer);
         this.needSort = true;
       } else {
         console.error('Compositor.add: layer not an instance of Layer.', layer);
@@ -5912,12 +5963,48 @@ var Viewer = function (_EventDispatcher) {
       this.effectPack.insertPass.apply(this.effectPack, arguments);
     }
   }, {
+    key: 'getPortSize',
+    value: function getPortSize() {
+      var _viewBox = this.viewBox,
+          width = _viewBox.width,
+          height = _viewBox.height;
+
+      if (this.vrmode) {
+        width = width / 2;
+        height = height / 2;
+      }
+      return { width: width, height: height };
+    }
+  }, {
     key: 'setLayersSize',
-    value: function setLayersSize(width, height) {
+    value: function setLayersSize() {
+      var _getPortSize = this.getPortSize(),
+          width = _getPortSize.width,
+          height = _getPortSize.height;
+
       var l = this.layers.length;
       for (var i = 0; i < l; i++) {
-        this.layers[i].setSize(width, height);
+        var layer = this.layers[i];
+        layer.setSize(width, height);
       }
+    }
+  }, {
+    key: 'setLayerSize',
+    value: function setLayerSize(layer) {
+      var _getPortSize2 = this.getPortSize(),
+          width = _getPortSize2.width,
+          height = _getPortSize2.height;
+
+      layer.setSize(width, height);
+    }
+  }, {
+    key: 'setComposerSize',
+    value: function setComposerSize() {
+      var _getPortSize3 = this.getPortSize(),
+          width = _getPortSize3.width,
+          height = _getPortSize3.height;
+
+      this.effectComposer.setSize(width, height);
     }
 
     /**
@@ -5932,11 +6019,13 @@ var Viewer = function (_EventDispatcher) {
     value: function setSize(width, height) {
       var updateStyle = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
+      this.width = width;
+      this.height = height;
       this.renderer.setSize(width, height, updateStyle);
       this.viewBox = this.renderer.getDrawingBufferSize();
 
-      this.effectComposer.setSize(this.viewBox.width, this.viewBox.height);
-      this.setLayersSize(this.viewBox.width, this.viewBox.height);
+      this.setComposerSize();
+      this.setLayersSize();
     }
   }, {
     key: 'setPixelRatio',
@@ -5946,11 +6035,37 @@ var Viewer = function (_EventDispatcher) {
     }
   }, {
     key: 'createLayer',
-    value: function createLayer(type, options) {
-      options = Object.assign({ width: this.width, height: this.height }, options);
-      var layer = new type(options);
+    value: function createLayer(layerClass, options) {
+      var _getPortSize4 = this.getPortSize(),
+          width = _getPortSize4.width,
+          height = _getPortSize4.height;
+
+      options = Object.assign({ width: width, height: height }, options);
+      var layer = new layerClass(options);
       this.add(layer);
       return layer;
+    }
+
+    /**
+     * getter whether scene interactively or not
+     */
+
+  }, {
+    key: 'vrmode',
+    get: function get$$1() {
+      return this._vrmode;
+    }
+
+    /**
+     * setter whether scene interactively or not
+     * @param {Boolean} value is interactively ?
+     */
+    ,
+    set: function set$$1(value) {
+      if (value !== this.vrmode) {
+        this._vrmode = value;
+        this.vrmodeOnChange();
+      }
     }
   }]);
   return Viewer;
@@ -6080,11 +6195,22 @@ var Layer = function () {
   }, {
     key: 'render',
     value: function render(renderer) {
-      if (this.autoClear) {
-        renderer.setRenderTarget(this.effectPack.renderTarget);
-        renderer.clear(renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil);
-      }
+      if (this.autoClear) this.clear(renderer, this.effectPack.renderTarget);
+
       renderer.render(this.scene, this.camera, this.effectPack.renderTarget);
+    }
+
+    /**
+     * clear framebuffer
+     * @param {WebGLRender} renderer renderer from view
+     * @param {WebGLRenderTarget} renderTarget clear which render target
+     */
+
+  }, {
+    key: 'clear',
+    value: function clear(renderer, renderTarget) {
+      renderer.setRenderTarget(renderTarget);
+      renderer.clear(renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil);
     }
 
     /**
@@ -6159,6 +6285,196 @@ var Layer = function () {
   }]);
   return Layer;
 }();
+
+var ARLayer = function (_Layer) {
+  inherits(ARLayer, _Layer);
+
+  function ARLayer(options) {
+    classCallCheck(this, ARLayer);
+
+    var _this = possibleConstructorReturn(this, (ARLayer.__proto__ || Object.getPrototypeOf(ARLayer)).call(this, options));
+
+    var _options$frameWidth = options.frameWidth,
+        frameWidth = _options$frameWidth === undefined ? 480 : _options$frameWidth,
+        _options$frameHeight = options.frameHeight,
+        frameHeight = _options$frameHeight === undefined ? 640 : _options$frameHeight;
+
+    /**
+     * video frame width
+     * @member {Number}
+     */
+
+    _this.frameWidth = frameWidth;
+
+    /**
+     * video frame height
+     * @member {Number}
+     */
+    _this.frameHeight = frameHeight;
+
+    // init update viewport for ar-video-frame
+    _this.updateViewport();
+
+    /**
+     * view-port camera object, a perspective camera
+     *
+     * @member {PerspectiveCamera}
+     */
+    _this.camera = new PerspectiveCamera();
+    _this.camera.matrixAutoUpdate = false;
+
+    /**
+     * tracking object `<markerName-arGlue>` map
+     *
+     * @member {Object}
+     */
+    _this.ar_map = {};
+    return _this;
+  }
+
+  /**
+   * add display-object like `ARGlue` or `THREE.Object3D` object
+   *
+   * @param {ARGlue|THREE.Object3D} object display-object which you want show
+   * @return {this} this
+   */
+
+
+  createClass(ARLayer, [{
+    key: 'add',
+    value: function add(object) {
+      if (arguments.length > 1) {
+        for (var i = 0; i < arguments.length; i++) {
+          this.add(arguments[i]);
+        }
+        return this;
+      }
+
+      if (object.type === 'ARGlue') {
+        var name = object.name;
+        this.ar_map[name] = object;
+      }
+      this.scene.add(object);
+      return this;
+    }
+
+    /**
+     * remove `ARGlue` or `THREE.Object3D` object
+     *
+     * @param {ARGlue|THREE.Object3D} object display-object which you had add before
+     * @return {this} this
+     */
+
+  }, {
+    key: 'remove',
+    value: function remove(object) {
+      if (arguments.length > 1) {
+        for (var i = 0; i < arguments.length; i++) {
+          this.remove(arguments[i]);
+        }
+        return this;
+      }
+
+      if (object.type === 'ARGlue') {
+        var name = object.name;
+        this.ar_map[name] = null;
+      }
+      this.scene.remove(object);
+      return this;
+    }
+
+    /**
+     * update tracking-display-object's pose state, poses get from `UC-AR`
+     *
+     * @param {Array} poses poses matrix array
+     */
+
+  }, {
+    key: 'updatePoses',
+    value: function updatePoses(poses) {
+      var _this2 = this;
+
+      poses.forEach(function (_ref) {
+        var name = _ref.name,
+            matrix = _ref.matrix,
+            isDetected = _ref.isDetected;
+
+        var glue = _this2.ar_map[name];
+        if (glue) {
+          glue.updatePose(matrix, isDetected);
+        }
+      });
+    }
+
+    /**
+     * update camera internal parama matrix, this matrix get from `UC-AR`
+     *
+     * @param {Array} matrix 4*4 matrix
+     */
+
+  }, {
+    key: 'updateCameraMatrix',
+    value: function updateCameraMatrix(matrix) {
+      this.camera.projectionMatrix.fromArray(matrix);
+    }
+
+    /**
+     * adjust viewport, when frameWidth frameHeight or renderer.getSize had change
+     */
+
+  }, {
+    key: 'updateViewport',
+    value: function updateViewport() {
+      var _renderer$getSize = this.renderer.getSize(),
+          width = _renderer$getSize.width,
+          height = _renderer$getSize.height;
+
+      var rw = width / this.frameWidth;
+      var rh = height / this.frameHeight;
+      var ratio = Math.max(rw, rh);
+      var rtw = this.frameWidth * ratio;
+      var rth = this.frameHeight * ratio;
+
+      var x = 0;
+      var y = 0;
+
+      if (rw < rh) {
+        x = -(rtw - width) / 2;
+      } else if (rw > rh) {
+        y = -(rth - height) / 2;
+      }
+
+      this.renderer.setViewport(x, y, rtw, rth);
+    }
+
+    /**
+     * render all scene
+     * @param {WebGLRender} renderer renderer context
+     */
+
+  }, {
+    key: 'render',
+    value: function render(renderer) {
+      if (this.autoClear) this.clear(renderer, this.effectPack.renderTarget);
+      renderer.render(this.scene, this.camera, this.effectPack.renderTarget);
+    }
+
+    /**
+     * resize layer size when viewport has change
+     * @param {number} width layer buffer width
+     * @param {number} height layer buffer height
+     */
+
+  }, {
+    key: 'setSize',
+    value: function setSize(width, height) {
+      this.effectPack.setSize(width, height);
+      // this.camera.aspect = width / height;
+      // this.camera.updateProjectionMatrix();
+    }
+  }]);
+  return ARLayer;
+}(Layer);
 
 var XRLayer = function (_Layer) {
   inherits(XRLayer, _Layer);
@@ -6241,12 +6557,10 @@ var XRLayer = function (_Layer) {
   }, {
     key: 'render',
     value: function render(renderer, session) {
-      if (this.autoClear) {
-        renderer.setRenderTarget(this.effectPack.renderTarget);
-        renderer.clear(renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil);
-      }
+      if (this.autoClear) this.clear(renderer, this.effectPack.renderTarget);
 
       if (session.mode === 'VR') {
+        this.updateStereo();
         var camera = session.eye === 'LEFT' ? this.stereo.cameraL : this.stereo.cameraR;
         renderer.render(this.scene, camera, this.effectPack.renderTarget);
       } else {
@@ -9742,6 +10056,6 @@ var GltfMagic = function (_EventDispatcher) {
   return GltfMagic;
 }(EventDispatcher);
 
-export { Utils, Tween, Smooth, Orienter, ARGlue, BloomPass, ClearMaskPass, FilmPass, GlitchPass, MaskPass, MattingPass, RenderPass, ShaderPass, ConvolutionShader, CopyShader, FilmShader, FocusShader, Viewer, Layer, XRLayer, Primer, CameraPrimer, TexturePrimer, AnchorRippling, SphereWorld, CylinderWorld, GltfMagic };
+export { Utils, Tween, Smooth, Orienter, BloomPass, ClearMaskPass, FilmPass, GlitchPass, MaskPass, MattingPass, RenderPass, ShaderPass, ConvolutionShader, CopyShader, FilmShader, FocusShader, ARGlue, Viewer, Layer, ARLayer, XRLayer, Primer, CameraPrimer, TexturePrimer, AnchorRippling, SphereWorld, CylinderWorld, GltfMagic };
 export { EventDispatcher } from 'three';
 //# sourceMappingURL=index.js.map
