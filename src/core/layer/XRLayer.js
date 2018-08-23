@@ -1,7 +1,5 @@
 import { PerspectiveCamera, StereoCamera } from 'three';
-// import InteractionManager from 'three.interaction/src/interaction/InteractionManager';
 import Orienter from '../../utils/Orienter';
-// import Utils from '../utils/Utils';
 import Layer from './Layer';
 
 class XRLayer extends Layer {
@@ -21,7 +19,7 @@ class XRLayer extends Layer {
      * @member {StereoCamera}
      */
     this.stereo = new StereoCamera();
-    this.stereo.aspect = options.stereoAspect || 0.5;
+    // this.stereo.aspect = options.stereoAspect || 0.5;
 
     /**
      * use orientation sensor or not
@@ -43,6 +41,8 @@ class XRLayer extends Layer {
         this.camera.quaternion.copy(quaternion);
       }
     });
+
+    this.interactive = true;
   }
 
   /**
@@ -79,24 +79,6 @@ class XRLayer extends Layer {
     this.effectPack.setSize(width, height);
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
-  }
-
-  /**
-   * getter whether scene interactively or not
-   */
-  get interactive() {
-    return this._interactive;
-  }
-
-  /**
-   * setter whether scene interactively or not
-   * @param {Boolean} value is interactively ?
-   */
-  set interactive(value) {
-    if (value !== this.interactive) {
-      this._interactive = value;
-      this.interactiveOnChange();
-    }
   }
 
   /**

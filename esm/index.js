@@ -3377,22 +3377,20 @@ var hitTestEvent = {
  * @extends EventDispatcher
  */
 
-var InteractionManager = function (_EventDispatcher) {
-  inherits(InteractionManager, _EventDispatcher);
+var InteractionLayer = function (_EventDispatcher) {
+  inherits(InteractionLayer, _EventDispatcher);
 
   /**
    * @param {WebGLRenderer} renderer - A reference to the current renderer
-   * @param {Scene} scene - A reference to the current scene
-   * @param {Camera} camera - A reference to the current camera
    * @param {Object} [options] - The options for the manager.
    * @param {Boolean} [options.autoPreventDefault=false] - Should the manager automatically prevent default browser actions.
    * @param {Boolean} [options.autoAttach=true] - Should the manager automatically attach target element.
    * @param {Number} [options.interactionFrequency=10] - Frequency increases the interaction events will be checked.
    */
-  function InteractionManager(renderer, scene, camera, options) {
-    classCallCheck(this, InteractionManager);
+  function InteractionLayer(renderer, options) {
+    classCallCheck(this, InteractionLayer);
 
-    var _this = possibleConstructorReturn(this, (InteractionManager.__proto__ || Object.getPrototypeOf(InteractionManager)).call(this));
+    var _this = possibleConstructorReturn(this, (InteractionLayer.__proto__ || Object.getPrototypeOf(InteractionLayer)).call(this));
 
     options = options || {};
 
@@ -3406,16 +3404,23 @@ var InteractionManager = function (_EventDispatcher) {
     /**
      * The renderer this interaction manager works for.
      *
+     * @member {Layer}
+     */
+    _this.layer = null;
+
+    /**
+     * The renderer this interaction manager works for.
+     *
      * @member {Scene}
      */
-    _this.scene = scene;
+    // this.scene = scene;
 
     /**
      * The renderer this interaction manager works for.
      *
      * @member {Camera}
      */
-    _this.camera = camera;
+    // this.camera = camera;
 
     /**
      * Should default browser actions automatically be prevented.
@@ -3626,7 +3631,7 @@ var InteractionManager = function (_EventDispatcher) {
      * Fired when a pointer device button (usually a mouse left-button) is pressed on the display
      * object.
      *
-     * @event InteractionManager#mousedown
+     * @event InteractionLayer#mousedown
      * @param {InteractionEvent} event - Interaction event
      */
 
@@ -3634,7 +3639,7 @@ var InteractionManager = function (_EventDispatcher) {
      * Fired when a pointer device secondary button (usually a mouse right-button) is pressed
      * on the display object.
      *
-     * @event InteractionManager#rightdown
+     * @event InteractionLayer#rightdown
      * @param {InteractionEvent} event - Interaction event
      */
 
@@ -3642,7 +3647,7 @@ var InteractionManager = function (_EventDispatcher) {
      * Fired when a pointer device button (usually a mouse left-button) is released over the display
      * object.
      *
-     * @event InteractionManager#mouseup
+     * @event InteractionLayer#mouseup
      * @param {InteractionEvent} event - Interaction event
      */
 
@@ -3650,7 +3655,7 @@ var InteractionManager = function (_EventDispatcher) {
      * Fired when a pointer device secondary button (usually a mouse right-button) is released
      * over the display object.
      *
-     * @event InteractionManager#rightup
+     * @event InteractionLayer#rightup
      * @param {InteractionEvent} event - Interaction event
      */
 
@@ -3658,7 +3663,7 @@ var InteractionManager = function (_EventDispatcher) {
      * Fired when a pointer device button (usually a mouse left-button) is pressed and released on
      * the display object.
      *
-     * @event InteractionManager#click
+     * @event InteractionLayer#click
      * @param {InteractionEvent} event - Interaction event
      */
 
@@ -3666,146 +3671,146 @@ var InteractionManager = function (_EventDispatcher) {
      * Fired when a pointer device secondary button (usually a mouse right-button) is pressed
      * and released on the display object.
      *
-     * @event InteractionManager#rightclick
+     * @event InteractionLayer#rightclick
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a pointer device button (usually a mouse left-button) is released outside the
      * display object that initially registered a
-     * [mousedown]{@link InteractionManager#event:mousedown}.
+     * [mousedown]{@link InteractionLayer#event:mousedown}.
      *
-     * @event InteractionManager#mouseupoutside
+     * @event InteractionLayer#mouseupoutside
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a pointer device secondary button (usually a mouse right-button) is released
      * outside the display object that initially registered a
-     * [rightdown]{@link InteractionManager#event:rightdown}.
+     * [rightdown]{@link InteractionLayer#event:rightdown}.
      *
-     * @event InteractionManager#rightupoutside
+     * @event InteractionLayer#rightupoutside
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a pointer device (usually a mouse) is moved while over the display object
      *
-     * @event InteractionManager#mousemove
+     * @event InteractionLayer#mousemove
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a pointer device (usually a mouse) is moved onto the display object
      *
-     * @event InteractionManager#mouseover
+     * @event InteractionLayer#mouseover
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a pointer device (usually a mouse) is moved off the display object
      *
-     * @event InteractionManager#mouseout
+     * @event InteractionLayer#mouseout
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a pointer device button is pressed on the display object.
      *
-     * @event InteractionManager#pointerdown
+     * @event InteractionLayer#pointerdown
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a pointer device button is released over the display object.
      *
-     * @event InteractionManager#pointerup
+     * @event InteractionLayer#pointerup
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when the operating system cancels a pointer event
      *
-     * @event InteractionManager#pointercancel
+     * @event InteractionLayer#pointercancel
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a pointer device button is pressed and released on the display object.
      *
-     * @event InteractionManager#pointertap
+     * @event InteractionLayer#pointertap
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a pointer device button is released outside the display object that initially
-     * registered a [pointerdown]{@link InteractionManager#event:pointerdown}.
+     * registered a [pointerdown]{@link InteractionLayer#event:pointerdown}.
      *
-     * @event InteractionManager#pointerupoutside
+     * @event InteractionLayer#pointerupoutside
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a pointer device is moved while over the display object
      *
-     * @event InteractionManager#pointermove
+     * @event InteractionLayer#pointermove
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a pointer device is moved onto the display object
      *
-     * @event InteractionManager#pointerover
+     * @event InteractionLayer#pointerover
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a pointer device is moved off the display object
      *
-     * @event InteractionManager#pointerout
+     * @event InteractionLayer#pointerout
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a touch point is placed on the display object.
      *
-     * @event InteractionManager#touchstart
+     * @event InteractionLayer#touchstart
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a touch point is removed from the display object.
      *
-     * @event InteractionManager#touchend
+     * @event InteractionLayer#touchend
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when the operating system cancels a touch
      *
-     * @event InteractionManager#touchcancel
+     * @event InteractionLayer#touchcancel
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a touch point is placed and removed from the display object.
      *
-     * @event InteractionManager#tap
+     * @event InteractionLayer#tap
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a touch point is removed outside of the display object that initially
-     * registered a [touchstart]{@link InteractionManager#event:touchstart}.
+     * registered a [touchstart]{@link InteractionLayer#event:touchstart}.
      *
-     * @event InteractionManager#touchendoutside
+     * @event InteractionLayer#touchendoutside
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a touch point is moved along the display object.
      *
-     * @event InteractionManager#touchmove
+     * @event InteractionLayer#touchmove
      * @param {InteractionEvent} event - Interaction event
      */
 
@@ -4018,25 +4023,47 @@ var InteractionManager = function (_EventDispatcher) {
   }
 
   /**
-   * Hit tests a point against the display tree, returning the first interactive object that is hit.
-   *
-   * @param {Point} globalPoint - A point to hit test with, in global space.
-   * @param {Object3D} [root] - The root display object to start from. If omitted, defaults
-   * to the last rendered root of the associated renderer.
-   * @return {Object3D} The hit display object, if any.
+   * @return {boolean}
    */
 
 
-  createClass(InteractionManager, [{
+  createClass(InteractionLayer, [{
+    key: 'isAble',
+    value: function isAble() {
+      return this.layer && this.layer.interactive;
+    }
+
+    /**
+     * set layer
+     * @param {Layer} layer layer
+     */
+
+  }, {
+    key: 'setLayer',
+    value: function setLayer(layer) {
+      this.layer = layer;
+    }
+
+    /**
+     * Hit tests a point against the display tree, returning the first interactive object that is hit.
+     *
+     * @param {Point} globalPoint - A point to hit test with, in global space.
+     * @param {Object3D} [root] - The root display object to start from. If omitted, defaults
+     * to the last rendered root of the associated renderer.
+     * @return {Object3D} The hit display object, if any.
+     */
+
+  }, {
     key: 'hitTest',
     value: function hitTest(globalPoint, root) {
+      if (!this.isAble()) return null;
       // clear the target for our hit test
       hitTestEvent.target = null;
       // assign the global point
       hitTestEvent.data.global = globalPoint;
       // ensure safety of the root
       if (!root) {
-        root = this.scene;
+        root = this.layer.scene;
       }
       // run the hit test
       this.processInteractive(hitTestEvent, root, null, true);
@@ -4185,6 +4212,7 @@ var InteractionManager = function (_EventDispatcher) {
     value: function update(_ref) {
       var snippet = _ref.snippet;
 
+      if (!this.isAble()) return;
       this._deltaTime += snippet;
 
       if (this._deltaTime < this.interactionFrequency) {
@@ -4217,7 +4245,7 @@ var InteractionManager = function (_EventDispatcher) {
           if (interactionData.originalEvent && interactionData.pointerType !== 'touch') {
             var interactionEvent = this.configureInteractionEventForDOMEvent(this.eventData, interactionData.originalEvent, interactionData);
 
-            this.processInteractive(interactionEvent, this.scene, this.processPointerOverOut, true);
+            this.processInteractive(interactionEvent, this.layer.scene, this.processPointerOverOut, true);
           }
         }
       }
@@ -4292,39 +4320,6 @@ var InteractionManager = function (_EventDispatcher) {
           displayObject[eventString](eventData);
         }
       }
-    }
-
-    /**
-     * Maps x and y coords from a DOM object and maps them correctly to the three.js view. The
-     * resulting value is stored in the point. This takes into account the fact that the DOM
-     * element could be scaled and positioned anywhere on the screen.
-     *
-     * @param  {Vector2} point - the point that the result will be stored in
-     * @param  {number} x - the x coord of the position to map
-     * @param  {number} y - the y coord of the position to map
-     */
-
-  }, {
-    key: 'mapPositionToPoint',
-    value: function mapPositionToPoint(point, x, y) {
-      var rect = void 0;
-
-      // IE 11 fix
-      if (!this.interactionDOMElement.parentElement) {
-        rect = {
-          x: 0,
-          y: 0,
-          left: 0,
-          top: 0,
-          width: 0,
-          height: 0
-        };
-      } else {
-        rect = this.interactionDOMElement.getBoundingClientRect();
-      }
-
-      point.x = (x - rect.left) / rect.width * 2 - 1;
-      point.y = -((y - rect.top) / rect.height) * 2 + 1;
     }
 
     /**
@@ -4442,6 +4437,7 @@ var InteractionManager = function (_EventDispatcher) {
   }, {
     key: 'onClick',
     value: function onClick(originalEvent) {
+      if (!this.isAble()) return;
       if (originalEvent.type !== 'click') return;
 
       var events = this.normalizeToPointerData(originalEvent);
@@ -4452,11 +4448,11 @@ var InteractionManager = function (_EventDispatcher) {
 
       var interactionData = this.getInteractionDataForPointerId(events[0]);
 
-      var interactionEvent = this.configureInteractionEventForDOMEvent(this.eventData, event, interactionData);
+      var interactionEvent = this.configureInteractionEventForDOMEvent(this.eventData, events[0], interactionData);
 
       interactionEvent.data.originalEvent = originalEvent;
 
-      this.processInteractive(interactionEvent, this.scene, this.processClick, true);
+      this.processInteractive(interactionEvent, this.layer.scene, this.processClick, true);
 
       this.emit('click', interactionEvent);
     }
@@ -4488,6 +4484,7 @@ var InteractionManager = function (_EventDispatcher) {
   }, {
     key: 'onPointerDown',
     value: function onPointerDown(originalEvent) {
+      if (!this.isAble()) return;
       // if we support touch events, then only use those for touch events, not pointer events
       if (this.supportsTouchEvents && originalEvent.pointerType === 'touch') return;
 
@@ -4508,21 +4505,21 @@ var InteractionManager = function (_EventDispatcher) {
       var eventLen = events.length;
 
       for (var i = 0; i < eventLen; i++) {
-        var _event = events[i];
+        var event = events[i];
 
-        var interactionData = this.getInteractionDataForPointerId(_event);
+        var interactionData = this.getInteractionDataForPointerId(event);
 
-        var interactionEvent = this.configureInteractionEventForDOMEvent(this.eventData, _event, interactionData);
+        var interactionEvent = this.configureInteractionEventForDOMEvent(this.eventData, event, interactionData);
 
         interactionEvent.data.originalEvent = originalEvent;
 
-        this.processInteractive(interactionEvent, this.scene, this.processPointerDown, true);
+        this.processInteractive(interactionEvent, this.layer.scene, this.processPointerDown, true);
 
         this.emit('pointerdown', interactionEvent);
-        if (_event.pointerType === 'touch') {
+        if (event.pointerType === 'touch') {
           this.emit('touchstart', interactionEvent);
-        } else if (_event.pointerType === 'mouse' || _event.pointerType === 'pen') {
-          var isRightButton = _event.button === 2;
+        } else if (event.pointerType === 'mouse' || event.pointerType === 'pen') {
+          var isRightButton = event.button === 2;
 
           this.emit(isRightButton ? 'rightdown' : 'mousedown', this.eventData);
         }
@@ -4588,26 +4585,26 @@ var InteractionManager = function (_EventDispatcher) {
       var eventAppend = originalEvent.target !== this.interactionDOMElement ? 'outside' : '';
 
       for (var i = 0; i < eventLen; i++) {
-        var _event2 = events[i];
+        var event = events[i];
 
-        var interactionData = this.getInteractionDataForPointerId(_event2);
+        var interactionData = this.getInteractionDataForPointerId(event);
 
-        var interactionEvent = this.configureInteractionEventForDOMEvent(this.eventData, _event2, interactionData);
+        var interactionEvent = this.configureInteractionEventForDOMEvent(this.eventData, event, interactionData);
 
         interactionEvent.data.originalEvent = originalEvent;
 
         // perform hit testing for events targeting our canvas or cancel events
-        this.processInteractive(interactionEvent, this.scene, func, cancelled || !eventAppend);
+        this.processInteractive(interactionEvent, this.layer.scene, func, cancelled || !eventAppend);
 
         this.emit(cancelled ? 'pointercancel' : 'pointerup' + eventAppend, interactionEvent);
 
-        if (_event2.pointerType === 'mouse' || _event2.pointerType === 'pen') {
-          var isRightButton = _event2.button === 2;
+        if (event.pointerType === 'mouse' || event.pointerType === 'pen') {
+          var isRightButton = event.button === 2;
 
           this.emit(isRightButton ? 'rightup' + eventAppend : 'mouseup' + eventAppend, interactionEvent);
-        } else if (_event2.pointerType === 'touch') {
+        } else if (event.pointerType === 'touch') {
           this.emit(cancelled ? 'touchcancel' : 'touchend' + eventAppend, interactionEvent);
-          this.releaseInteractionDataForPointerId(_event2.pointerId, interactionData);
+          this.releaseInteractionDataForPointerId(event.pointerId, interactionData);
         }
       }
     }
@@ -4622,6 +4619,7 @@ var InteractionManager = function (_EventDispatcher) {
   }, {
     key: 'onPointerCancel',
     value: function onPointerCancel(event) {
+      if (!this.isAble()) return;
       // if we support touch events, then only use those for touch events, not pointer events
       if (this.supportsTouchEvents && event.pointerType === 'touch') return;
 
@@ -4663,6 +4661,7 @@ var InteractionManager = function (_EventDispatcher) {
   }, {
     key: 'onPointerUp',
     value: function onPointerUp(event) {
+      if (!this.isAble()) return;
       // if we support touch events, then only use those for touch events, not pointer events
       if (this.supportsTouchEvents && event.pointerType === 'touch') return;
 
@@ -4757,6 +4756,7 @@ var InteractionManager = function (_EventDispatcher) {
   }, {
     key: 'onPointerMove',
     value: function onPointerMove(originalEvent) {
+      if (!this.isAble()) return;
       // if we support touch events, then only use those for touch events, not pointer events
       if (this.supportsTouchEvents && originalEvent.pointerType === 'touch') return;
 
@@ -4771,20 +4771,20 @@ var InteractionManager = function (_EventDispatcher) {
       var eventLen = events.length;
 
       for (var i = 0; i < eventLen; i++) {
-        var _event3 = events[i];
+        var event = events[i];
 
-        var interactionData = this.getInteractionDataForPointerId(_event3);
+        var interactionData = this.getInteractionDataForPointerId(event);
 
-        var interactionEvent = this.configureInteractionEventForDOMEvent(this.eventData, _event3, interactionData);
+        var interactionEvent = this.configureInteractionEventForDOMEvent(this.eventData, event, interactionData);
 
         interactionEvent.data.originalEvent = originalEvent;
 
-        var interactive = _event3.pointerType === 'touch' ? this.moveWhenInside : true;
+        var interactive = event.pointerType === 'touch' ? this.moveWhenInside : true;
 
-        this.processInteractive(interactionEvent, this.scene, this.processPointerMove, interactive);
+        this.processInteractive(interactionEvent, this.layer.scene, this.processPointerMove, interactive);
         this.emit('pointermove', interactionEvent);
-        if (_event3.pointerType === 'touch') this.emit('touchmove', interactionEvent);
-        if (_event3.pointerType === 'mouse' || _event3.pointerType === 'pen') this.emit('mousemove', interactionEvent);
+        if (event.pointerType === 'touch') this.emit('touchmove', interactionEvent);
+        if (event.pointerType === 'mouse' || event.pointerType === 'pen') this.emit('mousemove', interactionEvent);
       }
 
       if (events[0].pointerType === 'mouse') {
@@ -4833,6 +4833,7 @@ var InteractionManager = function (_EventDispatcher) {
   }, {
     key: 'onPointerOut',
     value: function onPointerOut(originalEvent) {
+      if (!this.isAble()) return;
       // if we support touch events, then only use those for touch events, not pointer events
       if (this.supportsTouchEvents && originalEvent.pointerType === 'touch') return;
 
@@ -4852,7 +4853,7 @@ var InteractionManager = function (_EventDispatcher) {
 
       interactionEvent.data.originalEvent = event;
 
-      this.processInteractive(interactionEvent, this.scene, this.processPointerOverOut, false);
+      this.processInteractive(interactionEvent, this.layer.scene, this.processPointerOverOut, false);
 
       this.emit('pointerout', interactionEvent);
       if (event.pointerType === 'mouse' || event.pointerType === 'pen') {
@@ -4928,6 +4929,7 @@ var InteractionManager = function (_EventDispatcher) {
   }, {
     key: 'onPointerOver',
     value: function onPointerOver(originalEvent) {
+      if (!this.isAble()) return;
       var events = this.normalizeToPointerData(originalEvent);
 
       // Only mouse and pointer can call onPointerOver, so events will always be length 1
@@ -5000,6 +5002,39 @@ var InteractionManager = function (_EventDispatcher) {
     }
 
     /**
+     * Maps x and y coords from a DOM object and maps them correctly to the three.js view. The
+     * resulting value is stored in the point. This takes into account the fact that the DOM
+     * element could be scaled and positioned anywhere on the screen.
+     *
+     * @param  {Vector2} point - the point that the result will be stored in
+     * @param  {number} x - the x coord of the position to map
+     * @param  {number} y - the y coord of the position to map
+     */
+
+  }, {
+    key: 'mapPositionToPoint',
+    value: function mapPositionToPoint(point, x, y) {
+      var rect = void 0;
+
+      // IE 11 fix
+      if (!this.interactionDOMElement.parentElement) {
+        rect = {
+          x: 0,
+          y: 0,
+          left: 0,
+          top: 0,
+          width: 0,
+          height: 0
+        };
+      } else {
+        rect = this.interactionDOMElement.getBoundingClientRect();
+      }
+
+      point.x = (x - rect.left) / rect.width * 2 - 1;
+      point.y = -((y - rect.top) / rect.height) * 2 + 1;
+    }
+
+    /**
      * Configure an InteractionEvent to wrap a DOM PointerEvent and InteractionData
      *
      * @private
@@ -5017,7 +5052,7 @@ var InteractionManager = function (_EventDispatcher) {
 
       this.mapPositionToPoint(interactionData.global, pointerEvent.clientX, pointerEvent.clientY);
 
-      this.raycaster.setFromCamera(interactionData.global, this.camera);
+      if (this.layer && this.layer.interactive) this.raycaster.setFromCamera(interactionData.global, this.layer.camera);
 
       // Not really sure why this is happening, but it's how a previous version handled things TODO: there should be remove
       if (pointerEvent.pointerType === 'touch') {
@@ -5138,7 +5173,7 @@ var InteractionManager = function (_EventDispatcher) {
       this._tempPoint = null;
     }
   }]);
-  return InteractionManager;
+  return InteractionLayer;
 }(EventDispatcher);
 
 var LayerCompositor = function () {
@@ -5401,27 +5436,6 @@ var EffectPack = function () {
   return EffectPack;
 }();
 
-// import GraphicsLayer from './GraphicsLayer';
-// import PrimerLayer from './PrimerLayer';
-/**
- * a `UC-AR` renderer framework, help you building AR-APP fastly
- * @extends EventDispatcher
- * @param {Object} options config for `Viewer` render view-port
- * @param {canvas} options.canvas `canvas-dom` or canvas `css-selector`
- * @param {Number} [options.vrmode=false] whether init with vrmode.
- * @param {Number} [options.updateStyle=false] need update canvas style size.
- * @param {Number} [options.pixelRatio=1] render buffer resolution.
- * @param {Boolean} [options.autoClear=true] whether the renderer should automatically clear its output before rendering a frame.
- * @param {Boolean} [options.alpha=false] whether the canvas contains an alpha (transparency) buffer or not.
- * @param {Boolean} [options.antialias=false] whether to perform antialiasing.
- * @param {String} [options.precision='highp'] Shader precision, Can be `highp`, `mediump` or `lowp`.
- * @param {Boolean} [options.premultipliedAlpha=true] whether the renderer will assume that colors have premultiplied alpha.
- * @param {Boolean} [options.stencil=true] whether the drawing buffer has a stencil buffer of at least 8 bits.
- * @param {Boolean} [options.preserveDrawingBuffer=false] whether to preserve the buffers until manually cleared or overwritten.
- * @param {Boolean} [options.depth=true] whether the drawing buffer has a depth buffer of at least 16 bits.
- * @param {Boolean} [options.logarithmicDepthBuffer] whether to use a logarithmic depth buffer.
- */
-
 var Viewer = function (_EventDispatcher) {
   inherits(Viewer, _EventDispatcher);
 
@@ -5543,11 +5557,13 @@ var Viewer = function (_EventDispatcher) {
      * 3d-view interaction manager
      * TODO: should fix interaction bug when vrmode
      */
-    _this.interactionManager = new InteractionManager(_this.renderer, _this.layers, _this.camera);
+    _this.interactionLayer = new InteractionLayer(_this.renderer);
 
     _this._vrmode = null;
 
     _this.vrmodeOnChange = function () {
+      _this.emit('vrmodeChange');
+      _this.setPassesSize();
       _this.setComposerSize();
       _this.setLayersSize();
     };
@@ -5971,7 +5987,6 @@ var Viewer = function (_EventDispatcher) {
 
       if (this.vrmode) {
         width = width / 2;
-        height = height / 2;
       }
       return { width: width, height: height };
     }
@@ -5989,20 +6004,29 @@ var Viewer = function (_EventDispatcher) {
       }
     }
   }, {
-    key: 'setLayerSize',
-    value: function setLayerSize(layer) {
+    key: 'setPassesSize',
+    value: function setPassesSize() {
       var _getPortSize2 = this.getPortSize(),
           width = _getPortSize2.width,
           height = _getPortSize2.height;
+
+      this.effectPack.setSize(width, height);
+    }
+  }, {
+    key: 'setLayerSize',
+    value: function setLayerSize(layer) {
+      var _getPortSize3 = this.getPortSize(),
+          width = _getPortSize3.width,
+          height = _getPortSize3.height;
 
       layer.setSize(width, height);
     }
   }, {
     key: 'setComposerSize',
     value: function setComposerSize() {
-      var _getPortSize3 = this.getPortSize(),
-          width = _getPortSize3.width,
-          height = _getPortSize3.height;
+      var _getPortSize4 = this.getPortSize(),
+          width = _getPortSize4.width,
+          height = _getPortSize4.height;
 
       this.effectComposer.setSize(width, height);
     }
@@ -6024,6 +6048,7 @@ var Viewer = function (_EventDispatcher) {
       this.renderer.setSize(width, height, updateStyle);
       this.viewBox = this.renderer.getDrawingBufferSize();
 
+      this.setPassesSize();
       this.setComposerSize();
       this.setLayersSize();
     }
@@ -6036,14 +6061,19 @@ var Viewer = function (_EventDispatcher) {
   }, {
     key: 'createLayer',
     value: function createLayer(layerClass, options) {
-      var _getPortSize4 = this.getPortSize(),
-          width = _getPortSize4.width,
-          height = _getPortSize4.height;
+      var _getPortSize5 = this.getPortSize(),
+          width = _getPortSize5.width,
+          height = _getPortSize5.height;
 
       options = Object.assign({ width: width, height: height }, options);
       var layer = new layerClass(options);
       this.add(layer);
       return layer;
+    }
+  }, {
+    key: 'setEventLayer',
+    value: function setEventLayer(layer) {
+      this.interactionLayer.setLayer(layer);
     }
 
     /**
@@ -6115,7 +6145,7 @@ var Layer = function () {
     this.timeScale = 1;
 
     /**
-     * after effect update delta
+     * after effect update delta TODO: link to effect pack
      * @member {Number}
      */
     this.aeDelta = 0;
@@ -6149,6 +6179,8 @@ var Layer = function () {
     }));
 
     this.quad.root = this;
+
+    this.interactive = false;
   }
 
   /**
@@ -6509,7 +6541,7 @@ var XRLayer = function (_Layer) {
      * @member {StereoCamera}
      */
     _this.stereo = new StereoCamera();
-    _this.stereo.aspect = options.stereoAspect || 0.5;
+    // this.stereo.aspect = options.stereoAspect || 0.5;
 
     /**
      * use orientation sensor or not
@@ -6533,6 +6565,8 @@ var XRLayer = function (_Layer) {
         _this.camera.quaternion.copy(quaternion);
       }
     });
+
+    _this.interactive = true;
     return _this;
   }
 
@@ -6580,28 +6614,6 @@ var XRLayer = function (_Layer) {
       this.effectPack.setSize(width, height);
       this.camera.aspect = width / height;
       this.camera.updateProjectionMatrix();
-    }
-
-    /**
-     * getter whether scene interactively or not
-     */
-
-  }, {
-    key: 'interactive',
-    get: function get$$1() {
-      return this._interactive;
-    }
-
-    /**
-     * setter whether scene interactively or not
-     * @param {Boolean} value is interactively ?
-     */
-    ,
-    set: function set$$1(value) {
-      if (value !== this.interactive) {
-        this._interactive = value;
-        this.interactiveOnChange();
-      }
     }
 
     /**

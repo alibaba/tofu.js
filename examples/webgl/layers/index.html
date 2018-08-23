@@ -45,6 +45,7 @@
         near: 0.01,
         far: 1000,
       });
+      xrViewer.setEventLayer(layer3d);
       layer3d.camera.position.set(0, 10, 50);
 
       var panoramaCube = new THREE.Mesh(
@@ -65,6 +66,9 @@
       layer3d.add(panoramaCube);
       layer3d.scene.background = new THREE.Color( 0x050511 );
       layer3d.scene.fog = new THREE.FogExp2(0x05050c, 0.004);
+      panoramaCube.on('click', function(e) {
+        console.log(e);
+      });
 
       var fxaaPass = new Tofu.ShaderPass( THREE.FXAAShader );
       fxaaPass.uniforms[ "resolution" ].value = new THREE.Vector2( 1 / WIDTH, 1 / HEIGHT );

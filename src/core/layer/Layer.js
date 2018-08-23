@@ -50,7 +50,7 @@ class Layer {
     this.timeScale = 1;
 
     /**
-     * after effect update delta
+     * after effect update delta TODO: link to effect pack
      * @member {Number}
      */
     this.aeDelta = 0;
@@ -87,6 +87,8 @@ class Layer {
     );
 
     this.quad.root = this;
+
+    this.interactive = false;
   }
 
   /**

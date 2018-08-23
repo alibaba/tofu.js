@@ -3,7 +3,7 @@ import {
   EventDispatcher,
 } from 'three';
 import EffectComposer from './EffectComposer';
-import InteractionManager from 'three.interaction/src/interaction/InteractionManager';
+import InteractionLayer from 'three.interaction/src/interaction/InteractionLayer';
 // import GraphicsLayer from './GraphicsLayer';
 // import PrimerLayer from './PrimerLayer';
 import LayerCompositor from './LayerCompositor';
@@ -136,11 +136,13 @@ class Viewer extends EventDispatcher {
      * 3d-view interaction manager
      * TODO: should fix interaction bug when vrmode
      */
-    this.interactionManager = new InteractionManager(this.renderer, this.layers, this.camera);
+    this.interactionLayer = new InteractionLayer(this.renderer);
 
     this._vrmode = null;
 
     this.vrmodeOnChange = () => {
+      this.emit('vrmodeChange');
+      this.setPassesSize();
       this.setComposerSize();
       this.setLayersSize();
     };
@@ -496,7 +498,6 @@ class Viewer extends EventDispatcher {
     let { width, height } = this.viewBox;
     if (this.vrmode) {
       width = width / 2;
-      height = height / 2;
     }
     return { width, height };
   }
@@ -508,6 +509,11 @@ class Viewer extends EventDispatcher {
       const layer = this.layers[i];
       layer.setSize(width, height);
     }
+  }
+
+  setPassesSize() {
+    const { width, height } = this.getPortSize();
+    this.effectPack.setSize(width, height);
   }
 
   setLayerSize(layer) {
@@ -532,6 +538,7 @@ class Viewer extends EventDispatcher {
     this.renderer.setSize(width, height, updateStyle);
     this.viewBox = this.renderer.getDrawingBufferSize();
 
+    this.setPassesSize();
     this.setComposerSize();
     this.setLayersSize();
   }
@@ -547,6 +554,10 @@ class Viewer extends EventDispatcher {
     const layer = new layerClass(options);
     this.add(layer);
     return layer;
+  }
+
+  setEventLayer(layer) {
+    this.interactionLayer.setLayer(layer);
   }
 
   /**

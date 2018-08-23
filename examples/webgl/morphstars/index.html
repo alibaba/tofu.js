@@ -103,9 +103,6 @@
           scale: new THREE.Vector3(450, 450, 450),
           translate: new THREE.Vector3(-260, 80, 0),
           rotation: new THREE.Euler(0, 0, 0, 'XYZ'),
-          needWave: true,
-          needTessellate: true,
-          edgeLength: 0.05,
           material: {
             size: 5,
           }
@@ -142,22 +139,22 @@
         });
         morphStars.animate({
           from: {
-            'rotation.y': Utils.DTR(-350),
+            'rotation.y': Utils.DTR(-30),
           },
           to: {
-            'rotation.y': Utils.DTR(-10),
+            'rotation.y': Utils.DTR(10),
           },
           ease: Tofu.Tween.Ease.Bezier(0.2, 1, 0.7, 1),
-          duration: 4000,
+          duration: 1000,
         }).on('complete', function() {
           canFlip = true;
           morphStars.to(0);
           morphStars.animate({
             from: {
-              'rotation.y': Utils.DTR(-10),
+              'rotation.y': Utils.DTR(10),
             },
             to: {
-              'rotation.y': Utils.DTR(10),
+              'rotation.y': Utils.DTR(-10),
             },
             infinite: true,
             alternate: true,
@@ -172,22 +169,25 @@
         layer3d.add(morphStars);
       });
 
-
-      // var fxaaPass = new Tofu.ShaderPass( THREE.FXAAShader );
-      // fxaaPass.uniforms[ "resolution" ].value = new THREE.Vector2( 1 / WIDTH, 1 / HEIGHT );
-
       var effectBloom = new Tofu.BloomPass(1.05);
       var effectFilm = new Tofu.FilmPass(0.15, 0.15, 1500, false);
 
       var effectFocus = new Tofu.ShaderPass(Tofu.FocusShader);
-      effectFocus.uniforms.screenWidth.value = WIDTH;
-      effectFocus.uniforms.screenHeight.value = HEIGHT;
+      var portSize = xrViewer.getPortSize();
+      effectFocus.uniforms.screenWidth.value = portSize.width;
+      effectFocus.uniforms.screenHeight.value = portSize.height;
 
       layer3d.addPass(effectBloom);
       layer3d.addPass(effectFilm);
       layer3d.addPass(effectFocus);
 
       xrViewer.start();
+
+      xrViewer.on('vrmodeChange', function() {
+        var portSize = xrViewer.getPortSize();
+        effectFocus.uniforms.screenWidth.value = portSize.width;
+        effectFocus.uniforms.screenHeight.value = portSize.height;
+      });
 
       // var startVec = new THREE.Vector2(0, 0);
       // var endVec = new THREE.Vector2(0, 0);
@@ -245,6 +245,9 @@
         // xrViewer.camera.aspect = WIDTH / HEIGHT;
         // xrViewer.camera.updateProjectionMatrix();
         // xrViewer.renderer.setSize(WIDTH, HEIGHT);
+        var portSize = xrViewer.getPortSize();
+        effectFocus.uniforms.screenWidth.value = portSize.width;
+        effectFocus.uniforms.screenHeight.value = portSize.height;
 
         xrViewer.setSize(WIDTH, HEIGHT);
       }
