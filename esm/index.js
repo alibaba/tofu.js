@@ -449,6 +449,11 @@ var possibleConstructorReturn = function (self, call) {
   return call && (typeof call === "object" || typeof call === "function") ? call : self;
 };
 
+/**
+ * an animate class, root class
+ * @private
+ */
+
 var Animate = function (_EventDispatcher) {
   inherits(Animate, _EventDispatcher);
 
@@ -844,6 +849,23 @@ BezierEasing.prototype.get = function (x) {
   return calcBezier(this._getTForX(x), this.mY1, this.mY2);
 };
 
+/* eslint no-cond-assign: "off" */
+/* eslint new-cap: 0 */
+/* eslint max-len: 0 */
+
+/**
+ * Tween 缓动时间运动函数集合
+ *
+ * ```js
+ * dispay.animate({
+ *   from: {x: 100},
+ *   to: {x: 200},
+ *   ease: JC.Tween.Ease.In, // 配置要调用的运动函数
+ * })
+ * ```
+ * @namespace Tween
+ */
+
 var Tween = {
 
   Linear: {
@@ -958,6 +980,13 @@ var Tween = {
   }
 };
 
+/* eslint guard-for-in: "off" */
+
+/**
+ * transition class
+ * @private
+ */
+
 var Transition = function (_Animate) {
   inherits(Transition, _Animate);
 
@@ -1010,6 +1039,11 @@ var Transition = function (_Animate) {
   }]);
   return Transition;
 }(Animate);
+
+/**
+ * PathMotion class
+ * @private
+ */
 
 var PathMotion = function (_Animate) {
   inherits(PathMotion, _Animate);
@@ -1075,6 +1109,13 @@ var PathMotion = function (_Animate) {
   }]);
   return PathMotion;
 }(Animate);
+
+// import Utils from '../utils/Utils';
+/**
+ * AnimateRunner, composer any animation type
+ *
+ * @private
+ */
 
 var AnimateRunner = function (_Animate) {
   inherits(AnimateRunner, _Animate);
@@ -1239,6 +1280,11 @@ var AnimateRunner = function (_Animate) {
   }]);
   return AnimateRunner;
 }(Animate);
+
+/**
+ * timeline animations class
+ * @private
+ */
 
 var TimelineAnimations = function () {
   function TimelineAnimations(object) {
@@ -1411,6 +1457,9 @@ var TimelineAnimations = function () {
   return TimelineAnimations;
 }();
 
+/**
+ * timeline scale, effect this display-node and it's children
+ */
 Object3D.prototype.timeScale = 1;
 
 /**
@@ -1847,6 +1896,14 @@ var CopyShader = {
 
 };
 
+/**
+ * @author alteredq / http://alteredqualia.com/
+ *
+ * Convolution shader
+ * ported from o3d sample to WebGL / GLSL
+ * http://o3d.googlecode.com/svn/trunk/samples/convolution.html
+ * @private
+ */
 var ConvolutionShader = {
 
   defines: {
@@ -2071,6 +2128,11 @@ var FilmShader = {
 
 };
 
+/**
+ * @author alteredq / http://alteredqualia.com/
+ * @private
+ */
+
 var FilmPass = function (_Pass) {
   inherits(FilmPass, _Pass);
 
@@ -2162,6 +2224,11 @@ var DigitalGlitch = {
   fragmentShader: "\n  uniform int byp; // should we apply the glitch ?\n\n  uniform sampler2D tDiffuse;\n  uniform sampler2D tDisp;\n\n  uniform float amount;\n  uniform float angle;\n  uniform float seed;\n  uniform float seed_x;\n  uniform float seed_y;\n  uniform float distortion_x;\n  uniform float distortion_y;\n  uniform float col_s;\n\n  varying vec2 vUv;\n\n\n  float rand(vec2 co){\n    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);\n  }\n\n  void main() {\n    if(byp<1) {\n      vec2 p = vUv;\n      float xs = floor(gl_FragCoord.x / 0.5);\n      float ys = floor(gl_FragCoord.y / 0.5);\n      // based on staffantans glitch shader for unity https://github.com/staffantan/unityglitch\n      vec4 normal = texture2D (tDisp, p*seed*seed);\n      if(p.y<distortion_x+col_s && p.y>distortion_x-col_s*seed) {\n        if(seed_x>0.){\n          p.y = 1. - (p.y + distortion_y);\n        }\n        else {\n          p.y = distortion_y;\n        }\n      }\n      if(p.x<distortion_y+col_s && p.x>distortion_y-col_s*seed) {\n        if(seed_y>0.){\n          p.x=distortion_x;\n        }\n        else {\n          p.x = 1. - (p.x + distortion_x);\n        }\n      }\n      p.x+=normal.x*seed_x*(seed/5.);\n      p.y+=normal.y*seed_y*(seed/5.);\n      // base from RGB shift shader\n      vec2 offset = amount * vec2( cos(angle), sin(angle));\n      vec4 cr = texture2D(tDiffuse, p + offset);\n      vec4 cga = texture2D(tDiffuse, p);\n      vec4 cb = texture2D(tDiffuse, p - offset);\n      gl_FragColor = vec4(cr.r, cga.g, cb.b, cga.a);\n      // add noise\n      vec4 snow = 200.*amount*vec4(rand(vec2(xs * seed,ys * seed*50.))*0.2);\n      gl_FragColor = gl_FragColor+ snow;\n    }\n    else {\n      gl_FragColor=texture2D (tDiffuse, vUv);\n    }\n  }"
 
 };
+
+/**
+ * @author alteredq / http://alteredqualia.com/
+ * @private
+ */
 
 var GlitchPass = function (_Pass) {
   inherits(GlitchPass, _Pass);
@@ -2270,6 +2337,11 @@ var GlitchPass = function (_Pass) {
   return GlitchPass;
 }(Pass);
 
+/**
+ * @author alteredq / http://alteredqualia.com/
+ * @private
+ */
+
 var MaskPass = function (_Pass) {
   inherits(MaskPass, _Pass);
 
@@ -2369,6 +2441,14 @@ var MattingShader = {
   fragmentShader: "\n  uniform float hueStart;\n  uniform float hueEnd;\n  uniform float lightnessStart;\n  uniform float lightnessEnd;\n\n  uniform sampler2D tDiffuse;\n\n  varying vec2 vUv;\n\n  vec3 rgb2hsv(vec3 c){\n    vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);\n    vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));\n    vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));\n\n    float d = q.x - min(q.w, q.y);\n    float e = 1.0e-10;\n    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);\n  }\n\n  void main() {\n    float lightnessCenter = (lightnessStart + lightnessEnd) / 2.0;\n    float lightnessRadius = (lightnessEnd - lightnessStart) / 2.0;\n\n    vec4 rgbColor = texture2D( tDiffuse, vUv );\n\n    vec3 hsv = rgb2hsv(rgbColor.rgb);\n\n    float alpha = 1.0;\n\n    // if (hsv.x > hueStart && hsv.x < hueEnd) {\n      float distance = abs(hsv.z - lightnessCenter) / lightnessRadius;\n      alpha = clamp(distance, 0.0, 1.0);\n    // }\n    gl_FragColor = vec4(rgbColor.rgb, alpha * alpha);\n\n  }"
 };
 
+/**
+ * @author alteredq / http://alteredqualia.com/
+ *
+ * Focus shader
+ * based on PaintEffect postprocess from ro.me
+ * http://code.google.com/p/3-dreams-of-black/source/browse/deploy/js/effects/PaintEffect.js
+ * @private
+ */
 var EdgeBlurShader = {
 
   uniforms: {
@@ -2576,6 +2656,11 @@ var RenderPass = function (_Pass) {
   return RenderPass;
 }(Pass);
 
+/**
+ * @author alteredq / http://alteredqualia.com/
+ * @private
+ */
+
 var ShaderPass = function (_Pass) {
   inherits(ShaderPass, _Pass);
 
@@ -2658,6 +2743,14 @@ var FocusShader = {
 
   fragmentShader: "\n  uniform float screenWidth;\n  uniform float screenHeight;\n  uniform float sampleDistance;\n  uniform float waveFactor;\n\n  uniform sampler2D tDiffuse;\n\n  varying vec2 vUv;\n\n  void main() {\n\n    vec4 color, org, tmp, add;\n    float sample_dist, f;\n    vec2 vin;\n    vec2 uv = vUv;\n\n    add = color = org = texture2D( tDiffuse, uv );\n\n    vin = ( uv - vec2( 0.5 ) ) * vec2( 1.4 );\n    sample_dist = dot( vin, vin ) * 2.0;\n\n    f = ( waveFactor * 100.0 + sample_dist ) * sampleDistance * 4.0;\n\n    vec2 sampleSize = vec2(  1.0 / screenWidth, 1.0 / screenHeight ) * vec2( f );\n\n    add += tmp = texture2D( tDiffuse, uv + vec2( 0.111964, 0.993712 ) * sampleSize );\n    if( tmp.b < color.b ) color = tmp;\n\n    add += tmp = texture2D( tDiffuse, uv + vec2( 0.846724, 0.532032 ) * sampleSize );\n    if( tmp.b < color.b ) color = tmp;\n\n    add += tmp = texture2D( tDiffuse, uv + vec2( 0.943883, -0.330279 ) * sampleSize );\n    if( tmp.b < color.b ) color = tmp;\n\n    add += tmp = texture2D( tDiffuse, uv + vec2( 0.330279, -0.943883 ) * sampleSize );\n    if( tmp.b < color.b ) color = tmp;\n\n    add += tmp = texture2D( tDiffuse, uv + vec2( -0.532032, -0.846724 ) * sampleSize );\n    if( tmp.b < color.b ) color = tmp;\n\n    add += tmp = texture2D( tDiffuse, uv + vec2( -0.993712, -0.111964 ) * sampleSize );\n    if( tmp.b < color.b ) color = tmp;\n\n    add += tmp = texture2D( tDiffuse, uv + vec2( -0.707107, 0.707107 ) * sampleSize );\n    if( tmp.b < color.b ) color = tmp;\n\n    color = color * vec4( 2.0 ) - ( add / vec4( 8.0 ) );\n    color = color + ( add / vec4( 8.0 ) - color ) * ( vec4( 1.0 ) - vec4( sample_dist * 0.5 ) );\n\n    gl_FragColor = vec4( color.rgb * color.rgb * vec3( 0.95 ) + color.rgb, 1.0 );\n\n  }"
 };
+
+/**
+ * used to link 3d-model with reality world, an ar-glue
+ *
+ * @param {Object} options config
+ * @param {String} options.name ar-glue name, same with `setMarkers` name-id
+ * @param {Boolean} [options.autoHide=true] whether auto-hide when marker have not detected
+ */
 
 var ARGlue = function (_Object3D) {
   inherits(ARGlue, _Object3D);
@@ -2851,6 +2944,13 @@ var Utils$2 = {
   }
 };
 
+/**
+ * proxy `addEventListener` function
+ *
+ * @param {String} type event type, evnet name
+ * @param {Function} fn callback
+ * @return {this} this
+ */
 EventDispatcher.prototype.on = function (type, fn) {
   if (!Utils$2.isFunction(fn)) return;
   if (this instanceof Object3D) this.interactive = true;
@@ -2910,6 +3010,9 @@ EventDispatcher.prototype.emit = function (type) {
   return this;
 };
 
+/**
+ * whether displayObject is interactively
+ */
 Object3D.prototype.interactive = false;
 
 /**
@@ -2949,6 +3052,12 @@ Object3D.prototype.raycastTest = function (raycaster) {
 
   return false;
 };
+
+/**
+ * Holds all information related to an Interaction event
+ *
+ * @class
+ */
 
 var InteractionData = function () {
   /**
@@ -5200,6 +5309,10 @@ var InteractionLayer = function (_EventDispatcher) {
   return InteractionLayer;
 }(EventDispatcher);
 
+/**
+ * layer compositor, use to merge primerLayer and graphicsLayer
+ */
+
 var LayerCompositor = function () {
   function LayerCompositor() {
     classCallCheck(this, LayerCompositor);
@@ -5459,6 +5572,27 @@ var EffectPack = function () {
   }]);
   return EffectPack;
 }();
+
+// import GraphicsLayer from './GraphicsLayer';
+// import PrimerLayer from './PrimerLayer';
+/**
+ * a `UC-AR` renderer framework, help you building AR-APP fastly
+ * @extends EventDispatcher
+ * @param {Object} options config for `Viewer` render view-port
+ * @param {canvas} options.canvas `canvas-dom` or canvas `css-selector`
+ * @param {Number} [options.vrmode=false] whether init with vrmode.
+ * @param {Number} [options.updateStyle=false] need update canvas style size.
+ * @param {Number} [options.pixelRatio=1] render buffer resolution.
+ * @param {Boolean} [options.autoClear=true] whether the renderer should automatically clear its output before rendering a frame.
+ * @param {Boolean} [options.alpha=false] whether the canvas contains an alpha (transparency) buffer or not.
+ * @param {Boolean} [options.antialias=false] whether to perform antialiasing.
+ * @param {String} [options.precision='highp'] Shader precision, Can be `highp`, `mediump` or `lowp`.
+ * @param {Boolean} [options.premultipliedAlpha=true] whether the renderer will assume that colors have premultiplied alpha.
+ * @param {Boolean} [options.stencil=true] whether the drawing buffer has a stencil buffer of at least 8 bits.
+ * @param {Boolean} [options.preserveDrawingBuffer=false] whether to preserve the buffers until manually cleared or overwritten.
+ * @param {Boolean} [options.depth=true] whether the drawing buffer has a depth buffer of at least 16 bits.
+ * @param {Boolean} [options.logarithmicDepthBuffer] whether to use a logarithmic depth buffer.
+ */
 
 var Viewer = function (_EventDispatcher) {
   inherits(Viewer, _EventDispatcher);
@@ -6101,6 +6235,10 @@ var Viewer = function (_EventDispatcher) {
   }]);
   return Viewer;
 }(EventDispatcher);
+
+/**
+ * render layer, for multi-function render pipeline, support after-effects
+ */
 
 var Layer = function () {
   /**
@@ -6870,6 +7008,14 @@ var Primer = function (_Mesh) {
   return Primer;
 }(Mesh);
 
+/**
+ * @author alteredq / http://alteredqualia.com/
+ *
+ * Focus shader
+ * based on PaintEffect postprocess from ro.me
+ * http://code.google.com/p/3-dreams-of-black/source/browse/deploy/js/effects/PaintEffect.js
+ * @private
+ */
 var YUVShader = {
 
   texOrder: ['uYTex', 'uUTex', 'uVTex'],
@@ -6889,6 +7035,14 @@ var YUVShader = {
   fragmentShader: '\n  uniform sampler2D uYTex;\n  uniform sampler2D uUTex;\n  uniform sampler2D uVTex;\n\n  uniform vec3 diffuse;\n\n  varying vec2 vUv;\n\n  const mat3 mYUV2RGB = mat3(\n    1.0,   1.0,     1.0,\n    0.0,  -0.395,  2.032,\n    1.40, -0.581,   0.0\n  );\n\n  void main(){\n    vec3 YUV;\n    YUV.x = 1.1643 * (texture2D(uYTex, vUv).r - 0.0625);\n    YUV.y = texture2D(uUTex, vUv).r - 0.5;\n    YUV.z = texture2D(uVTex, vUv).r - 0.5;\n\n    gl_FragColor = vec4(diffuse * diffuse * (mYUV2RGB * YUV), 1.0);\n  }'
 };
 
+/**
+ * @author alteredq / http://alteredqualia.com/
+ *
+ * Focus shader
+ * based on PaintEffect postprocess from ro.me
+ * http://code.google.com/p/3-dreams-of-black/source/browse/deploy/js/effects/PaintEffect.js
+ * @private
+ */
 var YCbCrShader = {
 
   texOrder: ['uYTex', 'uCTex'],
@@ -7142,6 +7296,10 @@ var CameraPrimer = function (_Primer) {
   return CameraPrimer;
 }(Primer);
 
+/**
+ * texture-primer, for Texture CanvasTexture VideoTexture
+ */
+
 var TexturePrimer = function (_Primer) {
   inherits(TexturePrimer, _Primer);
 
@@ -7242,6 +7400,10 @@ var TexturePrimer = function (_Primer) {
   return TexturePrimer;
 }(Primer);
 
+/**
+ * anchor class, help your to bind interaction event
+ */
+
 var AnchorBase = function (_Group) {
   inherits(AnchorBase, _Group);
 
@@ -7283,6 +7445,10 @@ var AnchorBase = function (_Group) {
   }]);
   return AnchorBase;
 }(Group);
+
+/**
+ * anchor class, help your to bind interaction event
+ */
 
 var AnchorRippling = function (_AnchorBase) {
   inherits(AnchorRippling, _AnchorBase);
@@ -7972,6 +8138,7 @@ var CylinderWorld = function (_Object3D) {
   return CylinderWorld;
 }(Object3D);
 
+// const BINARY_EXTENSION_BUFFER_NAME = 'binary_glTF';
 var BINARY_EXTENSION_HEADER_MAGIC = 'glTF';
 var BINARY_EXTENSION_HEADER_LENGTH = 12;
 var BINARY_EXTENSION_CHUNK_TYPES = {
@@ -10044,6 +10211,10 @@ GLTFParser.prototype.loadScenes = function () {
     });
   });
 };
+
+/**
+ * refactor from THREE.DeviceOrientationControls
+ */
 
 var GltfMagic = function (_EventDispatcher) {
   inherits(GltfMagic, _EventDispatcher);
