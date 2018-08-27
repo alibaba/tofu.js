@@ -1,5 +1,10 @@
-import { OrthographicCamera, Scene, Mesh, PlaneBufferGeometry, MeshBasicMaterial } from 'three';
-import EffectComposer from '../postprocessing/EffectComposer';
+import {
+  Mesh,
+  Scene,
+  PlaneBufferGeometry,
+  MeshBasicMaterial,
+} from 'three';
+import EffectPack from '../EffectPack';
 
 /**
  * render layer, for multi-function render pipeline, support after-effects
@@ -7,10 +12,11 @@ import EffectComposer from '../postprocessing/EffectComposer';
 class Layer {
   /**
    * layer required a renderer
-   * @param {WebGLRenderer} renderer webgl renderer
    * @param {Object} options options
    */
-  constructor(renderer) {
+  constructor(options) {
+    const { width, height } = options;
+
     /**
      * the parent of this layer, sometime was compositor
      * @member {Compositor}
@@ -31,41 +37,34 @@ class Layer {
     this.isLayer = true;
 
     /**
-     * cache renderer object in local
-     * @member {WebGLRenderer}
-     */
-    this.renderer = renderer;
-
-    /**
-     * Not Recommend set it to true, if it was true, this layer will forced rendering to the screen,
-     * you should make sure why you set renderToScreen with true.
-     * @member {Boolean}
-     */
-    this.renderToScreen = false;
-
-    /**
      * framebuffer will auto clear
      * @member {Boolean}
      */
     this.autoClear = true;
 
     /**
-     * effect composer, for postprogressing
-     * @member {EffectComposer}
+     * time-scale for timeline
+     *
+     * @member {Number}
      */
-    this.afterEffects = new EffectComposer(this.renderer);
+    this.timeScale = 1;
 
     /**
-     * after effect update delta
+     * after effect update delta TODO: link to effect pack
      * @member {Number}
      */
     this.aeDelta = 0;
 
     /**
-     * orthographic camera, for composite draw
-     * @member {OrthographicCamera}
+     * render effect kit to carry render content and some data
      */
-    this.camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    this.effectPack = new EffectPack({ width, height });
+
+    /**
+     * camera, for composite draw
+     * @member {Camera}
+     */
+    this.camera = null;
 
     /**
      * scene, for composite draw
@@ -73,7 +72,6 @@ class Layer {
      */
     this.scene = new Scene();
 
-    const readBuffer = this.afterEffects.readBuffer;
     /**
      * quad, for composite draw
      * @member {Mesh}
@@ -82,37 +80,69 @@ class Layer {
       new PlaneBufferGeometry(2, 2),
       new MeshBasicMaterial({
         transparent: true,
-        map: readBuffer.texture,
+        map: this.effectPack.renderTarget.texture,
         depthTest: false,
         depthWrite: false,
-      }));
+      })
+    );
 
-    this.scene.add(this.quad);
+    this.interactive = false;
+  }
+
+  /**
+   * push a display object into scene
+   *
+   * @param {THREE.Object3D} child display object, which will be rendering
+   * @return {this} this
+   */
+  add() {
+    this.scene.add.apply(this.scene, arguments);
+    return this;
+  }
+
+  /**
+   * remove a display object from scene
+   *
+   * @param {THREE.Object3D} child display object, which you had push it at before
+   * @return {this} this
+   */
+  remove() {
+    this.scene.remove.apply(this.scene, arguments);
+    return this;
+  }
+
+  /**
+   * update timeline
+   * @param {Number} snippet time snippet
+   * @private
+   */
+  updateTimeline(snippet) {
+    snippet = this.timeScale * snippet;
+    this.scene.updateTimeline(snippet);
+  }
+
+  render(renderer) {
+    if (this.autoClear) this.clear(renderer, this.effectPack.renderTarget);
+
+    renderer.render(this.scene, this.camera, this.effectPack.renderTarget);
   }
 
   /**
    * clear framebuffer
+   * @param {WebGLRender} renderer renderer from view
+   * @param {WebGLRenderTarget} renderTarget clear which render target
    */
-  clear() {
-    this.renderer.setRenderTarget(this.afterEffects.readBuffer);
-    this.renderer.clear(this.renderer.autoClearColor, this.renderer.autoClearDepth, this.renderer.autoClearStencil);
-  }
-
-  /**
-   * composite draw, use it when need composition
-   * @param {WebGLRenderTarget} renderTarget render to which buffer
-   * @private
-   */
-  draw(renderTarget) {
-    this.renderer.render(this.scene, this.camera, renderTarget);
+  clear(renderer, renderTarget) {
+    renderer.setRenderTarget(renderTarget);
+    renderer.clear(renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil);
   }
 
   /**
    * add a after-effects pass to this layer
    * @param {Pass} pass pass process
    */
-  addPass(pass) {
-    this.afterEffects.addPass(pass);
+  addPass() {
+    this.effectPack.addPass.apply(this.effectPack, arguments);
   }
 
   /**
@@ -120,8 +150,17 @@ class Layer {
    * @param {Pass} pass pass process
    * @param {Number} index insert which position
    */
-  insertPass(pass, index) {
-    this.afterEffects.insertPass(pass, index);
+  insertPass() {
+    this.effectPack.insertPass.apply(this.effectPack, arguments);
+  }
+
+  /**
+   * resize layer size when viewport has change
+   * @param {number} width layer buffer width
+   * @param {number} height layer buffer height
+   */
+  setSize(width, height) {
+    this.effectPack.setSize(width, height);
   }
 
   /**
@@ -139,6 +178,7 @@ class Layer {
   set zIndex(index) {
     if (this._zIndex !== index) {
       this._zIndex = index;
+      this.quad.renderOrder = index;
       if (this.parent) {
         this.parent.needSort = true;
       }
@@ -146,11 +186,10 @@ class Layer {
   }
 
   /**
-   * get after-effects was active
-   * @return {Boolean} active or not
+   * get primers status
    */
-  get isAeOpen() {
-    return this.afterEffects.isActive;
+  get isEmpty() {
+    return this.scene.children.length === 0;
   }
 }
 

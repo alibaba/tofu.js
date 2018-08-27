@@ -1,11 +1,13 @@
 import {
-  Mesh,
+  PlaneBufferGeometry,
   MeshBasicMaterial,
   VideoTexture,
   CanvasTexture,
   Texture,
   TextureLoader,
   Color,
+  LinearFilter,
+  RGBFormat,
 } from 'three';
 import Primer from './Primer';
 import Utils from '../../utils/Utils';
@@ -26,31 +28,55 @@ class TexturePrimer extends Primer {
    * @param {THREE.Format} [options.format] use which color format
    */
   constructor(frame, options) {
-    super(frame, options);
+    const {
+      color = 0xffffff,
+      depthTest = false,
+      depthWrite = false,
+      minFilter = LinearFilter,
+      magFilter = LinearFilter,
+      format = RGBFormat,
+    } = options || {};
 
-    const { color = 0xffffff, depthTest = false, depthWrite = false, minFilter, magFilter, format } = options || {};
-
-    this.texture = Utils.isString(frame) ? new TextureLoader().load(frame) :
+    const texture = Utils.isString(frame) ? new TextureLoader().load(frame) :
       frame.tagName === 'VIDEO' ? new VideoTexture(frame) :
         frame.tagName === 'CANVAS' ? new CanvasTexture(frame) :
           frame.tagName === 'IMG' ? new Texture(frame) : null;
+
+    /**
+     * geometry for this 2D context
+     * @member {PlaneBufferGeometry}
+     * @private
+     */
+    const geo = new PlaneBufferGeometry(2, 2);
+
+    /**
+     * material for this 2D context
+     * @member {MeshBasicMaterial}
+     * @private
+     */
+    const mat = new MeshBasicMaterial({
+      color: new Color(color),
+      map: texture,
+      depthTest,
+      depthWrite,
+    });
+
+    super(geo, mat, options);
+
+
+    /**
+     * this primer used texture
+     */
+    this.texture = texture;
 
     if (minFilter) this.texture.minFilter = minFilter;
     if (magFilter) this.texture.magFilter = magFilter;
     if (format) this.texture.format = format;
 
-
-    this.pigmentMat = new MeshBasicMaterial({
-      color: new Color(color),
-      map: this.texture,
-      depthTest,
-      depthWrite,
-    });
-
-    this.pigment = new Mesh(this.pigmentGeo, this.pigmentMat);
-    this.pigment.frustumCulled = false;
-
-    this.scene.add(this.pigment);
+    /**
+     * texture had loaded ?
+     */
+    this.loaded = false;
 
     this._gainFrameSize();
   }
@@ -62,29 +88,16 @@ class TexturePrimer extends Primer {
     const image = this.texture.image;
     if (!image) return;
     if (image.width > 0 && image.height > 0) {
-      this._setAspect(image.width / image.height);
+      this.loaded = true;
+      this.frameAspect = image.width / image.height;
+      this._updateAttributes();
     } else {
       image.addEventListener('load', () => {
-        this._setAspect(image.width / image.height);
+        this.loaded = true;
+        this.frameAspect = image.width / image.height;
+        this._updateAttributes();
       });
     }
-  }
-
-  /**
-   * update positions attribute
-   */
-  update() {
-    if (this.autoCover) this._updateAttributes();
-  }
-
-  /**
-   * render this primer
-   * @param {WebGLRenderer} renderer put webgl renderer
-   * @param {WebGLRenderTarget} rednerTarget render to which buffer
-   */
-  render(renderer, rednerTarget) {
-    this.update();
-    renderer.render(this.scene, this.camera, rednerTarget);
   }
 }
 

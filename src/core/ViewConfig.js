@@ -5,7 +5,7 @@ function setDefault(check, value, spare) {
 }
 
 /**
- * ViewPort class, a default config for WebGLRenderer with-in UC-AR
+ * ViewConfig class, a default config for WebGLRenderer with-in UC-AR
  *
  * @private
  * @param {Object} options custom config for WebGLRenderer
@@ -19,7 +19,7 @@ function setDefault(check, value, spare) {
  * @param {Boolean} [options.depth=true] whether the drawing buffer has a depth buffer of at least 16 bits.
  * @param {Boolean} [options.logarithmicDepthBuffer] whether to use a logarithmic depth buffer.
  */
-export default class ViewPort {
+export default class ViewConfig {
   constructor(options) {
     /**
      * canvas dom element

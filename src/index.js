@@ -9,8 +9,7 @@ export { default as Tween } from './utils/Tween';
 export { default as Smooth } from './utils/Smooth';
 export { default as Orienter } from './utils/Orienter';
 
-export { default as ARGlue } from './core/ARGlue';
-export { default as ViewPort } from './core/ViewPort';
+// export { default as ViewPort } from './core/ViewPort';
 
 export { default as BloomPass } from './postprocessing/BloomPass';
 export { default as ClearMaskPass } from './postprocessing/ClearMaskPass';
@@ -26,12 +25,16 @@ export { default as CopyShader } from './shader/CopyShader';
 export { default as FilmShader } from './shader/FilmShader';
 export { default as FocusShader } from './shader/FocusShader';
 
-export { default as ARViewer } from './core/ARViewer';
-export { default as XRViewer } from './core/XRViewer';
+export { default as ARGlue } from './core/ARGlue';
+export { default as Viewer } from './core/Viewer';
+export { default as Layer } from './core/layer/Layer';
+export { default as ARLayer } from './core/layer/ARLayer';
+export { default as XRLayer } from './core/layer/XRLayer';
+export { default as PrimerLayer } from './core/layer/PrimerLayer';
 
-export { default as Primer } from './extras/primers/Primer';
-export { default as CameraPrimer } from './extras/primers/CameraPrimer';
-export { default as TexturePrimer } from './extras/primers/TexturePrimer';
+export { default as Primer } from './core/primers/Primer';
+export { default as CameraPrimer } from './core/primers/CameraPrimer';
+export { default as TexturePrimer } from './core/primers/TexturePrimer';
 
 export { default as AnchorRippling } from './extras/panorama/AnchorRippling';
 // export { PanoramaBackground } from './extras/PanoramaBackground';

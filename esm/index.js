@@ -1,4 +1,4 @@
-import { AdditiveBlending, AlphaFormat, AmbientLight, AnimationClip, AnimationMixer, AnimationUtils, Bone, BufferAttribute, BufferGeometry, Camera, CanvasTexture, CircleBufferGeometry, ClampToEdgeWrapping, Color, Curve, CylinderBufferGeometry, DataTexture, DefaultLoadingManager, DirectionalLight, DoubleSide, Euler, EventDispatcher, FileLoader, FlatShading, FloatType, FrontSide, Group, InterleavedBuffer, InterleavedBufferAttribute, InterpolateDiscrete, InterpolateLinear, InterpolateSmooth, Line, LineLoop, LineSegments, LinearFilter, LinearMipMapLinearFilter, LinearMipMapNearestFilter, Loader, LuminanceAlphaFormat, LuminanceFormat, Matrix3, Matrix4, Mesh, MeshBasicMaterial, MeshLambertMaterial, MeshPhongMaterial, MeshStandardMaterial, MirroredRepeatWrapping, NearestFilter, NearestMipMapLinearFilter, NearestMipMapNearestFilter, NumberKeyframeTrack, Object3D, OrthographicCamera, PerspectiveCamera, PlaneBufferGeometry, PointLight, Points, PropertyBinding, Quaternion, QuaternionKeyframeTrack, RGBAFormat, RGBFormat, Raycaster, RepeatWrapping, Scene, ShaderLib, ShaderMaterial, Skeleton, SkinnedMesh, SphereBufferGeometry, SpotLight, StereoCamera, Texture, TextureLoader, TriangleFanDrawMode, TriangleStripDrawMode, UniformsUtils, UnsignedByteType, UnsignedShort4444Type, UnsignedShort5551Type, UnsignedShort565Type, Vector2, Vector3, VectorKeyframeTrack, VertexColors, VideoTexture, WebGLRenderTarget, WebGLRenderer } from 'three';
+import { AdditiveBlending, AlphaFormat, AmbientLight, AnimationClip, AnimationMixer, AnimationUtils, Bone, BufferAttribute, BufferGeometry, Camera, CanvasTexture, CircleBufferGeometry, ClampToEdgeWrapping, Color, Curve, CylinderBufferGeometry, DataTexture, DefaultLoadingManager, DirectionalLight, DoubleSide, Euler, EventDispatcher, FileLoader, FlatShading, FloatType, FrontSide, Group, InterleavedBuffer, InterleavedBufferAttribute, InterpolateDiscrete, InterpolateLinear, InterpolateSmooth, Line, LineLoop, LineSegments, LinearFilter, LinearMipMapLinearFilter, LinearMipMapNearestFilter, Loader, LuminanceAlphaFormat, LuminanceFormat, Matrix3, Matrix4, Mesh, MeshBasicMaterial, MeshLambertMaterial, MeshPhongMaterial, MeshStandardMaterial, MirroredRepeatWrapping, NearestFilter, NearestMipMapLinearFilter, NearestMipMapNearestFilter, NumberKeyframeTrack, Object3D, OrthographicCamera, PerspectiveCamera, PlaneBufferGeometry, PointLight, Points, PropertyBinding, Quaternion, QuaternionKeyframeTrack, RGBAFormat, RGBFormat, Raycaster, RepeatWrapping, Scene, ShaderLib, ShaderMaterial, Skeleton, SkinnedMesh, SphereBufferGeometry, SpotLight, StereoCamera, Texture, TextureLoader, TriangleFanDrawMode, TriangleStripDrawMode, UniformsUtils, UnsignedByteType, UnsignedShort4444Type, UnsignedShort5551Type, UnsignedShort565Type, Vector2, Vector3, Vector4, VectorKeyframeTrack, VertexColors, VideoTexture, WebGLRenderTarget, WebGLRenderer } from 'three';
 
 (function () {
   var lastTime = 0;
@@ -317,6 +317,30 @@ var Utils = {
     if (x >= max) return 1;
     x = (x - min) / (max - min);
     return x * x * x * (x * (x * 6 - 15) + 10);
+  },
+
+
+  /**
+   * sort list use bubble sort
+   * @param {array} list list array
+   * @param {function} fn list array
+   */
+  bubbleSort: function bubbleSort(list, fn) {
+    var length = list.length;
+    var i = void 0;
+    var j = void 0;
+    var temp = void 0;
+    for (i = 0; i < length - 1; i++) {
+      for (j = 0; j < length - 1 - i; j++) {
+        var m1 = fn(list[j]);
+        var m2 = fn(list[j + 1]);
+        if (m1 > m2) {
+          temp = list[j];
+          list[j] = list[j + 1];
+          list[j + 1] = temp;
+        }
+      }
+    }
   }
 };
 
@@ -424,11 +448,6 @@ var possibleConstructorReturn = function (self, call) {
 
   return call && (typeof call === "object" || typeof call === "function") ? call : self;
 };
-
-/**
- * an animate class, root class
- * @private
- */
 
 var Animate = function (_EventDispatcher) {
   inherits(Animate, _EventDispatcher);
@@ -825,23 +844,6 @@ BezierEasing.prototype.get = function (x) {
   return calcBezier(this._getTForX(x), this.mY1, this.mY2);
 };
 
-/* eslint no-cond-assign: "off" */
-/* eslint new-cap: 0 */
-/* eslint max-len: 0 */
-
-/**
- * Tween 缓动时间运动函数集合
- *
- * ```js
- * dispay.animate({
- *   from: {x: 100},
- *   to: {x: 200},
- *   ease: JC.Tween.Ease.In, // 配置要调用的运动函数
- * })
- * ```
- * @namespace Tween
- */
-
 var Tween = {
 
   Linear: {
@@ -956,13 +958,6 @@ var Tween = {
   }
 };
 
-/* eslint guard-for-in: "off" */
-
-/**
- * transition class
- * @private
- */
-
 var Transition = function (_Animate) {
   inherits(Transition, _Animate);
 
@@ -1015,11 +1010,6 @@ var Transition = function (_Animate) {
   }]);
   return Transition;
 }(Animate);
-
-/**
- * PathMotion class
- * @private
- */
 
 var PathMotion = function (_Animate) {
   inherits(PathMotion, _Animate);
@@ -1085,13 +1075,6 @@ var PathMotion = function (_Animate) {
   }]);
   return PathMotion;
 }(Animate);
-
-// import Utils from '../utils/Utils';
-/**
- * AnimateRunner, composer any animation type
- *
- * @private
- */
 
 var AnimateRunner = function (_Animate) {
   inherits(AnimateRunner, _Animate);
@@ -1256,11 +1239,6 @@ var AnimateRunner = function (_Animate) {
   }]);
   return AnimateRunner;
 }(Animate);
-
-/**
- * timeline animations class
- * @private
- */
 
 var TimelineAnimations = function () {
   function TimelineAnimations(object) {
@@ -1433,9 +1411,6 @@ var TimelineAnimations = function () {
   return TimelineAnimations;
 }();
 
-/**
- * timeline scale, effect this display-node and it's children
- */
 Object3D.prototype.timeScale = 1;
 
 /**
@@ -1819,166 +1794,6 @@ var Orienter = function (_EventDispatcher) {
   return Orienter;
 }(EventDispatcher);
 
-/**
- * used to link 3d-model with reality world, an ar-glue
- *
- * @param {Object} options config
- * @param {String} options.name ar-glue name, same with `setMarkers` name-id
- * @param {Boolean} [options.autoHide=true] whether auto-hide when marker have not detected
- */
-
-var ARGlue = function (_Object3D) {
-  inherits(ARGlue, _Object3D);
-
-  function ARGlue(options) {
-    classCallCheck(this, ARGlue);
-
-    var _this = possibleConstructorReturn(this, (ARGlue.__proto__ || Object.getPrototypeOf(ARGlue)).call(this));
-
-    options = options || {};
-
-    /**
-     * unique name in all ar-glue object
-     *
-     * @member {String}
-     */
-    _this.name = options.name;
-
-    /**
-     * whether auto-hide when marker have not detected
-     *
-     * @member {Boolean}
-     */
-    _this.autoHide = Utils.isBoolean(options.autoHide) ? options.autoHide : true;
-
-    /**
-     * close this object matrixAutoUpdate, just recive matrix from `UC-AR`
-     *
-     * @member {Boolean}
-     */
-    _this.matrixAutoUpdate = false;
-
-    /**
-     * class type, a mark to distinguish ar-glue and normal display-object
-     *
-     * @member {String}
-     */
-    _this.type = 'ARGlue';
-
-    if (!options.name) {
-      console.error('ARGlue: this glue must have a name');
-    }
-    return _this;
-  }
-
-  /**
-   * update this glue pose matrix
-   * @param {Array} matrix pose matrix
-   * @param {Boolean} isDetected whether detected at this tick
-   */
-
-
-  createClass(ARGlue, [{
-    key: 'updatePose',
-    value: function updatePose(matrix, isDetected) {
-      if (this.autoHide && !isDetected) {
-        this.visible = false;
-      } else {
-        this.visible = true;
-      }
-      this.matrix.fromArray(matrix);
-    }
-  }]);
-  return ARGlue;
-}(Object3D);
-
-function setDefault(check, value, spare) {
-  return check(value) ? value : spare;
-}
-
-/**
- * ViewPort class, a default config for WebGLRenderer with-in UC-AR
- *
- * @private
- * @param {Object} options custom config for WebGLRenderer
- * @param {String|canvas} options.canvas `canvas-dom` or canvas `css-selector`
- * @param {Boolean} [options.alpha=false] whether the canvas contains an alpha (transparency) buffer or not.
- * @param {Boolean} [options.antialias=false] whether to perform antialiasing.
- * @param {String} [options.precision='highp'] Shader precision, Can be `highp`, `mediump` or `lowp`.
- * @param {Boolean} [options.premultipliedAlpha=true] whether the renderer will assume that colors have premultiplied alpha.
- * @param {Boolean} [options.stencil=true] whether the drawing buffer has a stencil buffer of at least 8 bits.
- * @param {Boolean} [options.preserveDrawingBuffer=false] whether to preserve the buffers until manually cleared or overwritten.
- * @param {Boolean} [options.depth=true] whether the drawing buffer has a depth buffer of at least 16 bits.
- * @param {Boolean} [options.logarithmicDepthBuffer] whether to use a logarithmic depth buffer.
- */
-
-var ViewPort = function ViewPort(options) {
-  classCallCheck(this, ViewPort);
-
-  /**
-   * canvas dom element
-   *
-   * @member {canvas}
-   */
-  this.canvas = Utils.isString(options.canvas) ? document.getElementById(options.canvas) || document.querySelector(options.canvas) : options.canvas;
-
-  /**
-   * Shader precision
-   *
-   * @member {String}
-   */
-  this.precision = options.precision;
-
-  /**
-   * canvas contains an alpha (transparency) buffer or not
-   *
-   * @member {Boolean}
-   */
-  this.alpha = setDefault(Utils.isBoolean, options.alpha, true);
-
-  /**
-   * whether to perform antialiasing
-   *
-   * @member {Boolean}
-   */
-  this.antialias = setDefault(Utils.isBoolean, options.antialias, true);
-
-  /**
-   * whether the renderer will assume that colors have premultiplied alpha.
-   *
-   * @member {Boolean}
-   */
-  this.premultipliedAlpha = options.premultipliedAlpha;
-
-  /**
-   * whether the drawing buffer has a stencil buffer of at least 8 bits.
-   *
-   * @member {Boolean}
-   */
-  this.stencil = options.stencil;
-
-  /**
-   * whether to preserve the buffers until manually cleared or overwritten.
-   *
-   * @member {Boolean}
-   */
-  this.preserveDrawingBuffer = options.preserveDrawingBuffer;
-
-  /**
-   * whether the drawing buffer has a depth buffer of at least 16 bits.
-   *
-   * @member {Boolean}
-   */
-  this.depth = options.depth;
-
-  /**
-   * whether to use a logarithmic depth buffer.
-   *
-   * @member {Boolean}
-   */
-  this.logarithmicDepthBuffer = options.logarithmicDepthBuffer;
-};
-
 /* eslint no-unused-vars: 0 */
 
 var Pass = function () {
@@ -2003,7 +1818,7 @@ var Pass = function () {
     value: function setSize(width, height) {}
   }, {
     key: 'render',
-    value: function render(renderer, writeBuffer, readBuffer, delta, maskActive) {
+    value: function render(renderer, writeBuffer, readBuffer, delta) {
       console.error('Pass: .render() must be implemented in derived pass.');
     }
   }]);
@@ -2032,14 +1847,6 @@ var CopyShader = {
 
 };
 
-/**
- * @author alteredq / http://alteredqualia.com/
- *
- * Convolution shader
- * ported from o3d sample to WebGL / GLSL
- * http://o3d.googlecode.com/svn/trunk/samples/convolution.html
- * @private
- */
 var ConvolutionShader = {
 
   defines: {
@@ -2264,11 +2071,6 @@ var FilmShader = {
 
 };
 
-/**
- * @author alteredq / http://alteredqualia.com/
- * @private
- */
-
 var FilmPass = function (_Pass) {
   inherits(FilmPass, _Pass);
 
@@ -2360,11 +2162,6 @@ var DigitalGlitch = {
   fragmentShader: "\n  uniform int byp; // should we apply the glitch ?\n\n  uniform sampler2D tDiffuse;\n  uniform sampler2D tDisp;\n\n  uniform float amount;\n  uniform float angle;\n  uniform float seed;\n  uniform float seed_x;\n  uniform float seed_y;\n  uniform float distortion_x;\n  uniform float distortion_y;\n  uniform float col_s;\n\n  varying vec2 vUv;\n\n\n  float rand(vec2 co){\n    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);\n  }\n\n  void main() {\n    if(byp<1) {\n      vec2 p = vUv;\n      float xs = floor(gl_FragCoord.x / 0.5);\n      float ys = floor(gl_FragCoord.y / 0.5);\n      // based on staffantans glitch shader for unity https://github.com/staffantan/unityglitch\n      vec4 normal = texture2D (tDisp, p*seed*seed);\n      if(p.y<distortion_x+col_s && p.y>distortion_x-col_s*seed) {\n        if(seed_x>0.){\n          p.y = 1. - (p.y + distortion_y);\n        }\n        else {\n          p.y = distortion_y;\n        }\n      }\n      if(p.x<distortion_y+col_s && p.x>distortion_y-col_s*seed) {\n        if(seed_y>0.){\n          p.x=distortion_x;\n        }\n        else {\n          p.x = 1. - (p.x + distortion_x);\n        }\n      }\n      p.x+=normal.x*seed_x*(seed/5.);\n      p.y+=normal.y*seed_y*(seed/5.);\n      // base from RGB shift shader\n      vec2 offset = amount * vec2( cos(angle), sin(angle));\n      vec4 cr = texture2D(tDiffuse, p + offset);\n      vec4 cga = texture2D(tDiffuse, p);\n      vec4 cb = texture2D(tDiffuse, p - offset);\n      gl_FragColor = vec4(cr.r, cga.g, cb.b, cga.a);\n      // add noise\n      vec4 snow = 200.*amount*vec4(rand(vec2(xs * seed,ys * seed*50.))*0.2);\n      gl_FragColor = gl_FragColor+ snow;\n    }\n    else {\n      gl_FragColor=texture2D (tDiffuse, vUv);\n    }\n  }"
 
 };
-
-/**
- * @author alteredq / http://alteredqualia.com/
- * @private
- */
 
 var GlitchPass = function (_Pass) {
   inherits(GlitchPass, _Pass);
@@ -2473,11 +2270,6 @@ var GlitchPass = function (_Pass) {
   return GlitchPass;
 }(Pass);
 
-/**
- * @author alteredq / http://alteredqualia.com/
- * @private
- */
-
 var MaskPass = function (_Pass) {
   inherits(MaskPass, _Pass);
 
@@ -2577,14 +2369,6 @@ var MattingShader = {
   fragmentShader: "\n  uniform float hueStart;\n  uniform float hueEnd;\n  uniform float lightnessStart;\n  uniform float lightnessEnd;\n\n  uniform sampler2D tDiffuse;\n\n  varying vec2 vUv;\n\n  vec3 rgb2hsv(vec3 c){\n    vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);\n    vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));\n    vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));\n\n    float d = q.x - min(q.w, q.y);\n    float e = 1.0e-10;\n    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);\n  }\n\n  void main() {\n    float lightnessCenter = (lightnessStart + lightnessEnd) / 2.0;\n    float lightnessRadius = (lightnessEnd - lightnessStart) / 2.0;\n\n    vec4 rgbColor = texture2D( tDiffuse, vUv );\n\n    vec3 hsv = rgb2hsv(rgbColor.rgb);\n\n    float alpha = 1.0;\n\n    // if (hsv.x > hueStart && hsv.x < hueEnd) {\n      float distance = abs(hsv.z - lightnessCenter) / lightnessRadius;\n      alpha = clamp(distance, 0.0, 1.0);\n    // }\n    gl_FragColor = vec4(rgbColor.rgb, alpha * alpha);\n\n  }"
 };
 
-/**
- * @author alteredq / http://alteredqualia.com/
- *
- * Focus shader
- * based on PaintEffect postprocess from ro.me
- * http://code.google.com/p/3-dreams-of-black/source/browse/deploy/js/effects/PaintEffect.js
- * @private
- */
 var EdgeBlurShader = {
 
   uniforms: {
@@ -2792,11 +2576,6 @@ var RenderPass = function (_Pass) {
   return RenderPass;
 }(Pass);
 
-/**
- * @author alteredq / http://alteredqualia.com/
- * @private
- */
-
 var ShaderPass = function (_Pass) {
   inherits(ShaderPass, _Pass);
 
@@ -2880,6 +2659,71 @@ var FocusShader = {
   fragmentShader: "\n  uniform float screenWidth;\n  uniform float screenHeight;\n  uniform float sampleDistance;\n  uniform float waveFactor;\n\n  uniform sampler2D tDiffuse;\n\n  varying vec2 vUv;\n\n  void main() {\n\n    vec4 color, org, tmp, add;\n    float sample_dist, f;\n    vec2 vin;\n    vec2 uv = vUv;\n\n    add = color = org = texture2D( tDiffuse, uv );\n\n    vin = ( uv - vec2( 0.5 ) ) * vec2( 1.4 );\n    sample_dist = dot( vin, vin ) * 2.0;\n\n    f = ( waveFactor * 100.0 + sample_dist ) * sampleDistance * 4.0;\n\n    vec2 sampleSize = vec2(  1.0 / screenWidth, 1.0 / screenHeight ) * vec2( f );\n\n    add += tmp = texture2D( tDiffuse, uv + vec2( 0.111964, 0.993712 ) * sampleSize );\n    if( tmp.b < color.b ) color = tmp;\n\n    add += tmp = texture2D( tDiffuse, uv + vec2( 0.846724, 0.532032 ) * sampleSize );\n    if( tmp.b < color.b ) color = tmp;\n\n    add += tmp = texture2D( tDiffuse, uv + vec2( 0.943883, -0.330279 ) * sampleSize );\n    if( tmp.b < color.b ) color = tmp;\n\n    add += tmp = texture2D( tDiffuse, uv + vec2( 0.330279, -0.943883 ) * sampleSize );\n    if( tmp.b < color.b ) color = tmp;\n\n    add += tmp = texture2D( tDiffuse, uv + vec2( -0.532032, -0.846724 ) * sampleSize );\n    if( tmp.b < color.b ) color = tmp;\n\n    add += tmp = texture2D( tDiffuse, uv + vec2( -0.993712, -0.111964 ) * sampleSize );\n    if( tmp.b < color.b ) color = tmp;\n\n    add += tmp = texture2D( tDiffuse, uv + vec2( -0.707107, 0.707107 ) * sampleSize );\n    if( tmp.b < color.b ) color = tmp;\n\n    color = color * vec4( 2.0 ) - ( add / vec4( 8.0 ) );\n    color = color + ( add / vec4( 8.0 ) - color ) * ( vec4( 1.0 ) - vec4( sample_dist * 0.5 ) );\n\n    gl_FragColor = vec4( color.rgb * color.rgb * vec3( 0.95 ) + color.rgb, 1.0 );\n\n  }"
 };
 
+var ARGlue = function (_Object3D) {
+  inherits(ARGlue, _Object3D);
+
+  function ARGlue(options) {
+    classCallCheck(this, ARGlue);
+
+    var _this = possibleConstructorReturn(this, (ARGlue.__proto__ || Object.getPrototypeOf(ARGlue)).call(this));
+
+    options = options || {};
+
+    /**
+     * unique name in all ar-glue object
+     *
+     * @member {String}
+     */
+    _this.name = options.name;
+
+    /**
+     * whether auto-hide when marker have not detected
+     *
+     * @member {Boolean}
+     */
+    _this.autoHide = Utils.isBoolean(options.autoHide) ? options.autoHide : true;
+
+    /**
+     * close this object matrixAutoUpdate, just recive matrix from `UC-AR`
+     *
+     * @member {Boolean}
+     */
+    _this.matrixAutoUpdate = false;
+
+    /**
+     * class type, a mark to distinguish ar-glue and normal display-object
+     *
+     * @member {String}
+     */
+    _this.type = 'ARGlue';
+
+    if (!options.name) {
+      console.error('ARGlue: this glue must have a name');
+    }
+    return _this;
+  }
+
+  /**
+   * update this glue pose matrix
+   * @param {Array} matrix pose matrix
+   * @param {Boolean} isDetected whether detected at this tick
+   */
+
+
+  createClass(ARGlue, [{
+    key: 'updatePose',
+    value: function updatePose(matrix, isDetected) {
+      if (this.autoHide && !isDetected) {
+        this.visible = false;
+      } else {
+        this.visible = true;
+      }
+      this.matrix.fromArray(matrix);
+    }
+  }]);
+  return ARGlue;
+}(Object3D);
+
 var parameters = {
   minFilter: LinearFilter,
   magFilter: LinearFilter,
@@ -2893,40 +2737,23 @@ var parameters = {
  */
 
 var EffectComposer = function () {
-  function EffectComposer(renderer, autoToScreen) {
+  function EffectComposer(options) {
     classCallCheck(this, EffectComposer);
+    var width = options.width,
+        height = options.height;
 
-    this.cw = 0;
-    this.ch = 0;
+    this.autoClear = true;
 
-    this.renderer = renderer;
-
-    this.autoToScreen = autoToScreen || false;
-
-    var size = renderer.getDrawingBufferSize();
-    this.cw = size.width;
-    this.ch = size.height;
-    this.renderTarget1 = new WebGLRenderTarget(size.width, size.height, parameters);
-    this.renderTarget1.texture.name = 'EffectComposer.rt1';
+    this.renderTarget1 = new WebGLRenderTarget(width, height, parameters);
+    this.renderTarget1.texture.name = 'RT1';
 
     this.renderTarget2 = this.renderTarget1.clone();
-    this.renderTarget2.texture.name = 'EffectComposer.rt2';
+    this.renderTarget2.texture.name = 'RT2';
 
     this.writeBuffer = this.renderTarget1;
     this.readBuffer = this.renderTarget2;
 
-    this.passes = [];
-
-    // dependencies
-
-    if (CopyShader === undefined) {
-      console.error('EffectComposer relies on CopyShader');
-    }
-
-    if (ShaderPass === undefined) {
-      console.error('EffectComposer relies on ShaderPass');
-    }
-
+    // dependencies ShaderPass and CopyShader
     this.copyPass = new ShaderPass(CopyShader);
   }
 
@@ -2938,1245 +2765,46 @@ var EffectComposer = function () {
       this.writeBuffer = tmp;
     }
   }, {
-    key: 'addPass',
-    value: function addPass(pass) {
-      this.passes.push(pass);
-
-      var size = this.renderer.getDrawingBufferSize();
-      pass.setSize(size.width, size.height);
-    }
-  }, {
-    key: 'insertPass',
-    value: function insertPass(pass, index) {
-      this.passes.splice(index, 0, pass);
-    }
-  }, {
     key: 'render',
-    value: function render(delta) {
-      var maskActive = false;
-      var il = this.passes.length;
+    value: function render(renderer, effectPack, toScreen) {
+      var il = effectPack.passes.length;
+      var delta = effectPack.delta;
 
-      if (this.autoToScreen) this.setRTS();
+      // copy content to readBuffer
+      this.copyPass.render(renderer, this.readBuffer, effectPack.renderTarget);
 
+      // add effect like yoyo
       for (var i = 0; i < il; i++) {
-        var pass = this.passes[i];
+        var pass = effectPack.passes[i];
         if (pass.enabled === false) continue;
-        pass.render(this.renderer, this.writeBuffer, this.readBuffer, delta, maskActive);
+
+        pass.render(renderer, this.writeBuffer, this.readBuffer, delta);
 
         if (pass.needsSwap) {
-          if (maskActive) {
-            var context = this.renderer.context;
-            context.stencilFunc(context.NOTEQUAL, 1, 0xffffffff);
-            this.copyPass.render(this.renderer, this.writeBuffer, this.readBuffer, delta);
-            context.stencilFunc(context.EQUAL, 1, 0xffffffff);
-          }
           this.swapBuffers();
         }
-
-        if (MaskPass !== undefined) {
-          if (pass instanceof MaskPass) {
-            maskActive = true;
-          } else if (pass instanceof ClearMaskPass) {
-            maskActive = false;
-          }
-        }
-      }
-    }
-  }, {
-    key: 'setRTS',
-    value: function setRTS() {
-      var l = this.passes.length - 1;
-      var first = true;
-
-      for (; l >= 0; l--) {
-        var pass = this.passes[l];
-        if (pass.enabled && first) {
-          pass.renderToScreen = true;
-          first = false;
-        } else {
-          pass.renderToScreen = false;
-        }
-      }
-    }
-  }, {
-    key: 'reset',
-    value: function reset(renderTarget) {
-      if (renderTarget === undefined) {
-        var size = this.renderer.getDrawingBufferSize();
-        renderTarget = this.renderTarget1.clone();
-        renderTarget.setSize(size.width, size.height);
       }
 
-      this.renderTarget1.dispose();
-      this.renderTarget2.dispose();
-      this.renderTarget1 = renderTarget;
-      this.renderTarget2 = renderTarget.clone();
-
-      this.writeBuffer = this.renderTarget1;
-      this.readBuffer = this.renderTarget2;
+      // copy content back to layer buffer
+      var renderTarget = toScreen ? null : effectPack.renderTarget;
+      this.copyPass.render(renderer, renderTarget, this.readBuffer);
     }
+
+    /**
+     * resize buffer size when viewport has change
+     * @param {number} width render buffer width
+     * @param {number} height render buffer height
+     */
+
   }, {
     key: 'setSize',
     value: function setSize(width, height) {
-      if (width === this.cw && height === this.ch) return;
-
       this.renderTarget1.setSize(width, height);
       this.renderTarget2.setSize(width, height);
-
-      for (var i = 0; i < this.passes.length; i++) {
-        this.passes[i].setSize(width, height);
-      }
-      this.cw = width;
-      this.ch = height;
-    }
-  }, {
-    key: 'isActive',
-    get: function get$$1() {
-      var length = this.passes.length;
-      var hasPass = length > 0;
-      var invalid = false;
-      for (var i = 0; i < length; i++) {
-        if (this.passes[i].enabled) {
-          invalid = true;
-          break;
-        }
-      }
-      return hasPass && invalid;
     }
   }]);
   return EffectComposer;
 }();
-
-/**
- * render layer, for multi-function render pipeline, support after-effects
- */
-
-var Layer = function () {
-  /**
-   * layer required a renderer
-   * @param {WebGLRenderer} renderer webgl renderer
-   * @param {Object} options options
-   */
-  function Layer(renderer) {
-    classCallCheck(this, Layer);
-
-    /**
-     * the parent of this layer, sometime was compositor
-     * @member {Compositor}
-     */
-    this.parent = null;
-
-    /**
-     * zIndex order, for render list
-     * @member {Number}
-     * @private
-     */
-    this._zIndex = 0;
-
-    /**
-     * layer tag, fast check isLayer
-     * @member {Boolean}
-     */
-    this.isLayer = true;
-
-    /**
-     * cache renderer object in local
-     * @member {WebGLRenderer}
-     */
-    this.renderer = renderer;
-
-    /**
-     * Not Recommend set it to true, if it was true, this layer will forced rendering to the screen,
-     * you should make sure why you set renderToScreen with true.
-     * @member {Boolean}
-     */
-    this.renderToScreen = false;
-
-    /**
-     * framebuffer will auto clear
-     * @member {Boolean}
-     */
-    this.autoClear = true;
-
-    /**
-     * effect composer, for postprogressing
-     * @member {EffectComposer}
-     */
-    this.afterEffects = new EffectComposer(this.renderer);
-
-    /**
-     * after effect update delta
-     * @member {Number}
-     */
-    this.aeDelta = 0;
-
-    /**
-     * orthographic camera, for composite draw
-     * @member {OrthographicCamera}
-     */
-    this.camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
-
-    /**
-     * scene, for composite draw
-     * @member {Scene}
-     */
-    this.scene = new Scene();
-
-    var readBuffer = this.afterEffects.readBuffer;
-    /**
-     * quad, for composite draw
-     * @member {Mesh}
-     */
-    this.quad = new Mesh(new PlaneBufferGeometry(2, 2), new MeshBasicMaterial({
-      transparent: true,
-      map: readBuffer.texture,
-      depthTest: false,
-      depthWrite: false
-    }));
-
-    this.scene.add(this.quad);
-  }
-
-  /**
-   * clear framebuffer
-   */
-
-
-  createClass(Layer, [{
-    key: 'clear',
-    value: function clear() {
-      this.renderer.setRenderTarget(this.afterEffects.readBuffer);
-      this.renderer.clear(this.renderer.autoClearColor, this.renderer.autoClearDepth, this.renderer.autoClearStencil);
-    }
-
-    /**
-     * composite draw, use it when need composition
-     * @param {WebGLRenderTarget} renderTarget render to which buffer
-     * @private
-     */
-
-  }, {
-    key: 'draw',
-    value: function draw(renderTarget) {
-      this.renderer.render(this.scene, this.camera, renderTarget);
-    }
-
-    /**
-     * add a after-effects pass to this layer
-     * @param {Pass} pass pass process
-     */
-
-  }, {
-    key: 'addPass',
-    value: function addPass(pass) {
-      this.afterEffects.addPass(pass);
-    }
-
-    /**
-     * insert a after-effects pass to this layer
-     * @param {Pass} pass pass process
-     * @param {Number} index insert which position
-     */
-
-  }, {
-    key: 'insertPass',
-    value: function insertPass(pass, index) {
-      this.afterEffects.insertPass(pass, index);
-    }
-
-    /**
-     * get zIndex
-     * @return {Number} zIndex
-     */
-
-  }, {
-    key: 'zIndex',
-    get: function get$$1() {
-      return this._zIndex;
-    }
-
-    /**
-     * set zIndex
-     * @param {Number} index zIndex
-     */
-    ,
-    set: function set$$1(index) {
-      if (this._zIndex !== index) {
-        this._zIndex = index;
-        if (this.parent) {
-          this.parent.needSort = true;
-        }
-      }
-    }
-
-    /**
-     * get after-effects was active
-     * @return {Boolean} active or not
-     */
-
-  }, {
-    key: 'isAeOpen',
-    get: function get$$1() {
-      return this.afterEffects.isActive;
-    }
-  }]);
-  return Layer;
-}();
-
-/**
- * graphicsLayer, use to display 3d scene, support after-effects
- */
-
-var GraphicsLayer = function (_Layer) {
-  inherits(GraphicsLayer, _Layer);
-
-  /**
-   * required renderer, and you can set config for WebGLRenderTarget
-   * @param {WebGLRenderer} renderer webgl renderer
-   * @param {Object} options config for renderTarget
-   */
-  function GraphicsLayer(renderer, options) {
-    classCallCheck(this, GraphicsLayer);
-
-    /**
-     * graphics 3d scene
-     * @member {Scene}
-     */
-    var _this = possibleConstructorReturn(this, (GraphicsLayer.__proto__ || Object.getPrototypeOf(GraphicsLayer)).call(this, renderer, options));
-
-    _this.graphics = new Scene();
-    return _this;
-  }
-
-  /**
-   * update timeline
-   * @param {Number} snippet time snippet
-   * @private
-   */
-
-
-  createClass(GraphicsLayer, [{
-    key: 'updateTimeline',
-    value: function updateTimeline(snippet) {
-      this.scene.updateTimeline(snippet);
-      this.graphics.updateTimeline(snippet);
-    }
-
-    /**
-     * render graphicsLayer to buffer
-     * @param {PerspectiveCamera} camera use which Perspective-Camera to look the world
-     */
-
-  }, {
-    key: 'render',
-    value: function render(camera) {
-      var renderTarget = this.renderToScreen ? null : this.afterEffects.readBuffer;
-
-      if (this.autoClear) this.clear();
-
-      this.renderer.render(this.graphics, camera, renderTarget);
-
-      if (this.isAeOpen) {
-        this.afterEffects.render(this.aeDelta);
-      }
-    }
-
-    /**
-     * push a display object into graphics
-     *
-     * @param {THREE.Object3D} child display object, which will be rendering
-     * @return {this} this
-     */
-
-  }, {
-    key: 'add',
-    value: function add() {
-      this.graphics.add.apply(this.graphics, arguments);
-      return this;
-    }
-
-    /**
-     * remove a display object from graphics
-     *
-     * @param {THREE.Object3D} child display object, which you had push it at before
-     * @return {this} this
-     */
-
-  }, {
-    key: 'remove',
-    value: function remove() {
-      this.graphics.remove.apply(this.graphics, arguments);
-      return this;
-    }
-
-    /**
-     * get primers status
-     */
-
-  }, {
-    key: 'isEmpty',
-    get: function get$$1() {
-      return this.graphics.children.length === 0;
-    }
-  }]);
-  return GraphicsLayer;
-}(Layer);
-
-/**
- * primerLayer, use to display primers content, support after-effects
- */
-
-var PrimerLayer = function (_Layer) {
-  inherits(PrimerLayer, _Layer);
-
-  /**
-   * required renderer, and you can set config for WebGLRenderTarget
-   * @param {WebGLRenderer} renderer webgl renderer
-   * @param {Object} options config for renderTarget
-   */
-  function PrimerLayer(renderer, options) {
-    classCallCheck(this, PrimerLayer);
-
-    var _this = possibleConstructorReturn(this, (PrimerLayer.__proto__ || Object.getPrototypeOf(PrimerLayer)).call(this, renderer, options));
-
-    _this.primers = [];
-    return _this;
-  }
-
-  /**
-   * update timeline
-   * @param {Number} snippet time snippet
-   * @private
-   */
-
-
-  createClass(PrimerLayer, [{
-    key: 'updateTimeline',
-    value: function updateTimeline(snippet) {
-      this.scene.updateTimeline(snippet);
-
-      this.primers.forEach(function (primer) {
-        primer.updateTimeline(snippet);
-      });
-    }
-
-    /**
-     * render primerLayer to buffer
-     * @param {PerspectiveCamera} camera use which Perspective-Camera to look around the world
-     */
-
-  }, {
-    key: 'render',
-    value: function render() {
-      var renderTarget = this.renderToScreen ? null : this.afterEffects.readBuffer;
-
-      if (this.autoClear) this.clear();
-
-      var length = this.primers.length;
-      for (var i = 0; i < length; i++) {
-        var primer = this.primers[i];
-        if (primer.enabled) primer.render(this.renderer, renderTarget);
-      }
-
-      if (this.isAeOpen) {
-        this.afterEffects.render(this.aeDelta);
-      }
-    }
-
-    /**
-     * push a display object into primerLayer scene
-     *
-     * @param {THREE.Object3D} object display object, which will be rendering
-     * @return {this} this
-     */
-
-  }, {
-    key: 'add',
-    value: function add(object) {
-      if (arguments.length > 1) {
-        for (var i = 0; i < arguments.length; i++) {
-          this.add(arguments[i]);
-        }
-        return this;
-      }
-
-      if (object && object.isPrimer) {
-        if (object.parent !== null) {
-          object.parent.remove(object);
-        }
-
-        object.parent = this;
-
-        this.primers.push(object);
-      } else {
-        console.error('PrimerLayer.add: object not an instance of Primer.', object);
-      }
-      return this;
-    }
-
-    /**
-     * remove a display object from primerLayer scene
-     *
-     * @param {THREE.Object3D} object display object, which will be rendering
-     * @return {this} this
-     */
-
-  }, {
-    key: 'remove',
-    value: function remove(object) {
-      if (arguments.length > 1) {
-        for (var i = 0; i < arguments.length; i++) {
-          this.remove(arguments[i]);
-        }
-        return this;
-      }
-      var index = this.primers.indexOf(object);
-
-      if (index !== -1) {
-        object.parent = null;
-        this.primers.splice(index, 1);
-      }
-      return this;
-    }
-
-    /**
-     * get primers status
-     */
-
-  }, {
-    key: 'isEmpty',
-    get: function get$$1() {
-      var length = this.primers.length;
-      var none = length === 0;
-      var invalid = true;
-      for (var i = 0; i < length; i++) {
-        if (this.primers[i].enabled) {
-          invalid = false;
-          break;
-        }
-      }
-      return none || invalid;
-    }
-  }]);
-  return PrimerLayer;
-}(Layer);
-
-/**
- * compositor, use to merge primerLayer and graphicsLayer
- */
-
-var Compositor = function () {
-  /**
-   * compositor required a renderer
-   * @param {WebGLRenderer} renderer webgl renderer
-   */
-  function Compositor(renderer) {
-    classCallCheck(this, Compositor);
-
-    /**
-     * cache renderer object in local
-     * @member {WebGLRenderer}
-     */
-    this.renderer = renderer;
-
-    /**
-     * whether sort layers or not
-     * @member {Boolean}
-     */
-    this.needSort = false;
-
-    /**
-     * framebuffer will auto clear
-     * @member {Boolean}
-     */
-    this.autoClear = true;
-
-    /**
-     * store layers
-     * @member {Array}
-     */
-    this.layers = [];
-
-    /**
-     * effect composer, for postprogressing
-     * @member {EffectComposer}
-     */
-    this.afterEffects = new EffectComposer(this.renderer, true);
-
-    /**
-     * after effect update delta
-     * @member {Number}
-     */
-    this.aeDelta = 0;
-  }
-
-  /**
-   * merge layer with zIndex order, and add after effects
-   * @param {PerspectiveCamera} camera use which Perspective-Camera to look the world
-   */
-
-
-  createClass(Compositor, [{
-    key: 'render',
-    value: function render(camera) {
-      if (this.needSort) this._sortList();
-      this.renderLayers(camera);
-      this.composition();
-    }
-  }, {
-    key: 'renderLayers',
-    value: function renderLayers(camera) {
-      for (var i = 0; i < this.layers.length; i++) {
-        var layer = this.layers[i];
-        if (!layer.isEmpty) layer.render(camera);
-      }
-    }
-  }, {
-    key: 'composition',
-    value: function composition() {
-      var isAeOpen = this.isAeOpen;
-
-      var renderTarget = isAeOpen ? this.afterEffects.readBuffer : null;
-
-      if (this.autoClear) this.clear(renderTarget);
-
-      for (var i = 0; i < this.layers.length; i++) {
-        var layer = this.layers[i];
-        if (!layer.isEmpty) layer.draw(renderTarget);
-      }
-
-      if (isAeOpen) {
-        this.afterEffects.render(this.aeDelta);
-      }
-    }
-
-    /**
-     * clear framebuffer
-     * @param {WebGLRenderTarget} renderTarget clear which render target
-     */
-
-  }, {
-    key: 'clear',
-    value: function clear(renderTarget) {
-      this.renderer.setRenderTarget(renderTarget);
-      this.renderer.clear(this.renderer.autoClearColor, this.renderer.autoClearDepth, this.renderer.autoClearStencil);
-    }
-
-    /**
-     * add a layer into compositor
-     *
-     * @param {Layer} layer primerLayer or graphicsLayer
-     * @return {this} this
-     */
-
-  }, {
-    key: 'add',
-    value: function add(layer) {
-      if (arguments.length > 1) {
-        for (var i = 0; i < arguments.length; i++) {
-          this.add(arguments[i]);
-        }
-        return this;
-      }
-
-      if (layer && layer.isLayer) {
-        if (layer.parent !== null) {
-          layer.parent.remove(layer);
-        }
-
-        layer.parent = this;
-
-        this.layers.push(layer);
-        this.needSort = true;
-      } else {
-        console.error('Compositor.add: layer not an instance of PrimerLayer or GraphicsLayer.', layer);
-      }
-      return this;
-    }
-
-    /**
-     * remove a layer from compositor
-     *
-     * @param {Layer} layer primerLayer or graphicsLayer
-     * @return {this} this
-     */
-
-  }, {
-    key: 'remove',
-    value: function remove(layer) {
-      if (arguments.length > 1) {
-        for (var i = 0; i < arguments.length; i++) {
-          this.remove(arguments[i]);
-        }
-        return this;
-      }
-      var index = this.layers.indexOf(layer);
-
-      if (index !== -1) {
-        layer.parent = null;
-        this.layers.splice(index, 1);
-      }
-      return this;
-    }
-
-    /**
-     * add a after-effects pass to this compositor
-     * @param {Pass} pass pass process
-     */
-
-  }, {
-    key: 'addPass',
-    value: function addPass(pass) {
-      this.afterEffects.addPass(pass);
-    }
-
-    /**
-     * insert a after-effects pass to this compositor
-     * @param {Pass} pass pass process
-     * @param {Number} index insert to which position
-     */
-
-  }, {
-    key: 'insertPass',
-    value: function insertPass(pass, index) {
-      this.afterEffects.insertPass(pass, index);
-    }
-
-    /**
-     * sort layer, because array.sort was not stable-sort, so use bubble sort
-     * @private
-     */
-
-  }, {
-    key: '_sortList',
-    value: function _sortList() {
-      var layers = this.layers;
-      var length = layers.length;
-      var i = void 0;
-      var j = void 0;
-      var temp = void 0;
-      for (i = 0; i < length - 1; i++) {
-        for (j = 0; j < length - 1 - i; j++) {
-          if (layers[j].zIndex > layers[j + 1].zIndex) {
-            temp = layers[j];
-            layers[j] = layers[j + 1];
-            layers[j + 1] = temp;
-          }
-        }
-      }
-      this.needSort = false;
-    }
-
-    /**
-     * get after-effects was active
-     * @return {Boolean} active or not
-     */
-
-  }, {
-    key: 'isAeOpen',
-    get: function get$$1() {
-      return this.afterEffects.isActive;
-    }
-  }]);
-  return Compositor;
-}();
-
-/**
- * a `UC-AR` renderer framework, help you building AR-APP fastly
- * @extends EventDispatcher
- * @param {Object} options config for `Viewer` render view-port
- * @param {canvas} options.canvas `canvas-dom` or canvas `css-selector`
- * @param {Boolean} [options.autoClear=true] whether the renderer should automatically clear its output before rendering a frame.
- * @param {Boolean} [options.alpha=false] whether the canvas contains an alpha (transparency) buffer or not.
- * @param {Boolean} [options.antialias=false] whether to perform antialiasing.
- * @param {String} [options.precision='highp'] Shader precision, Can be `highp`, `mediump` or `lowp`.
- * @param {Boolean} [options.premultipliedAlpha=true] whether the renderer will assume that colors have premultiplied alpha.
- * @param {Boolean} [options.stencil=true] whether the drawing buffer has a stencil buffer of at least 8 bits.
- * @param {Boolean} [options.preserveDrawingBuffer=false] whether to preserve the buffers until manually cleared or overwritten.
- * @param {Boolean} [options.depth=true] whether the drawing buffer has a depth buffer of at least 16 bits.
- * @param {Boolean} [options.logarithmicDepthBuffer] whether to use a logarithmic depth buffer.
- */
-
-var Viewer = function (_EventDispatcher) {
-  inherits(Viewer, _EventDispatcher);
-
-  function Viewer(options) {
-    classCallCheck(this, Viewer);
-    var _options$width = options.width,
-        width = _options$width === undefined ? 300 : _options$width,
-        _options$height = options.height,
-        height = _options$height === undefined ? 150 : _options$height,
-        _options$updateStyle = options.updateStyle,
-        updateStyle = _options$updateStyle === undefined ? false : _options$updateStyle;
-
-    /**
-     * view-port camera object, a perspective camera
-     *
-     * @member {Camera}
-     */
-    var _this = possibleConstructorReturn(this, (Viewer.__proto__ || Object.getPrototypeOf(Viewer)).call(this));
-
-    _this.camera = null;
-
-    /**
-     * `WebGL` renderer object, base on `three.js` gl context
-     * @member {WebGLRenderer}
-     */
-    _this.renderer = new WebGLRenderer(new ViewPort(options));
-
-    /**
-     * init set renderer size
-     * @private
-     */
-    _this.renderer.setSize(width, height, updateStyle);
-
-    /**
-     * close auto-clear, and change
-     * @private
-     */
-    _this.renderer.autoClear = false;
-
-    /**
-     * whether the renderer should automatically clear its output before rendering a frame.
-     *
-     * @member {Boolean}
-     */
-    _this.autoClear = Utils.isBoolean(options.autoClear) ? options.autoClear : true;
-
-    /**
-     * whether update is working or not
-     *
-     * @member {Boolean}
-     */
-    _this.ticking = false;
-
-    /**
-     * pre-time cache
-     *
-     * @member {Number}
-     * @private
-     */
-    _this.pt = 0;
-
-    /**
-     * how long the time through, at this tick
-     *
-     * @member {Number}
-     * @private
-     */
-    _this.snippet = 0;
-
-    /**
-     * set it when you hope engine update at a fixed fps, default 60/fps
-     *
-     * @member {Number}
-     */
-    _this.fps = options.fps || 60;
-
-    /**
-     * time-scale for timeline
-     *
-     * @member {Number}
-     */
-    _this.timeScale = 1;
-
-    /**
-     * primer paint a plane as a background or foreground
-     * @member {PrimerLayer}
-     */
-    _this.primerLayer = new PrimerLayer(_this.renderer);
-
-    /**
-     * 3d Graphics layer, for render 3d scene
-     * @member {GraphicsLayer}
-     */
-    _this.graphicsLayer = new GraphicsLayer(_this.renderer);
-
-    /**
-     * compositor primerLayer and graphicsLayer with zIndex order
-     * @member {Compositor}
-     */
-    _this.compositor = new Compositor(_this.renderer);
-
-    /**
-     * add primerLayer and graphicsLayer to compositor
-     */
-    _this.compositor.add(_this.primerLayer, _this.graphicsLayer);
-    return _this;
-  }
-
-  /**
-   * update timeline and update render
-   */
-
-
-  createClass(Viewer, [{
-    key: 'update',
-    value: function update() {
-      this.timeline();
-      var snippet = this.snippet;
-
-      this.emit('pretimeline', {
-        snippet: snippet
-      });
-      this.updateTimeline(snippet);
-      this.emit('posttimeline', {
-        snippet: snippet
-      });
-
-      this.emit('prerender', {
-        snippet: snippet
-      });
-      this.render();
-      this.emit('postrender', {
-        snippet: snippet
-      });
-    }
-
-    /**
-     * update timeline
-     * @param {Number} snippet time snippet
-     * @private
-     */
-
-  }, {
-    key: 'updateTimeline',
-    value: function updateTimeline(snippet) {
-      this.primerLayer.updateTimeline(snippet);
-      this.graphicsLayer.updateTimeline(snippet);
-    }
-
-    /**
-     * render all 3d stage, should be overwrite by sub-class
-     */
-
-  }, {
-    key: 'render',
-    value: function render() {
-      console.warn('should be overwrite by sub-class');
-    }
-
-    /**
-     * render primerLayer and graphicsLayer, if you have not use primerLayer, we will direct render graphicsLayer
-     * @param {PerspectiveCamera} camera use which perspective-camera
-     */
-
-  }, {
-    key: 'renderLayer',
-    value: function renderLayer(camera) {
-      this.compositor.render(camera);
-    }
-
-    /**
-     * render loop, trigger one and one tick
-     *
-     * @private
-     */
-
-  }, {
-    key: 'tick',
-    value: function tick() {
-      var This = this;
-      /**
-       * render loop
-       */
-      (function render() {
-        This.update();
-        This.loop = RAF(render);
-      })();
-    }
-
-    /**
-     * update loop with fixed fps, maybe case a performance problem
-     *
-     * @private
-     */
-
-  }, {
-    key: 'tickFixedFPS',
-    value: function tickFixedFPS() {
-      var This = this;
-      this.loop = setInterval(function () {
-        This.update();
-      }, 1000 / this.fps);
-      This.update();
-    }
-
-    /**
-     * get timeline snippet
-     *
-     * @private
-     */
-
-  }, {
-    key: 'timeline',
-    value: function timeline() {
-      var snippet = Date.now() - this.pt;
-      this.pt += snippet;
-      this.snippet = snippet * this.timeScale;
-    }
-
-    /**
-     * start update engine
-     * @return {this} this
-     */
-
-  }, {
-    key: 'start',
-    value: function start() {
-      if (this.ticking) return;
-      this.ticking = true;
-      this.pt = Date.now();
-      if (this.fps === 60) {
-        this.tick();
-      } else {
-        this.tickFixedFPS();
-      }
-      return this;
-    }
-
-    /**
-     * stop update engine
-     * @return {this} this
-     */
-
-  }, {
-    key: 'stop',
-    value: function stop() {
-      CAF(this.loop);
-      clearInterval(this.loop);
-      this.ticking = false;
-      return this;
-    }
-
-    /**
-     * add a primer to primerLayer
-     * @return {this} this
-     */
-
-  }, {
-    key: 'addPrimer',
-    value: function addPrimer() {
-      this.primerLayer.add.apply(this.primerLayer, arguments);
-      return this;
-    }
-
-    /**
-     * remove a primer from primerLayer
-     * @return {this} this
-     */
-
-  }, {
-    key: 'removePrimer',
-    value: function removePrimer() {
-      this.primerLayer.remove.apply(this.primerLayer, arguments);
-      return this;
-    }
-  }]);
-  return Viewer;
-}(EventDispatcher);
-
-/**
- * AR-Viewer a UC-AR renderer framework
- * @extends Viewer
- * @param {Object} options config for `AR-Viewer` render view-port
- * @param {canvas} options.canvas `canvas-dom` or canvas `css-selector`
- * @param {Number} [options.width=300] init renderer width.
- * @param {Number} [options.height=150] init renderer height.
- * @param {Number} [options.frameWidth=480] set ar-video-frame width.
- * @param {Number} [options.frameHeight=640] set ar-video-frame height.
- * @param {Number} [options.updateStyle=false] auto update css style when setSize.
- * @param {Boolean} [options.interactive=true] whether interactive with scene.
- * @param {Number} [options.fps=60] render frame rate.
- * @param {Boolean} [options.autoClear=true] whether the renderer should automatically clear its output before rendering a frame.
- * @param {Boolean} [options.alpha=false] whether the canvas contains an alpha (transparency) buffer or not.
- * @param {Boolean} [options.antialias=false] whether to perform antialiasing.
- * @param {String} [options.precision='highp'] Shader precision, Can be `highp`, `mediump` or `lowp`.
- * @param {Boolean} [options.premultipliedAlpha=true] whether the renderer will assume that colors have premultiplied alpha.
- * @param {Boolean} [options.stencil=true] whether the drawing buffer has a stencil buffer of at least 8 bits.
- * @param {Boolean} [options.preserveDrawingBuffer=false] whether to preserve the buffers until manually cleared or overwritten.
- * @param {Boolean} [options.depth=true] whether the drawing buffer has a depth buffer of at least 16 bits.
- * @param {Boolean} [options.logarithmicDepthBuffer] whether to use a logarithmic depth buffer.
- */
-
-var ARViewer = function (_Viewer) {
-  inherits(ARViewer, _Viewer);
-
-  function ARViewer(options) {
-    classCallCheck(this, ARViewer);
-
-    var _this = possibleConstructorReturn(this, (ARViewer.__proto__ || Object.getPrototypeOf(ARViewer)).call(this, options));
-
-    var _options$frameWidth = options.frameWidth,
-        frameWidth = _options$frameWidth === undefined ? 480 : _options$frameWidth,
-        _options$frameHeight = options.frameHeight,
-        frameHeight = _options$frameHeight === undefined ? 640 : _options$frameHeight;
-
-    /**
-     * video frame width
-     * @member {Number}
-     */
-
-    _this.frameWidth = frameWidth;
-
-    /**
-     * video frame height
-     * @member {Number}
-     */
-    _this.frameHeight = frameHeight;
-
-    // init update viewport for ar-video-frame
-    _this.updateViewport();
-
-    /**
-     * view-port camera object, a perspective camera
-     *
-     * @member {PerspectiveCamera}
-     */
-    _this.camera = new PerspectiveCamera();
-    _this.camera.matrixAutoUpdate = false;
-
-    /**
-     * tracking object `<markerName-arGlue>` map
-     *
-     * @member {Object}
-     */
-    _this.ar_map = {};
-    return _this;
-  }
-
-  /**
-   * render layers
-   */
-
-
-  createClass(ARViewer, [{
-    key: 'render',
-    value: function render() {
-      if (this.autoClear) {
-        this.renderer.setRenderTarget(null);
-        this.renderer.clear(this.renderer.autoClearColor, this.renderer.autoClearDepth, this.renderer.autoClearStencil);
-      }
-
-      this.renderLayer(this.camera);
-    }
-
-    /**
-     * add display-object like `ARGlue` or `THREE.Object3D` object
-     *
-     * @param {ARGlue|THREE.Object3D} object display-object which you want show
-     * @return {this} this
-     */
-
-  }, {
-    key: 'add',
-    value: function add(object) {
-      if (arguments.length > 1) {
-        for (var i = 0; i < arguments.length; i++) {
-          this.add(arguments[i]);
-        }
-        return this;
-      }
-
-      if (object.type === 'ARGlue') {
-        var name = object.name;
-        this.ar_map[name] = object;
-      }
-      this.graphicsLayer.add(object);
-      return this;
-    }
-
-    /**
-     * remove `ARGlue` or `THREE.Object3D` object
-     *
-     * @param {ARGlue|THREE.Object3D} object display-object which you had add before
-     * @return {this} this
-     */
-
-  }, {
-    key: 'remove',
-    value: function remove(object) {
-      if (arguments.length > 1) {
-        for (var i = 0; i < arguments.length; i++) {
-          this.remove(arguments[i]);
-        }
-        return this;
-      }
-
-      if (object.type === 'ARGlue') {
-        var name = object.name;
-        this.ar_map[name] = null;
-      }
-      this.graphicsLayer.remove(object);
-      return this;
-    }
-
-    /**
-     * update tracking-display-object's pose state, poses get from `UC-AR`
-     *
-     * @param {Array} poses poses matrix array
-     */
-
-  }, {
-    key: 'updatePoses',
-    value: function updatePoses(poses) {
-      var _this2 = this;
-
-      poses.forEach(function (_ref) {
-        var name = _ref.name,
-            matrix = _ref.matrix,
-            isDetected = _ref.isDetected;
-
-        var glue = _this2.ar_map[name];
-        if (glue) {
-          glue.updatePose(matrix, isDetected);
-        }
-      });
-    }
-
-    /**
-     * update camera internal parama matrix, this matrix get from `UC-AR`
-     *
-     * @param {Array} matrix 4*4 matrix
-     */
-
-  }, {
-    key: 'updateCameraMatrix',
-    value: function updateCameraMatrix(matrix) {
-      this.camera.projectionMatrix.fromArray(matrix);
-    }
-
-    /**
-     * adjust viewport, when frameWidth frameHeight or renderer.getSize had change
-     */
-
-  }, {
-    key: 'updateViewport',
-    value: function updateViewport() {
-      var _renderer$getSize = this.renderer.getSize(),
-          width = _renderer$getSize.width,
-          height = _renderer$getSize.height;
-
-      var rw = width / this.frameWidth;
-      var rh = height / this.frameHeight;
-      var ratio = Math.max(rw, rh);
-      var rtw = this.frameWidth * ratio;
-      var rth = this.frameHeight * ratio;
-
-      var x = 0;
-      var y = 0;
-
-      if (rw < rh) {
-        x = -(rtw - width) / 2;
-      } else if (rw > rh) {
-        y = -(rth - height) / 2;
-      }
-
-      this.renderer.setViewport(x, y, rtw, rth);
-    }
-  }]);
-  return ARViewer;
-}(Viewer);
 
 /**
  * get variable type
@@ -4223,13 +2851,6 @@ var Utils$2 = {
   }
 };
 
-/**
- * proxy `addEventListener` function
- *
- * @param {String} type event type, evnet name
- * @param {Function} fn callback
- * @return {this} this
- */
 EventDispatcher.prototype.on = function (type, fn) {
   if (!Utils$2.isFunction(fn)) return;
   if (this instanceof Object3D) this.interactive = true;
@@ -4289,9 +2910,6 @@ EventDispatcher.prototype.emit = function (type) {
   return this;
 };
 
-/**
- * whether displayObject is interactively
- */
 Object3D.prototype.interactive = false;
 
 /**
@@ -4331,12 +2949,6 @@ Object3D.prototype.raycastTest = function (raycaster) {
 
   return false;
 };
-
-/**
- * Holds all information related to an Interaction event
- *
- * @class
- */
 
 var InteractionData = function () {
   /**
@@ -4789,22 +3401,20 @@ var hitTestEvent = {
  * @extends EventDispatcher
  */
 
-var InteractionManager = function (_EventDispatcher) {
-  inherits(InteractionManager, _EventDispatcher);
+var InteractionLayer = function (_EventDispatcher) {
+  inherits(InteractionLayer, _EventDispatcher);
 
   /**
    * @param {WebGLRenderer} renderer - A reference to the current renderer
-   * @param {Scene} scene - A reference to the current scene
-   * @param {Camera} camera - A reference to the current camera
    * @param {Object} [options] - The options for the manager.
    * @param {Boolean} [options.autoPreventDefault=false] - Should the manager automatically prevent default browser actions.
    * @param {Boolean} [options.autoAttach=true] - Should the manager automatically attach target element.
    * @param {Number} [options.interactionFrequency=10] - Frequency increases the interaction events will be checked.
    */
-  function InteractionManager(renderer, scene, camera, options) {
-    classCallCheck(this, InteractionManager);
+  function InteractionLayer(renderer, options) {
+    classCallCheck(this, InteractionLayer);
 
-    var _this = possibleConstructorReturn(this, (InteractionManager.__proto__ || Object.getPrototypeOf(InteractionManager)).call(this));
+    var _this = possibleConstructorReturn(this, (InteractionLayer.__proto__ || Object.getPrototypeOf(InteractionLayer)).call(this));
 
     options = options || {};
 
@@ -4818,16 +3428,23 @@ var InteractionManager = function (_EventDispatcher) {
     /**
      * The renderer this interaction manager works for.
      *
+     * @member {Layer}
+     */
+    _this.layer = null;
+
+    /**
+     * The renderer this interaction manager works for.
+     *
      * @member {Scene}
      */
-    _this.scene = scene;
+    // this.scene = scene;
 
     /**
      * The renderer this interaction manager works for.
      *
      * @member {Camera}
      */
-    _this.camera = camera;
+    // this.camera = camera;
 
     /**
      * Should default browser actions automatically be prevented.
@@ -5038,7 +3655,7 @@ var InteractionManager = function (_EventDispatcher) {
      * Fired when a pointer device button (usually a mouse left-button) is pressed on the display
      * object.
      *
-     * @event InteractionManager#mousedown
+     * @event InteractionLayer#mousedown
      * @param {InteractionEvent} event - Interaction event
      */
 
@@ -5046,7 +3663,7 @@ var InteractionManager = function (_EventDispatcher) {
      * Fired when a pointer device secondary button (usually a mouse right-button) is pressed
      * on the display object.
      *
-     * @event InteractionManager#rightdown
+     * @event InteractionLayer#rightdown
      * @param {InteractionEvent} event - Interaction event
      */
 
@@ -5054,7 +3671,7 @@ var InteractionManager = function (_EventDispatcher) {
      * Fired when a pointer device button (usually a mouse left-button) is released over the display
      * object.
      *
-     * @event InteractionManager#mouseup
+     * @event InteractionLayer#mouseup
      * @param {InteractionEvent} event - Interaction event
      */
 
@@ -5062,7 +3679,7 @@ var InteractionManager = function (_EventDispatcher) {
      * Fired when a pointer device secondary button (usually a mouse right-button) is released
      * over the display object.
      *
-     * @event InteractionManager#rightup
+     * @event InteractionLayer#rightup
      * @param {InteractionEvent} event - Interaction event
      */
 
@@ -5070,7 +3687,7 @@ var InteractionManager = function (_EventDispatcher) {
      * Fired when a pointer device button (usually a mouse left-button) is pressed and released on
      * the display object.
      *
-     * @event InteractionManager#click
+     * @event InteractionLayer#click
      * @param {InteractionEvent} event - Interaction event
      */
 
@@ -5078,146 +3695,146 @@ var InteractionManager = function (_EventDispatcher) {
      * Fired when a pointer device secondary button (usually a mouse right-button) is pressed
      * and released on the display object.
      *
-     * @event InteractionManager#rightclick
+     * @event InteractionLayer#rightclick
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a pointer device button (usually a mouse left-button) is released outside the
      * display object that initially registered a
-     * [mousedown]{@link InteractionManager#event:mousedown}.
+     * [mousedown]{@link InteractionLayer#event:mousedown}.
      *
-     * @event InteractionManager#mouseupoutside
+     * @event InteractionLayer#mouseupoutside
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a pointer device secondary button (usually a mouse right-button) is released
      * outside the display object that initially registered a
-     * [rightdown]{@link InteractionManager#event:rightdown}.
+     * [rightdown]{@link InteractionLayer#event:rightdown}.
      *
-     * @event InteractionManager#rightupoutside
+     * @event InteractionLayer#rightupoutside
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a pointer device (usually a mouse) is moved while over the display object
      *
-     * @event InteractionManager#mousemove
+     * @event InteractionLayer#mousemove
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a pointer device (usually a mouse) is moved onto the display object
      *
-     * @event InteractionManager#mouseover
+     * @event InteractionLayer#mouseover
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a pointer device (usually a mouse) is moved off the display object
      *
-     * @event InteractionManager#mouseout
+     * @event InteractionLayer#mouseout
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a pointer device button is pressed on the display object.
      *
-     * @event InteractionManager#pointerdown
+     * @event InteractionLayer#pointerdown
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a pointer device button is released over the display object.
      *
-     * @event InteractionManager#pointerup
+     * @event InteractionLayer#pointerup
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when the operating system cancels a pointer event
      *
-     * @event InteractionManager#pointercancel
+     * @event InteractionLayer#pointercancel
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a pointer device button is pressed and released on the display object.
      *
-     * @event InteractionManager#pointertap
+     * @event InteractionLayer#pointertap
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a pointer device button is released outside the display object that initially
-     * registered a [pointerdown]{@link InteractionManager#event:pointerdown}.
+     * registered a [pointerdown]{@link InteractionLayer#event:pointerdown}.
      *
-     * @event InteractionManager#pointerupoutside
+     * @event InteractionLayer#pointerupoutside
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a pointer device is moved while over the display object
      *
-     * @event InteractionManager#pointermove
+     * @event InteractionLayer#pointermove
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a pointer device is moved onto the display object
      *
-     * @event InteractionManager#pointerover
+     * @event InteractionLayer#pointerover
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a pointer device is moved off the display object
      *
-     * @event InteractionManager#pointerout
+     * @event InteractionLayer#pointerout
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a touch point is placed on the display object.
      *
-     * @event InteractionManager#touchstart
+     * @event InteractionLayer#touchstart
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a touch point is removed from the display object.
      *
-     * @event InteractionManager#touchend
+     * @event InteractionLayer#touchend
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when the operating system cancels a touch
      *
-     * @event InteractionManager#touchcancel
+     * @event InteractionLayer#touchcancel
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a touch point is placed and removed from the display object.
      *
-     * @event InteractionManager#tap
+     * @event InteractionLayer#tap
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a touch point is removed outside of the display object that initially
-     * registered a [touchstart]{@link InteractionManager#event:touchstart}.
+     * registered a [touchstart]{@link InteractionLayer#event:touchstart}.
      *
-     * @event InteractionManager#touchendoutside
+     * @event InteractionLayer#touchendoutside
      * @param {InteractionEvent} event - Interaction event
      */
 
     /**
      * Fired when a touch point is moved along the display object.
      *
-     * @event InteractionManager#touchmove
+     * @event InteractionLayer#touchmove
      * @param {InteractionEvent} event - Interaction event
      */
 
@@ -5430,25 +4047,47 @@ var InteractionManager = function (_EventDispatcher) {
   }
 
   /**
-   * Hit tests a point against the display tree, returning the first interactive object that is hit.
-   *
-   * @param {Point} globalPoint - A point to hit test with, in global space.
-   * @param {Object3D} [root] - The root display object to start from. If omitted, defaults
-   * to the last rendered root of the associated renderer.
-   * @return {Object3D} The hit display object, if any.
+   * @return {boolean}
    */
 
 
-  createClass(InteractionManager, [{
+  createClass(InteractionLayer, [{
+    key: 'isAble',
+    value: function isAble() {
+      return this.layer && this.layer.interactive;
+    }
+
+    /**
+     * set layer
+     * @param {Layer} layer layer
+     */
+
+  }, {
+    key: 'setLayer',
+    value: function setLayer(layer) {
+      this.layer = layer;
+    }
+
+    /**
+     * Hit tests a point against the display tree, returning the first interactive object that is hit.
+     *
+     * @param {Point} globalPoint - A point to hit test with, in global space.
+     * @param {Object3D} [root] - The root display object to start from. If omitted, defaults
+     * to the last rendered root of the associated renderer.
+     * @return {Object3D} The hit display object, if any.
+     */
+
+  }, {
     key: 'hitTest',
     value: function hitTest(globalPoint, root) {
+      if (!this.isAble()) return null;
       // clear the target for our hit test
       hitTestEvent.target = null;
       // assign the global point
       hitTestEvent.data.global = globalPoint;
       // ensure safety of the root
       if (!root) {
-        root = this.scene;
+        root = this.layer.scene;
       }
       // run the hit test
       this.processInteractive(hitTestEvent, root, null, true);
@@ -5597,6 +4236,7 @@ var InteractionManager = function (_EventDispatcher) {
     value: function update(_ref) {
       var snippet = _ref.snippet;
 
+      if (!this.isAble()) return;
       this._deltaTime += snippet;
 
       if (this._deltaTime < this.interactionFrequency) {
@@ -5629,7 +4269,7 @@ var InteractionManager = function (_EventDispatcher) {
           if (interactionData.originalEvent && interactionData.pointerType !== 'touch') {
             var interactionEvent = this.configureInteractionEventForDOMEvent(this.eventData, interactionData.originalEvent, interactionData);
 
-            this.processInteractive(interactionEvent, this.scene, this.processPointerOverOut, true);
+            this.processInteractive(interactionEvent, this.layer.scene, this.processPointerOverOut, true);
           }
         }
       }
@@ -5821,6 +4461,7 @@ var InteractionManager = function (_EventDispatcher) {
   }, {
     key: 'onClick',
     value: function onClick(originalEvent) {
+      if (!this.isAble()) return;
       if (originalEvent.type !== 'click') return;
 
       var events = this.normalizeToPointerData(originalEvent);
@@ -5835,7 +4476,7 @@ var InteractionManager = function (_EventDispatcher) {
 
       interactionEvent.data.originalEvent = originalEvent;
 
-      this.processInteractive(interactionEvent, this.scene, this.processClick, true);
+      this.processInteractive(interactionEvent, this.layer.scene, this.processClick, true);
 
       this.emit('click', interactionEvent);
     }
@@ -5867,6 +4508,7 @@ var InteractionManager = function (_EventDispatcher) {
   }, {
     key: 'onPointerDown',
     value: function onPointerDown(originalEvent) {
+      if (!this.isAble()) return;
       // if we support touch events, then only use those for touch events, not pointer events
       if (this.supportsTouchEvents && originalEvent.pointerType === 'touch') return;
 
@@ -5895,7 +4537,7 @@ var InteractionManager = function (_EventDispatcher) {
 
         interactionEvent.data.originalEvent = originalEvent;
 
-        this.processInteractive(interactionEvent, this.scene, this.processPointerDown, true);
+        this.processInteractive(interactionEvent, this.layer.scene, this.processPointerDown, true);
 
         this.emit('pointerdown', interactionEvent);
         if (event.pointerType === 'touch') {
@@ -5976,7 +4618,7 @@ var InteractionManager = function (_EventDispatcher) {
         interactionEvent.data.originalEvent = originalEvent;
 
         // perform hit testing for events targeting our canvas or cancel events
-        this.processInteractive(interactionEvent, this.scene, func, cancelled || !eventAppend);
+        this.processInteractive(interactionEvent, this.layer.scene, func, cancelled || !eventAppend);
 
         this.emit(cancelled ? 'pointercancel' : 'pointerup' + eventAppend, interactionEvent);
 
@@ -6001,6 +4643,7 @@ var InteractionManager = function (_EventDispatcher) {
   }, {
     key: 'onPointerCancel',
     value: function onPointerCancel(event) {
+      if (!this.isAble()) return;
       // if we support touch events, then only use those for touch events, not pointer events
       if (this.supportsTouchEvents && event.pointerType === 'touch') return;
 
@@ -6042,6 +4685,7 @@ var InteractionManager = function (_EventDispatcher) {
   }, {
     key: 'onPointerUp',
     value: function onPointerUp(event) {
+      if (!this.isAble()) return;
       // if we support touch events, then only use those for touch events, not pointer events
       if (this.supportsTouchEvents && event.pointerType === 'touch') return;
 
@@ -6136,6 +4780,7 @@ var InteractionManager = function (_EventDispatcher) {
   }, {
     key: 'onPointerMove',
     value: function onPointerMove(originalEvent) {
+      if (!this.isAble()) return;
       // if we support touch events, then only use those for touch events, not pointer events
       if (this.supportsTouchEvents && originalEvent.pointerType === 'touch') return;
 
@@ -6160,7 +4805,7 @@ var InteractionManager = function (_EventDispatcher) {
 
         var interactive = event.pointerType === 'touch' ? this.moveWhenInside : true;
 
-        this.processInteractive(interactionEvent, this.scene, this.processPointerMove, interactive);
+        this.processInteractive(interactionEvent, this.layer.scene, this.processPointerMove, interactive);
         this.emit('pointermove', interactionEvent);
         if (event.pointerType === 'touch') this.emit('touchmove', interactionEvent);
         if (event.pointerType === 'mouse' || event.pointerType === 'pen') this.emit('mousemove', interactionEvent);
@@ -6212,6 +4857,7 @@ var InteractionManager = function (_EventDispatcher) {
   }, {
     key: 'onPointerOut',
     value: function onPointerOut(originalEvent) {
+      if (!this.isAble()) return;
       // if we support touch events, then only use those for touch events, not pointer events
       if (this.supportsTouchEvents && originalEvent.pointerType === 'touch') return;
 
@@ -6231,7 +4877,7 @@ var InteractionManager = function (_EventDispatcher) {
 
       interactionEvent.data.originalEvent = event;
 
-      this.processInteractive(interactionEvent, this.scene, this.processPointerOverOut, false);
+      this.processInteractive(interactionEvent, this.layer.scene, this.processPointerOverOut, false);
 
       this.emit('pointerout', interactionEvent);
       if (event.pointerType === 'mouse' || event.pointerType === 'pen') {
@@ -6307,6 +4953,7 @@ var InteractionManager = function (_EventDispatcher) {
   }, {
     key: 'onPointerOver',
     value: function onPointerOver(originalEvent) {
+      if (!this.isAble()) return;
       var events = this.normalizeToPointerData(originalEvent);
 
       // Only mouse and pointer can call onPointerOver, so events will always be length 1
@@ -6429,7 +5076,7 @@ var InteractionManager = function (_EventDispatcher) {
 
       this.mapPositionToPoint(interactionData.global, pointerEvent.clientX, pointerEvent.clientY);
 
-      this.raycaster.setFromCamera(interactionData.global, this.camera);
+      if (this.layer && this.layer.interactive) this.raycaster.setFromCamera(interactionData.global, this.layer.camera);
 
       // Not really sure why this is happening, but it's how a previous version handled things TODO: there should be remove
       if (pointerEvent.pointerType === 'touch') {
@@ -6550,8 +5197,2172 @@ var InteractionManager = function (_EventDispatcher) {
       this._tempPoint = null;
     }
   }]);
-  return InteractionManager;
+  return InteractionLayer;
 }(EventDispatcher);
+
+var LayerCompositor = function () {
+  function LayerCompositor() {
+    classCallCheck(this, LayerCompositor);
+
+    /**
+     * framebuffer will auto clear
+     * @member {Boolean}
+     */
+    this.autoClear = true;
+
+    /**
+     * orthographic camera, for composite draw
+     * @member {OrthographicCamera}
+     */
+    this.camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+    /**
+     * scene, for composite draw
+     * @member {Scene}
+     */
+    this.scene = new Scene();
+  }
+
+  /**
+   * push a display object into scene
+   *
+   * @param {THREE.Object3D} child display object, which will be rendering
+   * @return {this} this
+   */
+
+
+  createClass(LayerCompositor, [{
+    key: 'add',
+    value: function add() {
+      this.scene.add.apply(this.scene, arguments);
+      return this;
+    }
+
+    /**
+     * remove a display object from scene
+     *
+     * @param {THREE.Object3D} child display object, which you had push it at before
+     * @return {this} this
+     */
+
+  }, {
+    key: 'remove',
+    value: function remove() {
+      this.scene.remove.apply(this.scene, arguments);
+      return this;
+    }
+  }, {
+    key: 'composition',
+    value: function composition(renderer, renderTarget) {
+      if (this.autoClear) this.clear(renderer, renderTarget);
+      renderer.render(this.scene, this.camera, renderTarget);
+    }
+
+    /**
+     * clear framebuffer
+     * @param {WebGLRender} renderer renderer from view
+     * @param {WebGLRenderTarget} renderTarget clear which render target
+     */
+
+  }, {
+    key: 'clear',
+    value: function clear(renderer, renderTarget) {
+      renderer.setRenderTarget(renderTarget);
+      renderer.clear(renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil);
+    }
+  }]);
+  return LayerCompositor;
+}();
+
+function setDefault(check, value, spare) {
+  return check(value) ? value : spare;
+}
+
+/**
+ * ViewConfig class, a default config for WebGLRenderer with-in UC-AR
+ *
+ * @private
+ * @param {Object} options custom config for WebGLRenderer
+ * @param {String|canvas} options.canvas `canvas-dom` or canvas `css-selector`
+ * @param {Boolean} [options.alpha=false] whether the canvas contains an alpha (transparency) buffer or not.
+ * @param {Boolean} [options.antialias=false] whether to perform antialiasing.
+ * @param {String} [options.precision='highp'] Shader precision, Can be `highp`, `mediump` or `lowp`.
+ * @param {Boolean} [options.premultipliedAlpha=true] whether the renderer will assume that colors have premultiplied alpha.
+ * @param {Boolean} [options.stencil=true] whether the drawing buffer has a stencil buffer of at least 8 bits.
+ * @param {Boolean} [options.preserveDrawingBuffer=false] whether to preserve the buffers until manually cleared or overwritten.
+ * @param {Boolean} [options.depth=true] whether the drawing buffer has a depth buffer of at least 16 bits.
+ * @param {Boolean} [options.logarithmicDepthBuffer] whether to use a logarithmic depth buffer.
+ */
+
+var ViewConfig = function ViewConfig(options) {
+  classCallCheck(this, ViewConfig);
+
+  /**
+   * canvas dom element
+   *
+   * @member {canvas}
+   */
+  this.canvas = Utils.isString(options.canvas) ? document.getElementById(options.canvas) || document.querySelector(options.canvas) : options.canvas;
+
+  /**
+   * Shader precision
+   *
+   * @member {String}
+   */
+  this.precision = options.precision;
+
+  /**
+   * canvas contains an alpha (transparency) buffer or not
+   *
+   * @member {Boolean}
+   */
+  this.alpha = setDefault(Utils.isBoolean, options.alpha, true);
+
+  /**
+   * whether to perform antialiasing
+   *
+   * @member {Boolean}
+   */
+  this.antialias = setDefault(Utils.isBoolean, options.antialias, true);
+
+  /**
+   * whether the renderer will assume that colors have premultiplied alpha.
+   *
+   * @member {Boolean}
+   */
+  this.premultipliedAlpha = options.premultipliedAlpha;
+
+  /**
+   * whether the drawing buffer has a stencil buffer of at least 8 bits.
+   *
+   * @member {Boolean}
+   */
+  this.stencil = options.stencil;
+
+  /**
+   * whether to preserve the buffers until manually cleared or overwritten.
+   *
+   * @member {Boolean}
+   */
+  this.preserveDrawingBuffer = options.preserveDrawingBuffer;
+
+  /**
+   * whether the drawing buffer has a depth buffer of at least 16 bits.
+   *
+   * @member {Boolean}
+   */
+  this.depth = options.depth;
+
+  /**
+   * whether to use a logarithmic depth buffer.
+   *
+   * @member {Boolean}
+   */
+  this.logarithmicDepthBuffer = options.logarithmicDepthBuffer;
+};
+
+var parameters$1 = {
+  minFilter: LinearFilter,
+  magFilter: LinearFilter,
+  format: RGBAFormat,
+  stencilBuffer: false
+};
+
+var EffectPack = function () {
+  function EffectPack(options) {
+    classCallCheck(this, EffectPack);
+    var width = options.width,
+        height = options.height;
+
+
+    this.width = width;
+
+    this.height = height;
+
+    /**
+     * render buffer to carry render content
+     */
+    this.renderTarget = new WebGLRenderTarget(this.width, this.height, parameters$1);
+
+    /**
+     * after effect update delta
+     * @member {Number}
+     */
+    this.delta = 0;
+
+    /**
+     * store pass array, all effect pass list
+     * @member {pass}
+     */
+    this.passes = [];
+  }
+
+  /**
+   * add a after-effects pass to this layer
+   * @param {Pass} pass pass process
+   */
+
+
+  createClass(EffectPack, [{
+    key: 'addPass',
+    value: function addPass(pass) {
+      this.passes.push(pass);
+      pass.setSize(this.width, this.height);
+    }
+
+    /**
+     * insert a after-effects pass to this layer
+     * @param {Pass} pass pass process
+     * @param {Number} index insert which position
+     */
+
+  }, {
+    key: 'insertPass',
+    value: function insertPass(pass, index) {
+      this.passes.splice(index, 0, pass);
+    }
+
+    /**
+     * resize buffer size and pass size when viewport has change
+     * @param {number} width render buffer width
+     * @param {number} height render buffer height
+     */
+
+  }, {
+    key: 'setSize',
+    value: function setSize(width, height) {
+      this.width = width;
+      this.height = height;
+      this.renderTarget.setSize(width, height);
+
+      var length = this.passes.length;
+      for (var i = 0; i < length; i++) {
+        this.passes[i].setSize(width, height);
+      }
+    }
+
+    /**
+     * get after-effects was active
+     * @return {Boolean} active or not
+     */
+
+  }, {
+    key: 'isAeOpen',
+    get: function get$$1() {
+      var length = this.passes.length;
+      if (length === 0) return false;
+      for (var i = 0; i < length; i++) {
+        if (this.passes[i].enabled) return true;
+      }
+      return false;
+    }
+  }]);
+  return EffectPack;
+}();
+
+var Viewer = function (_EventDispatcher) {
+  inherits(Viewer, _EventDispatcher);
+
+  function Viewer(options) {
+    classCallCheck(this, Viewer);
+
+    var _this = possibleConstructorReturn(this, (Viewer.__proto__ || Object.getPrototypeOf(Viewer)).call(this));
+
+    var _options$pixelRatio = options.pixelRatio,
+        pixelRatio = _options$pixelRatio === undefined ? 1 : _options$pixelRatio,
+        _options$width = options.width,
+        width = _options$width === undefined ? 300 : _options$width,
+        _options$height = options.height,
+        height = _options$height === undefined ? 150 : _options$height,
+        _options$updateStyle = options.updateStyle,
+        updateStyle = _options$updateStyle === undefined ? false : _options$updateStyle,
+        _options$vrmode = options.vrmode,
+        vrmode = _options$vrmode === undefined ? false : _options$vrmode;
+
+
+    _this.width = width;
+
+    _this.height = height;
+
+    _this.viewBox = { width: width * pixelRatio, height: height * pixelRatio };
+
+    /**
+     * `WebGL` renderer object, base on `three.js` gl context
+     * @member {WebGLRenderer}
+     */
+    _this.renderer = new WebGLRenderer(new ViewConfig(options));
+
+    /**
+     * init set pixelRatio
+     * @private
+     */
+    // this.renderer.setPixelRatio(pixelRatio);
+
+    /**
+     * init set renderer size
+     * @private
+     */
+    // this.renderer.setSize(width, height, updateStyle);
+
+    /**
+     * render effect kit to carry render content and some data
+     */
+    _this.effectPack = new EffectPack(_this.viewBox);
+
+    /**
+     * close auto-clear, and change
+     * @private
+     */
+    _this.renderer.autoClear = false;
+
+    /**
+     * whether the renderer should automatically clear its output before rendering a frame.
+     *
+     * @member {Boolean}
+     */
+    _this.autoClear = Utils.isBoolean(options.autoClear) ? options.autoClear : true;
+
+    /**
+     * whether update ticker is working or not
+     *
+     * @member {Boolean}
+     */
+    _this.ticking = false;
+
+    /**
+     * pre-time cache
+     *
+     * @member {Number}
+     * @private
+     */
+    _this.pt = 0;
+
+    /**
+     * how long the time through, at this tick
+     *
+     * @member {Number}
+     * @private
+     */
+    _this.snippet = 0;
+
+    /**
+     * set it when you hope engine update at a fixed fps, default 60/fps
+     *
+     * @member {Number}
+     */
+    _this.fps = options.fps || 60;
+
+    /**
+     * time-scale for timeline
+     *
+     * @member {Number}
+     */
+    _this.timeScale = 1;
+
+    /**
+     * effect composer, for postprogressing
+     * @member {EffectComposer}
+     */
+    _this.effectComposer = new EffectComposer(_this.viewBox);
+
+    /**
+     * compositor primerLayer and graphicsLayer with zIndex order
+     * @member {LayerCompositor}
+     */
+    _this.layerCompositor = new LayerCompositor();
+
+    /**
+     * store layers array, all content layer list
+     * @member {layer}
+     */
+    _this.layers = [];
+
+    /**
+     * 3d-view interaction manager
+     * TODO: should fix interaction bug when vrmode
+     */
+    _this.interactionLayer = new InteractionLayer(_this.renderer);
+
+    _this.setPixelRatio(pixelRatio, updateStyle);
+
+    _this.viewport = new Vector4();
+
+    _this._vrmode = null;
+
+    _this.vrmodeOnChange = function () {
+      _this.emit('vrmodeChange');
+      _this.setPassesSize();
+      _this.setComposerSize();
+      _this.setLayersSize();
+    };
+
+    _this.vrmode = vrmode;
+
+    _this.session = {
+      viewport: _this.viewport
+    };
+    return _this;
+  }
+
+  /**
+   * update timeline and update render
+   */
+
+
+  createClass(Viewer, [{
+    key: 'update',
+    value: function update() {
+      this.timeline();
+      var snippet = this.snippet;
+
+      this.emit('pretimeline', {
+        snippet: snippet
+      });
+      this.updateTimeline(snippet);
+      this.emit('posttimeline', {
+        snippet: snippet
+      });
+
+      this.emit('prerender', {
+        snippet: snippet
+      });
+      this.render();
+      this.emit('postrender', {
+        snippet: snippet
+      });
+    }
+
+    /**
+     * update timeline
+     * @param {Number} snippet time snippet
+     * @private
+     */
+
+  }, {
+    key: 'updateTimeline',
+    value: function updateTimeline(snippet) {
+      snippet = this.timeScale * snippet;
+
+      this.emit('pretimeline', {
+        snippet: snippet
+      });
+
+      var i = 0;
+      var layers = this.layers;
+      var length = layers.length;
+      while (i < length) {
+        layers[i].updateTimeline(snippet);
+        i++;
+      }
+
+      this.emit('posttimeline', {
+        snippet: snippet
+      });
+    }
+
+    /**
+     * clear framebuffer
+     * @param {WebGLRenderTarget} renderTarget clear which render target
+     */
+
+  }, {
+    key: 'clear',
+    value: function clear(renderTarget) {
+      this.renderer.setRenderTarget(renderTarget);
+      this.renderer.clear(this.renderer.autoClearColor, this.renderer.autoClearDepth, this.renderer.autoClearStencil);
+    }
+
+    /**
+     * set render rectangle area
+     * @param {number} x rectangle left-top point x-position
+     * @param {number} y rectangle left-top point y-position
+     * @param {number} width rectangle width
+     * @param {number} height rectangle height
+     */
+
+  }, {
+    key: 'setSV',
+    value: function setSV(x, y, width, height) {
+      this.viewport.set(x, y, width, height);
+      this.renderer.setScissor(x, y, width, height);
+      this.renderer.setViewport(x, y, width, height);
+    }
+
+    /**
+     * render all 3d stage, should be overwrite by sub-class
+     */
+
+  }, {
+    key: 'render',
+    value: function render() {
+      if (this.autoClear) this.clear(null);
+      var size = this.viewBox;
+      if (this.vrmode) {
+        var hw = size.width / 2;
+        this.session.mode = 'VR';
+
+        this.renderer.setScissorTest(true);
+
+        this.setSV(0, 0, hw, size.height);
+        this.session.eye = 'LEFT';
+        this.xrRender();
+
+        this.setSV(hw, 0, hw, size.height);
+        this.session.eye = 'RIGHT';
+        this.xrRender();
+
+        this.renderer.setScissorTest(false);
+      } else {
+        this.session.mode = 'NORMAL';
+        this.session.eye = '';
+        this.setSV(0, 0, size.width, size.height);
+        this.xrRender();
+      }
+    }
+
+    /**
+     * render every layer to it's render buffer
+     * @private
+     */
+
+  }, {
+    key: 'xrRender',
+    value: function xrRender() {
+      this.renderLayers(this.session);
+      this.layerEffect();
+      this.composition();
+    }
+
+    /**
+     * render every layer to it's render buffer
+     * @param {object} session a renderer session
+     * @private
+     */
+
+  }, {
+    key: 'renderLayers',
+    value: function renderLayers(session) {
+      if (this.needSort) {
+        this._sortList();
+        this.needSort = false;
+      }
+      var ll = this.layers.length;
+      for (var i = 0; i < ll; i++) {
+        var layer = this.layers[i];
+        if (!layer.isEmpty) layer.render(this.renderer, session);
+      }
+    }
+
+    /**
+     * process every layer effect magic
+     *
+     * @private
+     */
+
+  }, {
+    key: 'layerEffect',
+    value: function layerEffect() {
+      var ll = this.layers.length;
+      for (var i = 0; i < ll; i++) {
+        var layer = this.layers[i];
+        if (layer.effectPack.isAeOpen) this.effectComposer.render(this.renderer, layer.effectPack);
+      }
+    }
+
+    /**
+     * composition every layer to a single layer or render to screen
+     *
+     * @private
+     */
+
+  }, {
+    key: 'composition',
+    value: function composition() {
+      var isAeOpen = this.effectPack.isAeOpen;
+      var renderTarget = isAeOpen ? this.effectPack.renderTarget : null;
+      this.layerCompositor.composition(this.renderer, renderTarget);
+      if (isAeOpen) {
+        this.viewEffect();
+      }
+    }
+
+    /**
+     * if this view has pass effect, do magic again
+     *
+     * @private
+     */
+
+  }, {
+    key: 'viewEffect',
+    value: function viewEffect() {
+      this.effectComposer.render(this.renderer, this.effectPack, true);
+    }
+
+    /**
+     * render loop, trigger one and one tick
+     *
+     * @private
+     */
+
+  }, {
+    key: 'tick',
+    value: function tick() {
+      var This = this;
+      /**
+       * render loop
+       */
+      (function render() {
+        This.update();
+        This.loop = RAF(render);
+      })();
+    }
+
+    /**
+     * update loop with fixed fps, maybe case a performance problem
+     *
+     * @private
+     */
+
+  }, {
+    key: 'tickFixedFPS',
+    value: function tickFixedFPS() {
+      var This = this;
+      this.loop = setInterval(function () {
+        This.update();
+      }, 1000 / this.fps);
+      This.update();
+    }
+
+    /**
+     * get timeline snippet
+     *
+     * @private
+     */
+
+  }, {
+    key: 'timeline',
+    value: function timeline() {
+      var snippet = Date.now() - this.pt;
+      if (!this.pt || snippet > 200) {
+        this.pt = Date.now();
+        snippet = Date.now() - this.pt;
+      }
+      this.pt += snippet;
+      this.snippet = snippet;
+    }
+
+    /**
+     * start update engine
+     * @return {this} this
+     */
+
+  }, {
+    key: 'start',
+    value: function start() {
+      if (this.ticking) return;
+      this.ticking = true;
+      this.pt = Date.now();
+      if (this.fps >= 60) {
+        this.tick();
+      } else {
+        this.tickFixedFPS();
+      }
+      return this;
+    }
+
+    /**
+     * stop update engine
+     * @return {this} this
+     */
+
+  }, {
+    key: 'stop',
+    value: function stop() {
+      CAF(this.loop);
+      clearInterval(this.loop);
+      this.ticking = false;
+      return this;
+    }
+
+    /**
+     * sort layer, because array.sort was not stable-sort, so use bubble sort
+     *
+     * @private
+     */
+
+  }, {
+    key: '_sortList',
+    value: function _sortList() {
+      Utils.bubbleSort(this.layers, function (el) {
+        return el.zIndex;
+      });
+    }
+
+    /**
+     * add a layer into layer compositor
+     *
+     * @param {Layer} layer primerLayer or graphicsLayer
+     * @return {this} this
+     */
+
+  }, {
+    key: 'add',
+    value: function add(layer) {
+      if (arguments.length > 1) {
+        for (var i = 0; i < arguments.length; i++) {
+          this.add(arguments[i]);
+        }
+        return this;
+      }
+
+      if (layer && layer.isLayer) {
+        if (layer.parent !== null) {
+          layer.parent.remove(layer);
+        }
+
+        layer.parent = this;
+        this.layers.push(layer);
+        this.layerCompositor.add(layer.quad);
+        this.setLayerSize(layer);
+        this.needSort = true;
+      } else {
+        console.error('Compositor.add: layer not an instance of Layer.', layer);
+      }
+      return this;
+    }
+
+    /**
+     * remove a layer from compositor
+     *
+     * @param {Layer} layer primerLayer or graphicsLayer
+     * @return {this} this
+     */
+
+  }, {
+    key: 'remove',
+    value: function remove(layer) {
+      if (arguments.length > 1) {
+        for (var i = 0; i < arguments.length; i++) {
+          this.remove(arguments[i]);
+        }
+        return this;
+      }
+      var index = this.layers.indexOf(layer);
+
+      if (index !== -1) {
+        layer.parent = null;
+        this.layers.splice(index, 1);
+        this.layerCompositor.remove(layer.quad);
+      }
+      return this;
+    }
+
+    /**
+     * add a after-effects pass to this layer
+     * @param {Pass} pass pass process
+     */
+
+  }, {
+    key: 'addPass',
+    value: function addPass() {
+      this.effectPack.addPass.apply(this.effectPack, arguments);
+    }
+
+    /**
+     * insert a after-effects pass to this layer
+     * @param {Pass} pass pass process
+     * @param {Number} index insert which position
+     */
+
+  }, {
+    key: 'insertPass',
+    value: function insertPass() {
+      this.effectPack.insertPass.apply(this.effectPack, arguments);
+    }
+  }, {
+    key: 'getPortSize',
+    value: function getPortSize() {
+      var _viewBox = this.viewBox,
+          width = _viewBox.width,
+          height = _viewBox.height;
+
+      if (this.vrmode) {
+        width = width / 2;
+      }
+      return { width: width, height: height };
+    }
+  }, {
+    key: 'setLayersSize',
+    value: function setLayersSize() {
+      var _getPortSize = this.getPortSize(),
+          width = _getPortSize.width,
+          height = _getPortSize.height;
+
+      var l = this.layers.length;
+      for (var i = 0; i < l; i++) {
+        var layer = this.layers[i];
+        layer.setSize(width, height);
+      }
+    }
+  }, {
+    key: 'setPassesSize',
+    value: function setPassesSize() {
+      var _getPortSize2 = this.getPortSize(),
+          width = _getPortSize2.width,
+          height = _getPortSize2.height;
+
+      this.effectPack.setSize(width, height);
+    }
+  }, {
+    key: 'setLayerSize',
+    value: function setLayerSize(layer) {
+      var _getPortSize3 = this.getPortSize(),
+          width = _getPortSize3.width,
+          height = _getPortSize3.height;
+
+      layer.setSize(width, height);
+    }
+  }, {
+    key: 'setComposerSize',
+    value: function setComposerSize() {
+      var _getPortSize4 = this.getPortSize(),
+          width = _getPortSize4.width,
+          height = _getPortSize4.height;
+
+      this.effectComposer.setSize(width, height);
+    }
+
+    /**
+     * resize window when view box has change
+     * @param {number} width render buffer width
+     * @param {number} height render buffer height
+     * @param {boolean} updateStyle update style or not
+     */
+
+  }, {
+    key: 'setSize',
+    value: function setSize(width, height) {
+      var updateStyle = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+      this.width = width;
+      this.height = height;
+      this.renderer.setSize(width, height, updateStyle);
+      this.viewBox = this.renderer.getDrawingBufferSize();
+
+      this.setPassesSize();
+      this.setComposerSize();
+      this.setLayersSize();
+    }
+  }, {
+    key: 'setPixelRatio',
+    value: function setPixelRatio(pixelRatio, updateStyle) {
+      this.renderer.setPixelRatio(pixelRatio);
+      this.setSize(this.width, this.height, updateStyle);
+    }
+  }, {
+    key: 'createLayer',
+    value: function createLayer(layerClass, options) {
+      var _getPortSize5 = this.getPortSize(),
+          width = _getPortSize5.width,
+          height = _getPortSize5.height;
+
+      options = Object.assign({ width: width, height: height }, options);
+      var layer = new layerClass(options);
+      this.add(layer);
+      return layer;
+    }
+  }, {
+    key: 'setEventLayer',
+    value: function setEventLayer(layer) {
+      this.interactionLayer.setLayer(layer);
+    }
+
+    /**
+     * getter whether scene interactively or not
+     */
+
+  }, {
+    key: 'vrmode',
+    get: function get$$1() {
+      return this._vrmode;
+    }
+
+    /**
+     * setter whether scene interactively or not
+     * @param {Boolean} value is interactively ?
+     */
+    ,
+    set: function set$$1(value) {
+      if (value !== this.vrmode) {
+        this._vrmode = value;
+        this.vrmodeOnChange();
+      }
+    }
+  }]);
+  return Viewer;
+}(EventDispatcher);
+
+var Layer = function () {
+  /**
+   * layer required a renderer
+   * @param {Object} options options
+   */
+  function Layer(options) {
+    classCallCheck(this, Layer);
+    var width = options.width,
+        height = options.height;
+
+    /**
+     * the parent of this layer, sometime was compositor
+     * @member {Compositor}
+     */
+
+    this.parent = null;
+
+    /**
+     * zIndex order, for render list
+     * @member {Number}
+     * @private
+     */
+    this._zIndex = 0;
+
+    /**
+     * layer tag, fast check isLayer
+     * @member {Boolean}
+     */
+    this.isLayer = true;
+
+    /**
+     * framebuffer will auto clear
+     * @member {Boolean}
+     */
+    this.autoClear = true;
+
+    /**
+     * time-scale for timeline
+     *
+     * @member {Number}
+     */
+    this.timeScale = 1;
+
+    /**
+     * after effect update delta TODO: link to effect pack
+     * @member {Number}
+     */
+    this.aeDelta = 0;
+
+    /**
+     * render effect kit to carry render content and some data
+     */
+    this.effectPack = new EffectPack({ width: width, height: height });
+
+    /**
+     * camera, for composite draw
+     * @member {Camera}
+     */
+    this.camera = null;
+
+    /**
+     * scene, for composite draw
+     * @member {Scene}
+     */
+    this.scene = new Scene();
+
+    /**
+     * quad, for composite draw
+     * @member {Mesh}
+     */
+    this.quad = new Mesh(new PlaneBufferGeometry(2, 2), new MeshBasicMaterial({
+      transparent: true,
+      map: this.effectPack.renderTarget.texture,
+      depthTest: false,
+      depthWrite: false
+    }));
+
+    this.interactive = false;
+  }
+
+  /**
+   * push a display object into scene
+   *
+   * @param {THREE.Object3D} child display object, which will be rendering
+   * @return {this} this
+   */
+
+
+  createClass(Layer, [{
+    key: 'add',
+    value: function add() {
+      this.scene.add.apply(this.scene, arguments);
+      return this;
+    }
+
+    /**
+     * remove a display object from scene
+     *
+     * @param {THREE.Object3D} child display object, which you had push it at before
+     * @return {this} this
+     */
+
+  }, {
+    key: 'remove',
+    value: function remove() {
+      this.scene.remove.apply(this.scene, arguments);
+      return this;
+    }
+
+    /**
+     * update timeline
+     * @param {Number} snippet time snippet
+     * @private
+     */
+
+  }, {
+    key: 'updateTimeline',
+    value: function updateTimeline(snippet) {
+      snippet = this.timeScale * snippet;
+      this.scene.updateTimeline(snippet);
+    }
+  }, {
+    key: 'render',
+    value: function render(renderer) {
+      if (this.autoClear) this.clear(renderer, this.effectPack.renderTarget);
+
+      renderer.render(this.scene, this.camera, this.effectPack.renderTarget);
+    }
+
+    /**
+     * clear framebuffer
+     * @param {WebGLRender} renderer renderer from view
+     * @param {WebGLRenderTarget} renderTarget clear which render target
+     */
+
+  }, {
+    key: 'clear',
+    value: function clear(renderer, renderTarget) {
+      renderer.setRenderTarget(renderTarget);
+      renderer.clear(renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil);
+    }
+
+    /**
+     * add a after-effects pass to this layer
+     * @param {Pass} pass pass process
+     */
+
+  }, {
+    key: 'addPass',
+    value: function addPass() {
+      this.effectPack.addPass.apply(this.effectPack, arguments);
+    }
+
+    /**
+     * insert a after-effects pass to this layer
+     * @param {Pass} pass pass process
+     * @param {Number} index insert which position
+     */
+
+  }, {
+    key: 'insertPass',
+    value: function insertPass() {
+      this.effectPack.insertPass.apply(this.effectPack, arguments);
+    }
+
+    /**
+     * resize layer size when viewport has change
+     * @param {number} width layer buffer width
+     * @param {number} height layer buffer height
+     */
+
+  }, {
+    key: 'setSize',
+    value: function setSize(width, height) {
+      this.effectPack.setSize(width, height);
+    }
+
+    /**
+     * get zIndex
+     * @return {Number} zIndex
+     */
+
+  }, {
+    key: 'zIndex',
+    get: function get$$1() {
+      return this._zIndex;
+    }
+
+    /**
+     * set zIndex
+     * @param {Number} index zIndex
+     */
+    ,
+    set: function set$$1(index) {
+      if (this._zIndex !== index) {
+        this._zIndex = index;
+        this.quad.renderOrder = index;
+        if (this.parent) {
+          this.parent.needSort = true;
+        }
+      }
+    }
+
+    /**
+     * get primers status
+     */
+
+  }, {
+    key: 'isEmpty',
+    get: function get$$1() {
+      return this.scene.children.length === 0;
+    }
+  }]);
+  return Layer;
+}();
+
+var ARLayer = function (_Layer) {
+  inherits(ARLayer, _Layer);
+
+  function ARLayer(options) {
+    classCallCheck(this, ARLayer);
+
+    var _this = possibleConstructorReturn(this, (ARLayer.__proto__ || Object.getPrototypeOf(ARLayer)).call(this, options));
+
+    var _options$frameWidth = options.frameWidth,
+        frameWidth = _options$frameWidth === undefined ? 480 : _options$frameWidth,
+        _options$frameHeight = options.frameHeight,
+        frameHeight = _options$frameHeight === undefined ? 640 : _options$frameHeight;
+
+    /**
+     * video frame width
+     * @member {Number}
+     */
+
+    _this.frameWidth = frameWidth;
+
+    /**
+     * video frame height
+     * @member {Number}
+     */
+    _this.frameHeight = frameHeight;
+
+    // init update viewport for ar-video-frame
+    _this.updateViewport();
+
+    /**
+     * view-port camera object, a perspective camera
+     *
+     * @member {PerspectiveCamera}
+     */
+    _this.camera = new PerspectiveCamera();
+    _this.camera.matrixAutoUpdate = false;
+
+    /**
+     * tracking object `<markerName-arGlue>` map
+     *
+     * @member {Object}
+     */
+    _this.ar_map = {};
+    return _this;
+  }
+
+  /**
+   * add display-object like `ARGlue` or `THREE.Object3D` object
+   *
+   * @param {ARGlue|THREE.Object3D} object display-object which you want show
+   * @return {this} this
+   */
+
+
+  createClass(ARLayer, [{
+    key: 'add',
+    value: function add(object) {
+      if (arguments.length > 1) {
+        for (var i = 0; i < arguments.length; i++) {
+          this.add(arguments[i]);
+        }
+        return this;
+      }
+
+      if (object.type === 'ARGlue') {
+        var name = object.name;
+        this.ar_map[name] = object;
+      }
+      this.scene.add(object);
+      return this;
+    }
+
+    /**
+     * remove `ARGlue` or `THREE.Object3D` object
+     *
+     * @param {ARGlue|THREE.Object3D} object display-object which you had add before
+     * @return {this} this
+     */
+
+  }, {
+    key: 'remove',
+    value: function remove(object) {
+      if (arguments.length > 1) {
+        for (var i = 0; i < arguments.length; i++) {
+          this.remove(arguments[i]);
+        }
+        return this;
+      }
+
+      if (object.type === 'ARGlue') {
+        var name = object.name;
+        this.ar_map[name] = null;
+      }
+      this.scene.remove(object);
+      return this;
+    }
+
+    /**
+     * update tracking-display-object's pose state, poses get from `UC-AR`
+     *
+     * @param {Array} poses poses matrix array
+     */
+
+  }, {
+    key: 'updatePoses',
+    value: function updatePoses(poses) {
+      var _this2 = this;
+
+      poses.forEach(function (_ref) {
+        var name = _ref.name,
+            matrix = _ref.matrix,
+            isDetected = _ref.isDetected;
+
+        var glue = _this2.ar_map[name];
+        if (glue) {
+          glue.updatePose(matrix, isDetected);
+        }
+      });
+    }
+
+    /**
+     * update camera internal parama matrix, this matrix get from `UC-AR`
+     *
+     * @param {Array} matrix 4*4 matrix
+     */
+
+  }, {
+    key: 'updateCameraMatrix',
+    value: function updateCameraMatrix(matrix) {
+      this.camera.projectionMatrix.fromArray(matrix);
+    }
+
+    /**
+     * adjust viewport, when frameWidth frameHeight or renderer.getSize had change
+     * @return {Object} view port
+     */
+
+  }, {
+    key: 'updateViewport',
+    value: function updateViewport() {
+      var _effectPack = this.effectPack,
+          width = _effectPack.width,
+          height = _effectPack.height;
+
+      var rw = width / this.frameWidth;
+      var rh = height / this.frameHeight;
+      var ratio = Math.max(rw, rh);
+      var rtw = this.frameWidth * ratio;
+      var rth = this.frameHeight * ratio;
+
+      var sx = 0;
+      var sy = 0;
+
+      if (rw < rh) {
+        sx = -(rtw - width) / 2;
+      } else if (rw > rh) {
+        sy = -(rth - height) / 2;
+      }
+
+      // this.renderer.setViewport(sx, sy, rtw, rth);
+      return { sx: sx, sy: sy, rtw: rtw, rth: rth };
+    }
+
+    /**
+     * render all scene
+     * @param {WebGLRender} renderer renderer context
+     * @param {object} session renderer session
+     */
+
+  }, {
+    key: 'render',
+    value: function render(renderer) {
+      if (this.autoClear) this.clear(renderer, this.effectPack.renderTarget);
+
+      renderer.render(this.scene, this.camera, this.effectPack.renderTarget);
+    }
+
+    /**
+     * resize layer size when viewport has change
+     * @param {number} width layer buffer width
+     * @param {number} height layer buffer height
+     */
+
+  }, {
+    key: 'setSize',
+    value: function setSize(width, height) {
+      this.effectPack.setSize(width, height);
+
+      var _updateViewport = this.updateViewport(),
+          sx = _updateViewport.sx,
+          sy = _updateViewport.sy,
+          rtw = _updateViewport.rtw,
+          rth = _updateViewport.rth;
+
+      this.effectPack.renderTarget.viewport = new Vector4(sx, sy, rtw, rth);
+    }
+  }]);
+  return ARLayer;
+}(Layer);
+
+var XRLayer = function (_Layer) {
+  inherits(XRLayer, _Layer);
+
+  function XRLayer(options) {
+    classCallCheck(this, XRLayer);
+
+    var _this = possibleConstructorReturn(this, (XRLayer.__proto__ || Object.getPrototypeOf(XRLayer)).call(this, options));
+
+    var width = options.width,
+        height = options.height,
+        vrsensor = options.vrsensor,
+        _options$fov = options.fov,
+        fov = _options$fov === undefined ? 60 : _options$fov,
+        _options$aspect = options.aspect,
+        aspect = _options$aspect === undefined ? width / height : _options$aspect,
+        _options$near = options.near,
+        near = _options$near === undefined ? 0.1 : _options$near,
+        _options$far = options.far,
+        far = _options$far === undefined ? 1000 : _options$far;
+    /**
+     * view-port camera object, a perspective camera
+     *
+     * @member {Camera}
+     */
+
+    _this.camera = new PerspectiveCamera(fov, aspect, near, far);
+
+    /**
+     * stereo camera object
+     *
+     * @member {StereoCamera}
+     */
+    _this.stereo = new StereoCamera();
+    // this.stereo.aspect = options.stereoAspect || 0.5;
+
+    /**
+     * use orientation sensor or not
+     *
+     * @member {Boolean}
+     */
+    _this.vrsensor = vrsensor || false;
+
+    /**
+     * device orientation sensor, control camera look around
+     *
+     * @member {Orienter}
+     */
+    _this.sensorCTL = new Orienter();
+
+    // update sensor state before update timeline
+    _this.sensorCTL.on('deviceorientation', function (_ref) {
+      var quaternion = _ref.quaternion;
+
+      if (_this.vrsensor) {
+        _this.camera.quaternion.copy(quaternion);
+      }
+    });
+
+    _this.interactive = true;
+    return _this;
+  }
+
+  /**
+   * update stereo camera
+   */
+
+
+  createClass(XRLayer, [{
+    key: 'updateStereo',
+    value: function updateStereo() {
+      if (this.camera.parent === null) this.camera.updateMatrixWorld();
+      this.stereo.update(this.camera);
+    }
+
+    /**
+     * render all scene
+     * @param {WebGLRender} renderer renderer context
+     * @param {object} session renderer session
+     */
+
+  }, {
+    key: 'render',
+    value: function render(renderer, session) {
+      if (this.autoClear) this.clear(renderer, this.effectPack.renderTarget);
+
+      if (session.mode === 'VR') {
+        this.updateStereo();
+        var camera = session.eye === 'LEFT' ? this.stereo.cameraL : this.stereo.cameraR;
+        renderer.render(this.scene, camera, this.effectPack.renderTarget);
+      } else {
+        renderer.render(this.scene, this.camera, this.effectPack.renderTarget);
+      }
+    }
+
+    /**
+     * resize layer size when viewport has change
+     * @param {number} width layer buffer width
+     * @param {number} height layer buffer height
+     */
+
+  }, {
+    key: 'setSize',
+    value: function setSize(width, height) {
+      this.effectPack.setSize(width, height);
+      this.camera.aspect = width / height;
+      this.camera.updateProjectionMatrix();
+    }
+
+    /**
+     * getter whether scene interactively or not
+     */
+
+  }, {
+    key: 'vrmode',
+    get: function get$$1() {
+      return this._vrmode;
+    }
+
+    /**
+     * setter whether scene interactively or not
+     * @param {Boolean} value is interactively ?
+     */
+    ,
+    set: function set$$1(value) {
+      if (value !== this.vrmode) {
+        this._vrmode = value;
+        this.vrmodeOnChange();
+      }
+    }
+  }]);
+  return XRLayer;
+}(Layer);
+
+var PrimerLayer = function (_Layer) {
+  inherits(PrimerLayer, _Layer);
+
+  function PrimerLayer(options) {
+    classCallCheck(this, PrimerLayer);
+
+    /**
+     * camera for this 2D context
+     *
+     * @member {OrthographicCamera}
+     */
+    var _this = possibleConstructorReturn(this, (PrimerLayer.__proto__ || Object.getPrototypeOf(PrimerLayer)).call(this, options));
+
+    _this.camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    return _this;
+  }
+
+  /**
+   * render all scene
+   * @param {WebGLRender} renderer renderer context
+   * @param {object} session renderer session
+   */
+
+
+  createClass(PrimerLayer, [{
+    key: 'render',
+    value: function render(renderer) {
+      if (this.autoClear) this.clear(renderer, this.effectPack.renderTarget);
+      renderer.render(this.scene, this.camera, this.effectPack.renderTarget);
+    }
+
+    /**
+     * resize layer size when viewport has change
+     * @param {number} width layer buffer width
+     * @param {number} height layer buffer height
+     */
+
+  }, {
+    key: 'setSize',
+    value: function setSize(width, height) {
+      this.effectPack.setSize(width, height);
+      this.scene.children.forEach(function (child) {
+        child.setSize && child.setSize(width, height);
+      });
+    }
+  }]);
+  return PrimerLayer;
+}(Layer);
+
+/**
+ * base primer class, provide primering paint
+ */
+
+var Primer = function (_Mesh) {
+  inherits(Primer, _Mesh);
+
+  /**
+   * post some config to primer
+   * @param {*} geo have not be used
+   * @param {*} mat config primer status
+   * @param {*} options config primer status
+   */
+  function Primer(geo, mat, options) {
+    classCallCheck(this, Primer);
+
+    var _this = possibleConstructorReturn(this, (Primer.__proto__ || Object.getPrototypeOf(Primer)).call(this, geo, mat));
+
+    var _options$frameAspect = options.frameAspect,
+        frameAspect = _options$frameAspect === undefined ? 1 : _options$frameAspect,
+        _options$targetAspect = options.targetAspect,
+        targetAspect = _options$targetAspect === undefined ? 1 : _options$targetAspect,
+        _options$backgroundSi = options.backgroundSize,
+        backgroundSize = _options$backgroundSi === undefined ? 'COVER' : _options$backgroundSi;
+
+    /**
+     * frame aspect, same with texture aspect (width / height)
+     */
+
+    _this.frameAspect = frameAspect;
+
+    /**
+     * viewport aspect, same with viewport aspect (width / height)
+     */
+    _this.targetAspect = targetAspect;
+
+    /**
+     * background aspect, fill with 'COVER' or 'CONTAIN'
+     */
+    _this.backgroundSize = backgroundSize;
+    return _this;
+  }
+
+  /**
+   * set the target viewport aspect
+   * @param {Number} targetAspect target viewport aspect
+   */
+
+
+  createClass(Primer, [{
+    key: 'setAspect',
+    value: function setAspect(targetAspect) {
+      console.trace('aaa');
+      this.targetAspect = targetAspect;
+      if (this.loaded) this._updateAttributes();
+    }
+
+    /**
+     * update attribute
+     * @private
+     */
+
+  }, {
+    key: '_updateAttributes',
+    value: function _updateAttributes() {
+      var _cs2 = this._cs(),
+          width = _cs2.width,
+          height = _cs2.height;
+
+      this._setPositions(this.geometry.attributes.position, width, height);
+    }
+
+    /**
+     * calculation the size for geometry in this frameAspect
+     * @return {Object} size
+     * @private
+     */
+
+  }, {
+    key: '_cs',
+    value: function _cs() {
+      var scale = this.frameAspect / this.targetAspect;
+      var size = {
+        width: 1,
+        height: 1
+      };
+      if (this.backgroundSize === 'COVER') {
+        this._cover(size, scale);
+      } else if (this.backgroundSize === 'CONTAIN') {
+        this._contain(size, scale);
+      } else {
+        this._cover(size, scale);
+      }
+      return size;
+    }
+
+    /**
+     * calculate background size with 'COVER' mode
+     * @param {*} size size
+     * @param {*} scale scale
+     * @return {Object} size
+     * @private
+     */
+
+  }, {
+    key: '_cover',
+    value: function _cover(size, scale) {
+      if (this.targetAspect > this.frameAspect) {
+        size.height = 1 / scale;
+      } else {
+        size.width = scale;
+      }
+      return size;
+    }
+
+    /**
+     * calculate background size with 'CONTAIN' mode
+     * @param {*} size size
+     * @param {*} scale scale
+     * @return {Object} size
+     * @private
+     */
+
+  }, {
+    key: '_contain',
+    value: function _contain(size, scale) {
+      if (this.frameAspect > this.targetAspect) {
+        size.height = 1 / scale;
+      } else {
+        size.width = scale;
+      }
+      return size;
+    }
+
+    /**
+     * resize geometry size
+     * @param {BufferAttribute} positions positions buffer
+     * @param {Number} width target width
+     * @param {Number} height target height
+     * @return {BufferAttribute} updated BufferAttribute
+     */
+
+  }, {
+    key: '_setPositions',
+    value: function _setPositions(positions, width, height) {
+      var coefficient = [-1, 1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0];
+      for (var i = 0; i < positions.count; i++) {
+        var item = positions.itemSize * i;
+        positions.array[item] = coefficient[item] * width;
+        positions.array[item + 1] = coefficient[item + 1] * height;
+      }
+      positions.needsUpdate = true;
+      return positions;
+    }
+
+    /**
+     * resize layer size when viewport has change
+     * @param {number} width layer buffer width
+     * @param {number} height layer buffer height
+     */
+
+  }, {
+    key: 'setSize',
+    value: function setSize(width, height) {
+      this.setAspect(width / height);
+    }
+  }]);
+  return Primer;
+}(Mesh);
+
+var YUVShader = {
+
+  texOrder: ['uYTex', 'uUTex', 'uVTex'],
+
+  uniforms: {
+
+    uYTex: { value: null, ss: 1, format: LuminanceFormat },
+    uUTex: { value: null, ss: 0.5, format: LuminanceFormat },
+    uVTex: { value: null, ss: 0.5, format: LuminanceFormat },
+
+    diffuse: { value: new Color(0xffffff) }
+
+  },
+
+  vertexShader: '\n  varying vec2 vUv;\n  void main() {\n    vUv = uv;\n    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n  }',
+
+  fragmentShader: '\n  uniform sampler2D uYTex;\n  uniform sampler2D uUTex;\n  uniform sampler2D uVTex;\n\n  uniform vec3 diffuse;\n\n  varying vec2 vUv;\n\n  const mat3 mYUV2RGB = mat3(\n    1.0,   1.0,     1.0,\n    0.0,  -0.395,  2.032,\n    1.40, -0.581,   0.0\n  );\n\n  void main(){\n    vec3 YUV;\n    YUV.x = 1.1643 * (texture2D(uYTex, vUv).r - 0.0625);\n    YUV.y = texture2D(uUTex, vUv).r - 0.5;\n    YUV.z = texture2D(uVTex, vUv).r - 0.5;\n\n    gl_FragColor = vec4(diffuse * diffuse * (mYUV2RGB * YUV), 1.0);\n  }'
+};
+
+var YCbCrShader = {
+
+  texOrder: ['uYTex', 'uCTex'],
+
+  uniforms: {
+
+    uYTex: { value: null, ss: 1, format: LuminanceFormat },
+    uCTex: { value: null, ss: 0.5, format: LuminanceAlphaFormat },
+
+    diffuse: { value: new Color(0xffffff) }
+
+  },
+
+  vertexShader: '\n  varying vec2 vUv;\n  void main() {\n    vUv = uv;\n    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n  }',
+
+  fragmentShader: '\n  uniform sampler2D uYTex;\n  uniform sampler2D uCTex;\n  uniform vec3 diffuse;\n\n  varying vec2 vUv;\n\n  const mat3 mYCbCrToRGB = mat3(\n    1.0,      1.0,     1.0,\n    0.0,     -0.18732, 1.8556,\n    1.57481, -.46813,  0.0\n  );\n\n  void main(){\n    vec3 YCbCr;\n    YCbCr.x  = texture2D(uYTex, vUv).r;\n    YCbCr.yz = texture2D(uCTex, vUv).ra - 0.5;\n    gl_FragColor = vec4(diffuse * diffuse * (mYCbCrToRGB * YCbCr), 1.0);\n  }'
+};
+
+var FORMAT_MAP = {
+  3: YUVShader,
+  4: YCbCrShader,
+  5: YCbCrShader
+};
+
+var LANDSCAPE_MAP = {
+  NONE: 0,
+  CW: Utils.DTR(-90),
+  CCW: Utils.DTR(90)
+};
+
+/**
+ * camera-primer, for ali webar framework
+ */
+
+var CameraPrimer = function (_Primer) {
+  inherits(CameraPrimer, _Primer);
+
+  /**
+   * required displayTarget to get frame
+   * @param {DisplayTarget} displayTarget webar DisplayTarget class
+   * @param {Object} options primer config
+   * @param {Color} [options.color=0xffffff] tint color
+   * @param {Boolean} [options.depthTest=false] enbale depth test
+   * @param {Boolean} [options.depthWrite=false] enbale depth write
+   */
+  function CameraPrimer(displayTarget, options) {
+    classCallCheck(this, CameraPrimer);
+
+    var _this = possibleConstructorReturn(this, (CameraPrimer.__proto__ || Object.getPrototypeOf(CameraPrimer)).call(this, displayTarget, options));
+
+    var _ref = options || {},
+        _ref$color = _ref.color,
+        color = _ref$color === undefined ? 0xffffff : _ref$color,
+        _ref$depthTest = _ref.depthTest,
+        depthTest = _ref$depthTest === undefined ? false : _ref$depthTest,
+        _ref$depthWrite = _ref.depthWrite,
+        depthWrite = _ref$depthWrite === undefined ? false : _ref$depthWrite;
+
+    /**
+     * frame landscape orientation
+     * @member {Number}
+     * @private
+     */
+
+
+    _this.landscape = Utils.isString(options.landscape) && LANDSCAPE_MAP[options.landscape] ? LANDSCAPE_MAP[options.landscape] : LANDSCAPE_MAP.CW;
+
+    /**
+     * this frame need to flip with y-axis
+     * @member {Boolean}
+     * @private
+     */
+    _this.flip = Utils.isBoolean(options.flip) ? options.flip : true;
+
+    /**
+     * uv matrix
+     * @member {Matrix3}
+     * @private
+     */
+    _this.uvMatrix = new Matrix3();
+
+    /**
+     * cache the displayTarget
+     * @member {DisplayTarget}
+     */
+    _this.displayTarget = displayTarget;
+
+    /**
+     * set primer tint color
+     * @member {Color}
+     */
+    _this.color = color;
+
+    /**
+     * whether enbale depth test or not
+     * @member {Boolean}
+     * @private
+     */
+    _this._depthTest = depthTest || false;
+
+    /**
+     * whether enbale depth write or not
+     * @member {Boolean}
+     * @private
+     */
+    _this._depthWrite = depthWrite || false;
+
+    _this.init(_this.getFrames());
+    return _this;
+  }
+
+  /**
+   * get frame data from displayTarget
+   * @return {frameData} camera frame data
+   */
+
+
+  createClass(CameraPrimer, [{
+    key: 'getFrames',
+    value: function getFrames() {
+      return this.displayTarget.getFrames();
+    }
+
+    /**
+     * init set something
+     * @param {frameData} frameData camera frame data
+     * @private
+     */
+
+  }, {
+    key: 'init',
+    value: function init(_ref2) {
+      var _this2 = this;
+
+      var format = _ref2.format,
+          dataArray = _ref2.dataArray,
+          width = _ref2.width,
+          height = _ref2.height;
+
+      this.shader = FORMAT_MAP[format];
+
+      this.uniforms = UniformsUtils.clone(this.shader.uniforms);
+
+      this.shader.texOrder.forEach(function (tex, idx) {
+        var _uniforms$tex = _this2.uniforms[tex],
+            ss = _uniforms$tex.ss,
+            format = _uniforms$tex.format;
+
+        _this2.uniforms[tex].value = new DataTexture(dataArray[idx], width * ss, height * ss, format);
+      });
+
+      this.uniforms.diffuse.value = new Color(this.color);
+
+      this.pigmentMat = new ShaderMaterial({
+        uniforms: this.uniforms,
+        vertexShader: this.shader.vertexShader,
+        fragmentShader: this.shader.fragmentShader,
+        depthTest: this._depthTest,
+        depthWrite: this._depthWrite
+      });
+
+      this.pigment = new Mesh(this.pigmentGeo, this.pigmentMat);
+      this.pigment.frustumCulled = false;
+
+      this._correctUv(this.pigmentGeo.attributes.uv);
+
+      this.scene.add(this.pigment);
+
+      this._setAspect(height / width);
+    }
+
+    /**
+     * update shader uniforms and aspect itself
+     * @param {frameData} frameData camera frame data
+     * @private
+     */
+
+  }, {
+    key: 'updateFrame',
+    value: function updateFrame(_ref3) {
+      var _this3 = this;
+
+      var dataArray = _ref3.dataArray,
+          width = _ref3.width,
+          height = _ref3.height;
+
+      this.shader.texOrder.forEach(function (tex, idx) {
+        if (_this3.uniforms[tex].value.needsUpdate) return;
+        var ss = _this3.uniforms[tex].ss;
+
+        _this3.uniforms[tex].value.image.data = dataArray[idx];
+        _this3.uniforms[tex].value.image.width = width * ss;
+        _this3.uniforms[tex].value.image.height = height * ss;
+        _this3.uniforms[tex].value.needsUpdate = true;
+      });
+      this._setAspect(height / width);
+    }
+
+    /**
+     * update attribute and frame
+     */
+
+  }, {
+    key: 'update',
+    value: function update() {
+      if (this.autoCover) this._updateAttributes();
+      if (!this.displayTarget.isDirty) return;
+      this.updateFrame(this.getFrames());
+    }
+
+    /**
+     * render this primer
+     * @param {WebGLRenderer} renderer put webgl renderer
+     * @param {WebGLRenderTarget} rednerTarget render to which buffer
+     */
+
+  }, {
+    key: 'render',
+    value: function render(renderer, rednerTarget) {
+      this.update();
+      renderer.render(this.scene, this.camera, rednerTarget);
+    }
+
+    /**
+     * correct uv buffer
+     * @param {BufferAttribute} uv uv bufferAttribute
+     * @return {BufferAttribute} corrected BufferAttribute
+     */
+
+  }, {
+    key: '_correctUv',
+    value: function _correctUv(uv) {
+      var v1 = new Vector3();
+      this.uvMatrix.identity();
+      this.uvMatrix.translate(-0.5, -0.5);
+      this.uvMatrix.rotate(this.landscape);
+      if (this.flip) this.uvMatrix.scale(1, -1);
+      this.uvMatrix.translate(0.5, 0.5);
+      for (var i = 0, l = uv.count; i < l; i++) {
+        v1.x = uv.getX(i);
+        v1.y = uv.getY(i);
+        v1.z = 1;
+
+        v1.applyMatrix3(this.uvMatrix);
+        uv.setXY(i, v1.x, v1.y);
+      }
+      uv.needsUpdate = true;
+      return uv;
+    }
+  }]);
+  return CameraPrimer;
+}(Primer);
+
+var TexturePrimer = function (_Primer) {
+  inherits(TexturePrimer, _Primer);
+
+  /**
+   * create a texture frame
+   * @param {image|canvas|video} frame texture frame
+   * @param {Object} options config
+   * @param {Color} [options.color=0xffffff] tint color
+   * @param {Boolean} [options.depthTest=false] enable depth test
+   * @param {Boolean} [options.depthWrite=false] enable depth write
+   * @param {THREE.Filter} [options.minFilter] use which min filter
+   * @param {THREE.Filter} [options.magFilter] use which mag filter
+   * @param {THREE.Format} [options.format] use which color format
+   */
+  function TexturePrimer(frame, options) {
+    classCallCheck(this, TexturePrimer);
+
+    var _ref = options || {},
+        _ref$color = _ref.color,
+        color = _ref$color === undefined ? 0xffffff : _ref$color,
+        _ref$depthTest = _ref.depthTest,
+        depthTest = _ref$depthTest === undefined ? false : _ref$depthTest,
+        _ref$depthWrite = _ref.depthWrite,
+        depthWrite = _ref$depthWrite === undefined ? false : _ref$depthWrite,
+        _ref$minFilter = _ref.minFilter,
+        minFilter = _ref$minFilter === undefined ? LinearFilter : _ref$minFilter,
+        _ref$magFilter = _ref.magFilter,
+        magFilter = _ref$magFilter === undefined ? LinearFilter : _ref$magFilter,
+        _ref$format = _ref.format,
+        format = _ref$format === undefined ? RGBFormat : _ref$format;
+
+    var texture = Utils.isString(frame) ? new TextureLoader().load(frame) : frame.tagName === 'VIDEO' ? new VideoTexture(frame) : frame.tagName === 'CANVAS' ? new CanvasTexture(frame) : frame.tagName === 'IMG' ? new Texture(frame) : null;
+
+    /**
+     * geometry for this 2D context
+     * @member {PlaneBufferGeometry}
+     * @private
+     */
+    var geo = new PlaneBufferGeometry(2, 2);
+
+    /**
+     * material for this 2D context
+     * @member {MeshBasicMaterial}
+     * @private
+     */
+    var mat = new MeshBasicMaterial({
+      color: new Color(color),
+      map: texture,
+      depthTest: depthTest,
+      depthWrite: depthWrite
+    });
+
+    /**
+     * this primer used texture
+     */
+    var _this = possibleConstructorReturn(this, (TexturePrimer.__proto__ || Object.getPrototypeOf(TexturePrimer)).call(this, geo, mat, options));
+
+    _this.texture = texture;
+
+    if (minFilter) _this.texture.minFilter = minFilter;
+    if (magFilter) _this.texture.magFilter = magFilter;
+    if (format) _this.texture.format = format;
+
+    /**
+     * texture had loaded ?
+     */
+    _this.loaded = false;
+
+    _this._gainFrameSize();
+    return _this;
+  }
+
+  /**
+   * gain frame size, and to adjust aspect
+   */
+
+
+  createClass(TexturePrimer, [{
+    key: '_gainFrameSize',
+    value: function _gainFrameSize() {
+      var _this2 = this;
+
+      var image = this.texture.image;
+      if (!image) return;
+      if (image.width > 0 && image.height > 0) {
+        this.loaded = true;
+        this.frameAspect = image.width / image.height;
+        this._updateAttributes();
+      } else {
+        image.addEventListener('load', function () {
+          _this2.loaded = true;
+          _this2.frameAspect = image.width / image.height;
+          _this2._updateAttributes();
+        });
+      }
+    }
+  }]);
+  return TexturePrimer;
+}(Primer);
+
+var AnchorBase = function (_Group) {
+  inherits(AnchorBase, _Group);
+
+  function AnchorBase() {
+    classCallCheck(this, AnchorBase);
+    return possibleConstructorReturn(this, (AnchorBase.__proto__ || Object.getPrototypeOf(AnchorBase)).apply(this, arguments));
+  }
+
+  createClass(AnchorBase, [{
+    key: 'putWhere',
+
+    /**
+     * help you caculate anchor position, relative which parent
+     *
+     * @param {Vector3} point global position relative camera
+     * @param {Object3D} parent relative which parent
+     * @return {Vector3} position relative parent coordinate system
+     */
+    value: function putWhere(point, parent) {
+      point.multiplyScalar(0.9);
+      point.applyMatrix4(new Matrix4().getInverse(parent.matrixWorld));
+      this.position.set(point.x, point.y, point.z);
+      this.lookAt(0, 0, 0);
+      return point;
+    }
+
+    /**
+     * put anchor to which posotion, position was relative it's parent
+     *
+     * @param {Vector3} position position was relative it's parent
+     */
+
+  }, {
+    key: 'putHere',
+    value: function putHere(position) {
+      this.position.set(position.x, position.y, position.z);
+      this.lookAt(0, 0, 0);
+    }
+  }]);
+  return AnchorBase;
+}(Group);
+
+var AnchorRippling = function (_AnchorBase) {
+  inherits(AnchorRippling, _AnchorBase);
+
+  /**
+   * 构造函数
+   * @param {Object} options 配置
+   * @param {String} [options.image] 点击区域的半径
+   * @param {Number} [options.width=8] 点击区域的半径
+   * @param {Number} [options.height=8] 点击区域的半径
+   * @param {Number} [options.segmentation=4] 点击区域的圆细分
+   * @param {Boolean} [options.rippling=false] 点击区域的圆细分
+   * @param {Number} [options.radius=8] 点击区域的半径
+   * @param {Number} [options.segmentationRip=8] 点击区域的半径
+   * @param {Color} [options.color=0xffffff] 点击区域的圆细分
+   * @param {Number} [options.count=2] 点击区域的圆细分
+   * @param {Number} [options.duration=1000] 点击区域的圆细分
+   */
+  function AnchorRippling(options) {
+    classCallCheck(this, AnchorRippling);
+
+    var _this = possibleConstructorReturn(this, (AnchorRippling.__proto__ || Object.getPrototypeOf(AnchorRippling)).call(this));
+
+    var _ref = options || {},
+        image = _ref.image,
+        width = _ref.width,
+        height = _ref.height,
+        _ref$segmentation = _ref.segmentation,
+        segmentation = _ref$segmentation === undefined ? 4 : _ref$segmentation,
+        rippling = _ref.rippling,
+        _ref$radius = _ref.radius,
+        radius = _ref$radius === undefined ? 8 : _ref$radius,
+        _ref$segmentationRip = _ref.segmentationRip,
+        segmentationRip = _ref$segmentationRip === undefined ? 16 : _ref$segmentationRip,
+        color = _ref.color,
+        _ref$count = _ref.count,
+        count = _ref$count === undefined ? 2 : _ref$count,
+        _ref$duration = _ref.duration,
+        duration = _ref$duration === undefined ? 1800 : _ref$duration;
+    /**
+     * global texture for stars
+     * @member {Texture}
+     */
+
+
+    _this.map = Utils.isString(image) ? new TextureLoader().load(image) : null;
+
+    _this.waves = new Group();
+    _this.waves.position.z = -0.1;
+    _this.uiFace = new Mesh(new PlaneBufferGeometry(width, height, segmentation, segmentation), new MeshBasicMaterial({ map: _this.map, transparent: true }));
+
+    if (rippling) _this.initRippling(radius, segmentationRip, color, count, duration);
+
+    _this.add(_this.uiFace);
+    return _this;
+  }
+
+  createClass(AnchorRippling, [{
+    key: 'initRippling',
+    value: function initRippling(radius, segmentation, color, count, duration) {
+      var waitTime = duration / count;
+      for (var i = 0; i <= count; i++) {
+        var last = i === count;
+        var circle = new Mesh(new CircleBufferGeometry(radius, segmentation), new MeshBasicMaterial({ color: new Color(color), transparent: true, depthTest: false }));
+        if (!last) {
+          var wait = waitTime * i;
+          circle.runners({
+            runners: [{ from: { 'material.opacity': 0.1 }, to: { scaleXYZ: 1.25, 'material.opacity': 0.5 }, duration: duration * 0.4, ease: Tween.Linear.None }, { to: { scaleXYZ: 1.5, 'material.opacity': 0 }, duration: duration * 0.6, ease: Tween.Linear.None }],
+            wait: wait,
+            infinite: true
+          });
+        }
+
+        this.waves.add(circle);
+      }
+      this.add(this.waves);
+    }
+  }]);
+  return AnchorRippling;
+}(AnchorBase);
 
 var RATIO = 0.15;
 var RANGE = 60;
@@ -7161,1014 +7972,6 @@ var CylinderWorld = function (_Object3D) {
   return CylinderWorld;
 }(Object3D);
 
-/**
- * `XR-Viewer` a `UC-VR` or `UC-3D` renderer framework
- * @extends Viewer
- * @param {Object} options config for `XR-Viewer` render view-port
- * @param {canvas} options.canvas `canvas-dom` or canvas `css-selector`
- * @param {Number} [options.width=300] init renderer width.
- * @param {Number} [options.height=150] init renderer height.
- * @param {Number} [options.updateStyle=false] auto update css style when setSize.
- * @param {Number} [options.fov=60] Camera frustum vertical field of view.
- * @param {Number} [options.aspect=width/height] Camera frustum aspect ratio.
- * @param {Number} [options.near=0.1] Camera frustum near plane.
- * @param {Number} [options.far=1000] Camera frustum far plane.
- * @param {Number} [options.vrmode=false] whether init with vrmode.
- * @param {Number} [options.stereoAspect=0.5] stereo camera aspect for vrmode.
- * @param {Number} [options.vrsensor=false] whether init with vrsensor.
- * @param {Boolean} [options.interactive=true] whether interactive with scene.
- * @param {Number} [options.fps=60] render frame rate.
- * @param {Boolean} [options.autoClear=true] whether the renderer should automatically clear its output before rendering a frame.
- * @param {Boolean} [options.alpha=false] whether the canvas contains an alpha (transparency) buffer or not.
- * @param {Boolean} [options.antialias=false] whether to perform antialiasing.
- * @param {String} [options.precision='highp'] Shader precision, Can be `highp`, `mediump` or `lowp`.
- * @param {Boolean} [options.premultipliedAlpha=true] whether the renderer will assume that colors have premultiplied alpha.
- * @param {Boolean} [options.stencil=true] whether the drawing buffer has a stencil buffer of at least 8 bits.
- * @param {Boolean} [options.preserveDrawingBuffer=false] whether to preserve the buffers until manually cleared or overwritten.
- * @param {Boolean} [options.depth=true] whether the drawing buffer has a depth buffer of at least 16 bits.
- * @param {Boolean} [options.logarithmicDepthBuffer] whether to use a logarithmic depth buffer.
- */
-
-var XRViewer = function (_Viewer) {
-  inherits(XRViewer, _Viewer);
-
-  function XRViewer(options) {
-    classCallCheck(this, XRViewer);
-
-    var _this = possibleConstructorReturn(this, (XRViewer.__proto__ || Object.getPrototypeOf(XRViewer)).call(this, options));
-
-    var _this$renderer$getSiz = _this.renderer.getSize(),
-        width = _this$renderer$getSiz.width,
-        height = _this$renderer$getSiz.height;
-
-    var vrmode = options.vrmode,
-        vrsensor = options.vrsensor,
-        _options$fov = options.fov,
-        fov = _options$fov === undefined ? 60 : _options$fov,
-        _options$aspect = options.aspect,
-        aspect = _options$aspect === undefined ? width / height : _options$aspect,
-        _options$near = options.near,
-        near = _options$near === undefined ? 0.1 : _options$near,
-        _options$far = options.far,
-        far = _options$far === undefined ? 1000 : _options$far;
-
-    /**
-     * view-port camera object, a perspective camera
-     *
-     * @member {Camera}
-     */
-
-    _this.camera = new PerspectiveCamera(fov, aspect, near, far);
-
-    /**
-     * stereo camera object
-     *
-     * @member {StereoCamera}
-     */
-    _this.stereo = new StereoCamera();
-    _this.stereo.aspect = options.stereoAspect || 0.5;
-
-    /**
-     * enable vr-mode or not
-     *
-     * @member {Boolean}
-     */
-    _this.vrmode = vrmode || false;
-
-    /**
-     * use orientation sensor or not
-     *
-     * @member {Boolean}
-     */
-    _this.vrsensor = vrsensor || false;
-
-    /**
-     * device orientation sensor, control camera look around
-     *
-     * @member {Orienter}
-     */
-    _this.sensorCTL = new Orienter();
-
-    // update sensor state before update timeline
-    _this.sensorCTL.on('deviceorientation', function (_ref) {
-      var quaternion = _ref.quaternion;
-
-      if (_this.vrsensor) {
-        _this.camera.quaternion.copy(quaternion);
-      }
-    });
-
-    /**
-     * 3d-view interaction manager
-     * TODO: should fix interaction bug when vrmode
-     */
-    _this.interactionManager = new InteractionManager(_this.renderer, _this.graphicsLayer.graphics, _this.camera);
-
-    // update interaction in every tick
-    var interactionUpdate = function interactionUpdate(_ref2) {
-      var snippet = _ref2.snippet;
-
-      _this.interactionManager.update(snippet);
-    };
-
-    /**
-     * whether all 3d-view is interactively or not
-     *
-     * @member {boolean}
-     * @private
-     */
-    _this._interactive = null;
-
-    _this.interactiveOnChange = function () {
-      if (this.interactive) {
-        this.on('pretimeline', interactionUpdate);
-        this.interactionManager.addEvents();
-      } else {
-        this.off('pretimeline', interactionUpdate);
-        this.interactionManager.removeEvents();
-      }
-    };
-
-    /**
-     * whether all 3d-view is interactively or not
-     *
-     * @member {boolean}
-     */
-    _this.interactive = Utils.isBoolean(options.interactive) ? options.interactive : true;
-    return _this;
-  }
-
-  /**
-   * scene background
-   */
-
-
-  createClass(XRViewer, [{
-    key: 'render',
-
-
-    /**
-     * render all scene
-     */
-    value: function render() {
-      if (this.autoClear) {
-        this.renderer.setRenderTarget(null);
-        this.renderer.clear(this.renderer.autoClearColor, this.renderer.autoClearDepth, this.renderer.autoClearStencil);
-      }
-
-      this.xrrender();
-    }
-
-    /**
-     * auto switch render-mode, use vrmode or not
-     */
-
-  }, {
-    key: 'xrrender',
-    value: function xrrender() {
-      var size = this.renderer.getDrawingBufferSize();
-      if (this.vrmode) {
-        var hw = size.width / 2;
-        this.updateStereo();
-
-        this.renderer.setScissorTest(true);
-
-        this.setSV(0, 0, hw, size.height);
-        this.renderLayer(this.stereo.cameraL);
-
-        this.setSV(hw, 0, hw, size.height);
-        this.renderLayer(this.stereo.cameraR);
-
-        this.renderer.setScissorTest(false);
-      } else {
-        this.setSV(0, 0, size.width, size.height);
-
-        this.renderLayer(this.camera);
-      }
-    }
-
-    /**
-     * update stereo camera
-     */
-
-  }, {
-    key: 'updateStereo',
-    value: function updateStereo() {
-      if (this.camera.parent === null) this.camera.updateMatrixWorld();
-      this.stereo.update(this.camera);
-    }
-
-    /**
-     * set render rectangle area
-     * @param {*} x rectangle left-top point x-position
-     * @param {*} y rectangle left-top point y-position
-     * @param {*} width rectangle width
-     * @param {*} height rectangle height
-     */
-
-  }, {
-    key: 'setSV',
-    value: function setSV(x, y, width, height) {
-      this.renderer.setScissor(x, y, width, height);
-      this.renderer.setViewport(x, y, width, height);
-    }
-
-    /**
-     * push a display object into graphicsLayer scene
-     *
-     * @param {THREE.Object3D} child display object, which will be rendering
-     * @return {this} this
-     */
-
-  }, {
-    key: 'add',
-    value: function add() {
-      this.graphicsLayer.add.apply(this.graphicsLayer, arguments);
-      return this;
-    }
-
-    /**
-     * remove a display object from graphicsLayer scene
-     *
-     * @param {THREE.Object3D} child display object, which you had push it at before
-     * @return {this} this
-     */
-
-  }, {
-    key: 'remove',
-    value: function remove() {
-      this.graphicsLayer.remove.apply(this.graphicsLayer, arguments);
-      return this;
-    }
-  }, {
-    key: 'background',
-    get: function get$$1() {
-      return this._background;
-    }
-
-    /**
-     * set scene background
-     * @param {SphereWorld|CylinderWorld} bg scene background
-     */
-    ,
-    set: function set$$1(bg) {
-      if (bg instanceof SphereWorld || bg instanceof CylinderWorld) {
-        this._background = bg;
-
-        if (bg.needCamera) {
-          bg.setCamera(this.camera);
-        }
-        if (bg.needMount) {
-          this.add(bg);
-        }
-      } else {
-        console.log('unexpected background instance, only support SphereWorld、CylinderWorld');
-      }
-    }
-
-    /**
-     * getter whether scene interactively or not
-     */
-
-  }, {
-    key: 'interactive',
-    get: function get$$1() {
-      return this._interactive;
-    }
-
-    /**
-     * setter whether scene interactively or not
-     * @param {Boolean} value is interactively ?
-     */
-    ,
-    set: function set$$1(value) {
-      if (value !== this.interactive) {
-        this._interactive = value;
-        this.interactiveOnChange();
-      }
-    }
-  }]);
-  return XRViewer;
-}(Viewer);
-
-var LANDSCAPE_MAP = {
-  NONE: 0,
-  CW: Utils.DTR(-90),
-  CCW: Utils.DTR(90)
-};
-
-/**
- * base primer class, provide primering paint
- */
-
-var Primer = function () {
-  /**
-   * post some config to primer
-   * @param {*} _ have not be used
-   * @param {*} options config primer status
-   */
-  function Primer(_, options) {
-    classCallCheck(this, Primer);
-
-    options = options || {};
-
-    /**
-     * frame landscape orientation
-     * @member {Number}
-     * @private
-     */
-    this.landscape = Utils.isString(options.landscape) && LANDSCAPE_MAP[options.landscape] ? LANDSCAPE_MAP[options.landscape] : LANDSCAPE_MAP.CW;
-
-    /**
-     * this frame need to flip with y-axis
-     * @member {Boolean}
-     * @private
-     */
-    this.flip = Utils.isBoolean(options.flip) ? options.flip : true;
-
-    /**
-     * uv matrix
-     * @member {Matrix3}
-     * @private
-     */
-    this.uvMatrix = new Matrix3();
-
-    /**
-     * primer tag
-     * @member {Boolean}
-     */
-    this.isPrimer = true;
-
-    /**
-     * this primer is enable
-     * @member {Boolean}
-     */
-    this.enabled = true;
-
-    /**
-     * the parent of this parent
-     * @member {Layer}
-     * @private
-     */
-    this.parent = null;
-
-    /**
-     * scene for this 2D context
-     * @member {Scene}
-     * @private
-     */
-    this.scene = new Scene();
-
-    /**
-     * camera for this 2D context
-     * @member {OrthographicCamera}
-     * @private
-     */
-    this.camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
-
-    /**
-     * geometry for this 2D context
-     * @member {PlaneBufferGeometry}
-     * @private
-     */
-    this.pigmentGeo = new PlaneBufferGeometry(2, 2);
-
-    /**
-     * whether auto-cover to target viewport
-     * @member {Boolean}
-     */
-    this.autoCover = options.autoCover || false;
-
-    if (this.autoCover && options.targetAspect) {
-      this.setTargetAspect(options.targetAspect);
-    }
-  }
-
-  /**
-   * update timeline
-   */
-
-
-  createClass(Primer, [{
-    key: 'updateTimeline',
-    value: function updateTimeline() {}
-
-    /**
-     * render function, need overwrite by sub-class
-     */
-
-  }, {
-    key: 'render',
-    value: function render() {
-      console.warn('should be overwrite by sub-class');
-    }
-
-    /**
-     * set the target viewport aspect
-     * @param {Number} aspect target viewport aspect
-     */
-
-  }, {
-    key: 'setTargetAspect',
-    value: function setTargetAspect(aspect) {
-      this.targetAspect = aspect;
-      if (this.autoCover) this.needsUpdateAttributes = true;
-    }
-
-    /**
-     * update attribute
-     * @private
-     */
-
-  }, {
-    key: '_updateAttributes',
-    value: function _updateAttributes() {
-      if (!this.needsUpdateAttributes) return;
-
-      var _cs2 = this._cs(),
-          width = _cs2.width,
-          height = _cs2.height;
-
-      this._setPositions(this.pigmentGeo.attributes.position, width, height);
-      this.needsUpdateAttributes = false;
-    }
-
-    /**
-     * update aspect itself
-     * @param {Number} aspect target viewport aspect
-     * @private
-     */
-
-  }, {
-    key: '_setAspect',
-    value: function _setAspect(aspect) {
-      this.aspect = aspect;
-      if (this.autoCover) this.needsUpdateAttributes = true;
-    }
-
-    /**
-     * calculation the size for geometry in this targetAspect
-     * @return {Object} size
-     * @private
-     */
-
-  }, {
-    key: '_cs',
-    value: function _cs() {
-      var scale = this.aspect / this.targetAspect;
-      var size = {
-        width: 1,
-        height: 1
-      };
-      if (this.targetAspect > this.aspect) {
-        size.height = 1 / scale;
-      } else if (this.targetAspect < this.aspect) {
-        size.width = scale;
-      }
-      return size;
-    }
-
-    /**
-     * resize geometry size
-     * @param {BufferAttribute} positions positions buffer
-     * @param {Number} width target width
-     * @param {Number} height target height
-     * @return {BufferAttribute} updated BufferAttribute
-     */
-
-  }, {
-    key: '_setPositions',
-    value: function _setPositions(positions, width, height) {
-      var coefficient = [-1, 1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0];
-      for (var i = 0; i < positions.count; i++) {
-        var item = positions.itemSize * i;
-        positions.array[item] = coefficient[item] * width;
-        positions.array[item + 1] = coefficient[item + 1] * height;
-      }
-      positions.needsUpdate = true;
-      return positions;
-    }
-
-    /**
-     * correct uv buffer
-     * @param {BufferAttribute} uv uv bufferAttribute
-     * @return {BufferAttribute} corrected BufferAttribute
-     */
-
-  }, {
-    key: '_correctUv',
-    value: function _correctUv(uv) {
-      var v1 = new Vector3();
-      this.uvMatrix.identity();
-      this.uvMatrix.translate(-0.5, -0.5);
-      this.uvMatrix.rotate(this.landscape);
-      if (this.flip) this.uvMatrix.scale(1, -1);
-      this.uvMatrix.translate(0.5, 0.5);
-      for (var i = 0, l = uv.count; i < l; i++) {
-        v1.x = uv.getX(i);
-        v1.y = uv.getY(i);
-        v1.z = 1;
-
-        v1.applyMatrix3(this.uvMatrix);
-        uv.setXY(i, v1.x, v1.y);
-      }
-      uv.needsUpdate = true;
-      return uv;
-    }
-
-    /**
-     * get autoCover status
-     */
-
-  }, {
-    key: 'autoCover',
-    get: function get$$1() {
-      return this._autoCover;
-    }
-
-    /**
-     * set autoCover status
-     * @param {Boolean} autoCover whether autoCover or not
-     */
-    ,
-    set: function set$$1(autoCover) {
-      if (autoCover !== this.autoCover) {
-        this._autoCover = autoCover;
-        if (autoCover) this.needsUpdateAttributes = true;
-      }
-    }
-  }]);
-  return Primer;
-}();
-
-/**
- * @author alteredq / http://alteredqualia.com/
- *
- * Focus shader
- * based on PaintEffect postprocess from ro.me
- * http://code.google.com/p/3-dreams-of-black/source/browse/deploy/js/effects/PaintEffect.js
- * @private
- */
-var YUVShader = {
-
-  texOrder: ['uYTex', 'uUTex', 'uVTex'],
-
-  uniforms: {
-
-    uYTex: { value: null, ss: 1, format: LuminanceFormat },
-    uUTex: { value: null, ss: 0.5, format: LuminanceFormat },
-    uVTex: { value: null, ss: 0.5, format: LuminanceFormat },
-
-    diffuse: { value: new Color(0xffffff) }
-
-  },
-
-  vertexShader: '\n  varying vec2 vUv;\n  void main() {\n    vUv = uv;\n    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n  }',
-
-  fragmentShader: '\n  uniform sampler2D uYTex;\n  uniform sampler2D uUTex;\n  uniform sampler2D uVTex;\n\n  uniform vec3 diffuse;\n\n  varying vec2 vUv;\n\n  const mat3 mYUV2RGB = mat3(\n    1.0,   1.0,     1.0,\n    0.0,  -0.395,  2.032,\n    1.40, -0.581,   0.0\n  );\n\n  void main(){\n    vec3 YUV;\n    YUV.x = 1.1643 * (texture2D(uYTex, vUv).r - 0.0625);\n    YUV.y = texture2D(uUTex, vUv).r - 0.5;\n    YUV.z = texture2D(uVTex, vUv).r - 0.5;\n\n    gl_FragColor = vec4(diffuse * diffuse * (mYUV2RGB * YUV), 1.0);\n  }'
-};
-
-/**
- * @author alteredq / http://alteredqualia.com/
- *
- * Focus shader
- * based on PaintEffect postprocess from ro.me
- * http://code.google.com/p/3-dreams-of-black/source/browse/deploy/js/effects/PaintEffect.js
- * @private
- */
-var YCbCrShader = {
-
-  texOrder: ['uYTex', 'uCTex'],
-
-  uniforms: {
-
-    uYTex: { value: null, ss: 1, format: LuminanceFormat },
-    uCTex: { value: null, ss: 0.5, format: LuminanceAlphaFormat },
-
-    diffuse: { value: new Color(0xffffff) }
-
-  },
-
-  vertexShader: '\n  varying vec2 vUv;\n  void main() {\n    vUv = uv;\n    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n  }',
-
-  fragmentShader: '\n  uniform sampler2D uYTex;\n  uniform sampler2D uCTex;\n  uniform vec3 diffuse;\n\n  varying vec2 vUv;\n\n  const mat3 mYCbCrToRGB = mat3(\n    1.0,      1.0,     1.0,\n    0.0,     -0.18732, 1.8556,\n    1.57481, -.46813,  0.0\n  );\n\n  void main(){\n    vec3 YCbCr;\n    YCbCr.x  = texture2D(uYTex, vUv).r;\n    YCbCr.yz = texture2D(uCTex, vUv).ra - 0.5;\n    gl_FragColor = vec4(diffuse * diffuse * (mYCbCrToRGB * YCbCr), 1.0);\n  }'
-};
-
-var FORMAT_MAP = {
-  3: YUVShader,
-  4: YCbCrShader,
-  5: YCbCrShader
-};
-
-/**
- * camera-primer, for ali webar framework
- */
-
-var CameraPrimer = function (_Primer) {
-  inherits(CameraPrimer, _Primer);
-
-  /**
-   * required displayTarget to get frame
-   * @param {DisplayTarget} displayTarget webar DisplayTarget class
-   * @param {Object} options primer config
-   * @param {Color} [options.color=0xffffff] tint color
-   * @param {Boolean} [options.depthTest=false] enbale depth test
-   * @param {Boolean} [options.depthWrite=false] enbale depth write
-   */
-  function CameraPrimer(displayTarget, options) {
-    classCallCheck(this, CameraPrimer);
-
-    var _this = possibleConstructorReturn(this, (CameraPrimer.__proto__ || Object.getPrototypeOf(CameraPrimer)).call(this, displayTarget, options));
-
-    var _ref = options || {},
-        _ref$color = _ref.color,
-        color = _ref$color === undefined ? 0xffffff : _ref$color,
-        _ref$depthTest = _ref.depthTest,
-        depthTest = _ref$depthTest === undefined ? false : _ref$depthTest,
-        _ref$depthWrite = _ref.depthWrite,
-        depthWrite = _ref$depthWrite === undefined ? false : _ref$depthWrite;
-
-    /**
-     * cache the displayTarget
-     * @member {DisplayTarget}
-     */
-
-
-    _this.displayTarget = displayTarget;
-
-    /**
-     * set primer tint color
-     * @member {Color}
-     */
-    _this.color = color;
-
-    /**
-     * whether enbale depth test or not
-     * @member {Boolean}
-     * @private
-     */
-    _this._depthTest = depthTest || false;
-
-    /**
-     * whether enbale depth write or not
-     * @member {Boolean}
-     * @private
-     */
-    _this._depthWrite = depthWrite || false;
-
-    _this.init(_this.getFrames());
-    return _this;
-  }
-
-  /**
-   * get frame data from displayTarget
-   * @return {frameData} camera frame data
-   */
-
-
-  createClass(CameraPrimer, [{
-    key: 'getFrames',
-    value: function getFrames() {
-      return this.displayTarget.getFrames();
-    }
-
-    /**
-     * init set something
-     * @param {frameData} frameData camera frame data
-     * @private
-     */
-
-  }, {
-    key: 'init',
-    value: function init(_ref2) {
-      var _this2 = this;
-
-      var format = _ref2.format,
-          dataArray = _ref2.dataArray,
-          width = _ref2.width,
-          height = _ref2.height;
-
-      this.shader = FORMAT_MAP[format];
-
-      this.uniforms = UniformsUtils.clone(this.shader.uniforms);
-
-      this.shader.texOrder.forEach(function (tex, idx) {
-        var _uniforms$tex = _this2.uniforms[tex],
-            ss = _uniforms$tex.ss,
-            format = _uniforms$tex.format;
-
-        _this2.uniforms[tex].value = new DataTexture(dataArray[idx], width * ss, height * ss, format);
-      });
-
-      this.uniforms.diffuse.value = new Color(this.color);
-
-      this.pigmentMat = new ShaderMaterial({
-        uniforms: this.uniforms,
-        vertexShader: this.shader.vertexShader,
-        fragmentShader: this.shader.fragmentShader,
-        depthTest: this._depthTest,
-        depthWrite: this._depthWrite
-      });
-
-      this.pigment = new Mesh(this.pigmentGeo, this.pigmentMat);
-      this.pigment.frustumCulled = false;
-
-      this._correctUv(this.pigmentGeo.attributes.uv);
-
-      this.scene.add(this.pigment);
-
-      this._setAspect(height / width);
-    }
-
-    /**
-     * update shader uniforms and aspect itself
-     * @param {frameData} frameData camera frame data
-     * @private
-     */
-
-  }, {
-    key: 'updateFrame',
-    value: function updateFrame(_ref3) {
-      var _this3 = this;
-
-      var dataArray = _ref3.dataArray,
-          width = _ref3.width,
-          height = _ref3.height;
-
-      this.shader.texOrder.forEach(function (tex, idx) {
-        if (_this3.uniforms[tex].value.needsUpdate) return;
-        var ss = _this3.uniforms[tex].ss;
-
-        _this3.uniforms[tex].value.image.data = dataArray[idx];
-        _this3.uniforms[tex].value.image.width = width * ss;
-        _this3.uniforms[tex].value.image.height = height * ss;
-        _this3.uniforms[tex].value.needsUpdate = true;
-      });
-      this._setAspect(height / width);
-    }
-
-    /**
-     * update attribute and frame
-     */
-
-  }, {
-    key: 'update',
-    value: function update() {
-      if (this.autoCover) this._updateAttributes();
-      if (!this.displayTarget.isDirty) return;
-      this.updateFrame(this.getFrames());
-    }
-
-    /**
-     * render this primer
-     * @param {WebGLRenderer} renderer put webgl renderer
-     * @param {WebGLRenderTarget} rednerTarget render to which buffer
-     */
-
-  }, {
-    key: 'render',
-    value: function render(renderer, rednerTarget) {
-      this.update();
-      renderer.render(this.scene, this.camera, rednerTarget);
-    }
-  }]);
-  return CameraPrimer;
-}(Primer);
-
-/**
- * texture-primer, for Texture CanvasTexture VideoTexture
- */
-
-var TexturePrimer = function (_Primer) {
-  inherits(TexturePrimer, _Primer);
-
-  /**
-   * create a texture frame
-   * @param {image|canvas|video} frame texture frame
-   * @param {Object} options config
-   * @param {Color} [options.color=0xffffff] tint color
-   * @param {Boolean} [options.depthTest=false] enable depth test
-   * @param {Boolean} [options.depthWrite=false] enable depth write
-   * @param {THREE.Filter} [options.minFilter] use which min filter
-   * @param {THREE.Filter} [options.magFilter] use which mag filter
-   * @param {THREE.Format} [options.format] use which color format
-   */
-  function TexturePrimer(frame, options) {
-    classCallCheck(this, TexturePrimer);
-
-    var _this = possibleConstructorReturn(this, (TexturePrimer.__proto__ || Object.getPrototypeOf(TexturePrimer)).call(this, frame, options));
-
-    var _ref = options || {},
-        _ref$color = _ref.color,
-        color = _ref$color === undefined ? 0xffffff : _ref$color,
-        _ref$depthTest = _ref.depthTest,
-        depthTest = _ref$depthTest === undefined ? false : _ref$depthTest,
-        _ref$depthWrite = _ref.depthWrite,
-        depthWrite = _ref$depthWrite === undefined ? false : _ref$depthWrite,
-        minFilter = _ref.minFilter,
-        magFilter = _ref.magFilter,
-        format = _ref.format;
-
-    _this.texture = Utils.isString(frame) ? new TextureLoader().load(frame) : frame.tagName === 'VIDEO' ? new VideoTexture(frame) : frame.tagName === 'CANVAS' ? new CanvasTexture(frame) : frame.tagName === 'IMG' ? new Texture(frame) : null;
-
-    if (minFilter) _this.texture.minFilter = minFilter;
-    if (magFilter) _this.texture.magFilter = magFilter;
-    if (format) _this.texture.format = format;
-
-    _this.pigmentMat = new MeshBasicMaterial({
-      color: new Color(color),
-      map: _this.texture,
-      depthTest: depthTest,
-      depthWrite: depthWrite
-    });
-
-    _this.pigment = new Mesh(_this.pigmentGeo, _this.pigmentMat);
-    _this.pigment.frustumCulled = false;
-
-    _this.scene.add(_this.pigment);
-
-    _this._gainFrameSize();
-    return _this;
-  }
-
-  /**
-   * gain frame size, and to adjust aspect
-   */
-
-
-  createClass(TexturePrimer, [{
-    key: '_gainFrameSize',
-    value: function _gainFrameSize() {
-      var _this2 = this;
-
-      var image = this.texture.image;
-      if (!image) return;
-      if (image.width > 0 && image.height > 0) {
-        this._setAspect(image.width / image.height);
-      } else {
-        image.addEventListener('load', function () {
-          _this2._setAspect(image.width / image.height);
-        });
-      }
-    }
-
-    /**
-     * update positions attribute
-     */
-
-  }, {
-    key: 'update',
-    value: function update() {
-      if (this.autoCover) this._updateAttributes();
-    }
-
-    /**
-     * render this primer
-     * @param {WebGLRenderer} renderer put webgl renderer
-     * @param {WebGLRenderTarget} rednerTarget render to which buffer
-     */
-
-  }, {
-    key: 'render',
-    value: function render(renderer, rednerTarget) {
-      this.update();
-      renderer.render(this.scene, this.camera, rednerTarget);
-    }
-  }]);
-  return TexturePrimer;
-}(Primer);
-
-/**
- * anchor class, help your to bind interaction event
- */
-
-var AnchorBase = function (_Group) {
-  inherits(AnchorBase, _Group);
-
-  function AnchorBase() {
-    classCallCheck(this, AnchorBase);
-    return possibleConstructorReturn(this, (AnchorBase.__proto__ || Object.getPrototypeOf(AnchorBase)).apply(this, arguments));
-  }
-
-  createClass(AnchorBase, [{
-    key: 'putWhere',
-
-    /**
-     * help you caculate anchor position, relative which parent
-     *
-     * @param {Vector3} point global position relative camera
-     * @param {Object3D} parent relative which parent
-     * @return {Vector3} position relative parent coordinate system
-     */
-    value: function putWhere(point, parent) {
-      point.multiplyScalar(0.9);
-      point.applyMatrix4(new Matrix4().getInverse(parent.matrixWorld));
-      this.position.set(point.x, point.y, point.z);
-      this.lookAt(0, 0, 0);
-      return point;
-    }
-
-    /**
-     * put anchor to which posotion, position was relative it's parent
-     *
-     * @param {Vector3} position position was relative it's parent
-     */
-
-  }, {
-    key: 'putHere',
-    value: function putHere(position) {
-      this.position.set(position.x, position.y, position.z);
-      this.lookAt(0, 0, 0);
-    }
-  }]);
-  return AnchorBase;
-}(Group);
-
-/**
- * anchor class, help your to bind interaction event
- */
-
-var AnchorRippling = function (_AnchorBase) {
-  inherits(AnchorRippling, _AnchorBase);
-
-  /**
-   * 构造函数
-   * @param {Object} options 配置
-   * @param {String} [options.image] 点击区域的半径
-   * @param {Number} [options.width=8] 点击区域的半径
-   * @param {Number} [options.height=8] 点击区域的半径
-   * @param {Number} [options.segmentation=4] 点击区域的圆细分
-   * @param {Boolean} [options.rippling=false] 点击区域的圆细分
-   * @param {Number} [options.radius=8] 点击区域的半径
-   * @param {Number} [options.segmentationRip=8] 点击区域的半径
-   * @param {Color} [options.color=0xffffff] 点击区域的圆细分
-   * @param {Number} [options.count=2] 点击区域的圆细分
-   * @param {Number} [options.duration=1000] 点击区域的圆细分
-   */
-  function AnchorRippling(options) {
-    classCallCheck(this, AnchorRippling);
-
-    var _this = possibleConstructorReturn(this, (AnchorRippling.__proto__ || Object.getPrototypeOf(AnchorRippling)).call(this));
-
-    var _ref = options || {},
-        image = _ref.image,
-        width = _ref.width,
-        height = _ref.height,
-        _ref$segmentation = _ref.segmentation,
-        segmentation = _ref$segmentation === undefined ? 4 : _ref$segmentation,
-        rippling = _ref.rippling,
-        _ref$radius = _ref.radius,
-        radius = _ref$radius === undefined ? 8 : _ref$radius,
-        _ref$segmentationRip = _ref.segmentationRip,
-        segmentationRip = _ref$segmentationRip === undefined ? 16 : _ref$segmentationRip,
-        color = _ref.color,
-        _ref$count = _ref.count,
-        count = _ref$count === undefined ? 2 : _ref$count,
-        _ref$duration = _ref.duration,
-        duration = _ref$duration === undefined ? 1800 : _ref$duration;
-    /**
-     * global texture for stars
-     * @member {Texture}
-     */
-
-
-    _this.map = Utils.isString(image) ? new TextureLoader().load(image) : null;
-
-    _this.waves = new Group();
-    _this.waves.position.z = -0.1;
-    _this.uiFace = new Mesh(new PlaneBufferGeometry(width, height, segmentation, segmentation), new MeshBasicMaterial({ map: _this.map, transparent: true }));
-
-    if (rippling) _this.initRippling(radius, segmentationRip, color, count, duration);
-
-    _this.add(_this.uiFace);
-    return _this;
-  }
-
-  createClass(AnchorRippling, [{
-    key: 'initRippling',
-    value: function initRippling(radius, segmentation, color, count, duration) {
-      var waitTime = duration / count;
-      for (var i = 0; i <= count; i++) {
-        var last = i === count;
-        var circle = new Mesh(new CircleBufferGeometry(radius, segmentation), new MeshBasicMaterial({ color: new Color(color), transparent: true, depthTest: false }));
-        if (!last) {
-          var wait = waitTime * i;
-          circle.runners({
-            runners: [{ from: { 'material.opacity': 0.1 }, to: { scaleXYZ: 1.25, 'material.opacity': 0.5 }, duration: duration * 0.4, ease: Tween.Linear.None }, { to: { scaleXYZ: 1.5, 'material.opacity': 0 }, duration: duration * 0.6, ease: Tween.Linear.None }],
-            wait: wait,
-            infinite: true
-          });
-        }
-
-        this.waves.add(circle);
-      }
-      this.add(this.waves);
-    }
-  }]);
-  return AnchorRippling;
-}(AnchorBase);
-
-// const BINARY_EXTENSION_BUFFER_NAME = 'binary_glTF';
 var BINARY_EXTENSION_HEADER_MAGIC = 'glTF';
 var BINARY_EXTENSION_HEADER_LENGTH = 12;
 var BINARY_EXTENSION_CHUNK_TYPES = {
@@ -10242,10 +10045,6 @@ GLTFParser.prototype.loadScenes = function () {
   });
 };
 
-/**
- * refactor from THREE.DeviceOrientationControls
- */
-
 var GltfMagic = function (_EventDispatcher) {
   inherits(GltfMagic, _EventDispatcher);
 
@@ -10303,6 +10102,6 @@ var GltfMagic = function (_EventDispatcher) {
   return GltfMagic;
 }(EventDispatcher);
 
-export { Utils, Tween, Smooth, Orienter, ARGlue, ViewPort, BloomPass, ClearMaskPass, FilmPass, GlitchPass, MaskPass, MattingPass, RenderPass, ShaderPass, ConvolutionShader, CopyShader, FilmShader, FocusShader, ARViewer, XRViewer, Primer, CameraPrimer, TexturePrimer, AnchorRippling, SphereWorld, CylinderWorld, GltfMagic };
+export { Utils, Tween, Smooth, Orienter, BloomPass, ClearMaskPass, FilmPass, GlitchPass, MaskPass, MattingPass, RenderPass, ShaderPass, ConvolutionShader, CopyShader, FilmShader, FocusShader, ARGlue, Viewer, Layer, ARLayer, XRLayer, PrimerLayer, Primer, CameraPrimer, TexturePrimer, AnchorRippling, SphereWorld, CylinderWorld, GltfMagic };
 export { EventDispatcher } from 'three';
 //# sourceMappingURL=index.js.map

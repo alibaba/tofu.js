@@ -277,6 +277,29 @@ const Utils = {
     x = (x - min) / (max - min);
     return x * x * x * (x * (x * 6 - 15) + 10);
   },
+
+  /**
+   * sort list use bubble sort
+   * @param {array} list list array
+   * @param {function} fn list array
+   */
+  bubbleSort(list, fn) {
+    const length = list.length;
+    let i;
+    let j;
+    let temp;
+    for (i = 0; i < length - 1; i++) {
+      for (j = 0; j < length - 1 - i; j++) {
+        const m1 = fn(list[j]);
+        const m2 = fn(list[j + 1]);
+        if (m1 > m2) {
+          temp = list[j];
+          list[j] = list[j + 1];
+          list[j + 1] = temp;
+        }
+      }
+    }
+  },
 };
 
 export default Utils;

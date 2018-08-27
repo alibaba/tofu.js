@@ -17,7 +17,7 @@ export default class Pass {
 
   setSize(width, height) {}
 
-  render(renderer, writeBuffer, readBuffer, delta, maskActive) {
+  render(renderer, writeBuffer, readBuffer, delta) {
     console.error('Pass: .render() must be implemented in derived pass.');
   }
 }

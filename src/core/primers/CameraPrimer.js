@@ -4,15 +4,24 @@ import {
   ShaderMaterial,
   DataTexture,
   Color,
+  Vector3,
+  Matrix3,
 } from 'three';
 import Primer from './Primer';
 import YUVShader from '../../shader/YUVShader';
 import YCbCrShader from '../../shader/YCbCrShader';
+import Utils from '../../utils/Utils';
 
 const FORMAT_MAP = {
   3: YUVShader,
   4: YCbCrShader,
   5: YCbCrShader,
+};
+
+const LANDSCAPE_MAP = {
+  NONE: 0,
+  CW: Utils.DTR(-90),
+  CCW: Utils.DTR(90),
 };
 
 /**
@@ -31,6 +40,28 @@ class CameraPrimer extends Primer {
     super(displayTarget, options);
 
     const { color = 0xffffff, depthTest = false, depthWrite = false } = options || {};
+
+    /**
+     * frame landscape orientation
+     * @member {Number}
+     * @private
+     */
+    this.landscape = Utils.isString(options.landscape) && LANDSCAPE_MAP[options.landscape] ?
+      LANDSCAPE_MAP[options.landscape] : LANDSCAPE_MAP.CW;
+
+    /**
+     * this frame need to flip with y-axis
+     * @member {Boolean}
+     * @private
+     */
+    this.flip = Utils.isBoolean(options.flip) ? options.flip : true;
+
+    /**
+     * uv matrix
+     * @member {Matrix3}
+     * @private
+     */
+    this.uvMatrix = new Matrix3();
 
     /**
      * cache the displayTarget
@@ -138,6 +169,30 @@ class CameraPrimer extends Primer {
   render(renderer, rednerTarget) {
     this.update();
     renderer.render(this.scene, this.camera, rednerTarget);
+  }
+
+  /**
+   * correct uv buffer
+   * @param {BufferAttribute} uv uv bufferAttribute
+   * @return {BufferAttribute} corrected BufferAttribute
+   */
+  _correctUv(uv) {
+    const v1 = new Vector3();
+    this.uvMatrix.identity();
+    this.uvMatrix.translate(-0.5, -0.5);
+    this.uvMatrix.rotate(this.landscape);
+    if (this.flip) this.uvMatrix.scale(1, -1);
+    this.uvMatrix.translate(0.5, 0.5);
+    for (let i = 0, l = uv.count; i < l; i++) {
+      v1.x = uv.getX(i);
+      v1.y = uv.getY(i);
+      v1.z = 1;
+
+      v1.applyMatrix3(this.uvMatrix);
+      uv.setXY(i, v1.x, v1.y);
+    }
+    uv.needsUpdate = true;
+    return uv;
   }
 }
 

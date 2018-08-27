@@ -37,126 +37,124 @@
       var WIDTH = window.innerWidth;
       var HEIGHT = window.innerHeight;
       var morphStars;
-      var xrViewer = new Tofu.XRViewer({
+      var xrViewer = new Tofu.Viewer({
         canvas: '#webgl',
-        fov: 75,
         width: WIDTH,
         height: HEIGHT,
+      });
+      const layer3d = xrViewer.createLayer(Tofu.XRLayer, {
+        fov: 75,
         near: 0.01,
         far: 3000,
-        aeEnable: true,
       });
-      xrViewer.camera.position.set(0, 0, 1000);
-			xrViewer.renderer.autoClear = false;
-      xrViewer.graphicsLayer.graphics.background = new THREE.Color( 0x05050c );
-      xrViewer.graphicsLayer.graphics.fog = new THREE.FogExp2(0x05050c, 0.0004);
-      var smooth = new Smooth(xrViewer.graphicsLayer.graphics.rotation);
-      xrViewer.graphicsLayer.graphics.on('pretimeline', function() {
+      layer3d.camera.position.set(0, 0, 1000);
+      layer3d.scene.background = new THREE.Color( 0x05050c );
+      layer3d.scene.fog = new THREE.FogExp2(0x05050c, 0.0004);
+      var smooth = new Smooth(layer3d.scene.rotation);
+      layer3d.scene.on('pretimeline', function() {
         smooth.update();
       });
 
       var loader = new Tofu.SpecimensLoader();
       loader.load([
         new Specimen({
-          url: './js/game.json',
-          name: 'game',
-          scale: new THREE.Vector3(700, 700, 700),
-          translate: new THREE.Vector3(-400, 100, 0),
-          rotation: new THREE.Euler(Utils.DTR(72), Utils.DTR(30), Utils.DTR(60), 'ZYX'),
+          url: '//image.uc.cn/s/uae/g/01/tofu_test/images/fish.json',
+          name: 'fish',
+          scale: new THREE.Vector3(600, 600, 600),
+          translate: new THREE.Vector3(-250, 120, 0),
+          rotation: new THREE.Euler(0, 0, 0, 'XYZ'),
           material: {
             size: 5,
           }
         }),
         new Specimen({
-          url: './js/ac.json',
-          name: 'ac',
-          scale: new THREE.Vector3(700, 700, 700),
-          translate: new THREE.Vector3(400, 0, 0),
-          rotation: new THREE.Euler(0, Utils.DTR(-30), 0, 'ZYX'),
+          url: '//image.uc.cn/s/uae/g/01/tofu_test/images/uc.json',
+          name: 'uc',
+          scale: new THREE.Vector3(520, 520, 520),
+          translate: new THREE.Vector3(280, 120, 0),
+          rotation: new THREE.Euler(0, 0, 0, 'XYZ'),
           material: {
             size: 5,
           }
         }),
         new Specimen({
-          url: './js/book.json',
-          name: 'book',
-          scale: new THREE.Vector3(1e3, 1e3, 1e3),
-          translate: new THREE.Vector3(-500, 150, 0),
-          rotation: new THREE.Euler(Utils.DTR(10), 0, 0, 'ZYX'),
+          url: '//image.uc.cn/s/uae/g/01/tofu_test/images/sm.json',
+          name: 'sm',
+          scale: new THREE.Vector3(500, 500, 500),
+          translate: new THREE.Vector3(-200, 60, 0),
+          rotation: new THREE.Euler(0, 0, Utils.DTR(-24), 'XYZ'),
           material: {
             size: 5,
           }
         }),
         new Specimen({
-          url: './js/movie.json',
-          name: 'movie',
-          scale: new THREE.Vector3(1200, 1200, 1200),
-          translate: new THREE.Vector3(0, 0, 0),
-          rotation: new THREE.Euler(Utils.DTR(90), Utils.DTR(180), 0, 'ZYX'),
+          url: '//image.uc.cn/s/uae/g/01/tofu_test/images/9game.json',
+          name: '9game',
+          scale: new THREE.Vector3(500, 500, 500),
+          translate: new THREE.Vector3(240, 80, 0),
+          rotation: new THREE.Euler(0, 0, Utils.DTR(15), 'XYZ'),
           material: {
             size: 5,
           }
         }),
         new Specimen({
-          url: './js/kv.json',
+          url: '//image.uc.cn/s/uae/g/01/tofu_test/images/youku.json',
+          name: 'youku',
+          scale: new THREE.Vector3(450, 450, 450),
+          translate: new THREE.Vector3(-260, 80, 0),
+          rotation: new THREE.Euler(0, 0, 0, 'XYZ'),
+          material: {
+            size: 5,
+          }
+        }),
+        new Specimen({
+          url: '//image.uc.cn/s/uae/g/01/tofu_test/images/fish-ball.json',
+          name: 'fishball',
+          scale: new THREE.Vector3(450, 450, 450),
+          translate: new THREE.Vector3(50, 180, 0),
+          rotation: new THREE.Euler(0, 0, 0, 'XYZ'),
+          material: {
+            size: 5,
+          }
+        }),
+        new Specimen({
+          url: '//image.uc.cn/s/uae/g/01/tofu_test/images/kv.json',
           name: 'kv',
           scale: new THREE.Vector3(1500, 1500, 1500),
           translate: new THREE.Vector3(0, -500, 0),
-          rotation: new THREE.Euler(Utils.DTR(10), 0, 0, 'ZYX'),
+          rotation: new THREE.Euler(Utils.DTR(10), 0, 0, 'XYZ'),
           needWave: true,
           needTessellate: true,
-          edgeLength: 0.05,
           material: {
             size: 5,
-          }
-        }),
-        new Specimen({
-          url: './js/uc.json',
-          name: 'uc',
-          scale: new THREE.Vector3(450, 450, 450),
-          translate: new THREE.Vector3(0, 0, 0),
-          rotation: new THREE.Euler(0, 0, 0, 'ZYX'),
-          material: {
-            size: 5,
-          }
-        }),
-        new Specimen({
-          url: './js/qr.json',
-          name: 'qr',
-          scale: new THREE.Vector3(500, 500, 500),
-          translate: new THREE.Vector3(0, 0, 0),
-          rotation: new THREE.Euler(0, 0, 0, 'ZYX'),
-          material: {
-            size: 20,
-            map: null,
           }
         }),
       ]).on('complete', function() {
         morphStars = new Tofu.MorphStars(loader, {
-          specimens: [ 'game', 'ac', 'book', 'movie', 'uc', 'kv' ],
-          hovers: [ 'qr' ],
+          specimens: [ 'fish', 'uc', 'sm', 'youku', 'fishball', 'kv' ],
+          hovers: [],
           image: './images/gradient.png',
           size: 1000,
           ease: Tofu.Tween.Ease.Out
         });
         morphStars.animate({
           from: {
-            'rotation.y': Utils.DTR(-350),
+            'rotation.y': Utils.DTR(-30),
           },
           to: {
-            'rotation.y': Utils.DTR(-10),
+            'rotation.y': Utils.DTR(10),
           },
           ease: Tofu.Tween.Ease.Bezier(0.2, 1, 0.7, 1),
-          duration: 4000,
+          duration: 1000,
         }).on('complete', function() {
           canFlip = true;
           morphStars.to(0);
           morphStars.animate({
             from: {
-              'rotation.y': Utils.DTR(-10),
+              'rotation.y': Utils.DTR(10),
             },
             to: {
-              'rotation.y': Utils.DTR(10),
+              'rotation.y': Utils.DTR(-10),
             },
             infinite: true,
             alternate: true,
@@ -164,114 +162,122 @@
           });
         });
         if (isMobile) {
-          sensor();
+          // sensor();
         } else {
-          mousemove();
+          // mousemove();
         }
-        xrViewer.add(morphStars);
+        layer3d.add(morphStars);
       });
 
+      var effectBloom = new Tofu.BloomPass(1.05);
+      var effectFilm = new Tofu.FilmPass(0.15, 0.15, 1500, false);
 
-      // var renderModel = new Tofu.RenderPass();
-      var effectBloom = new Tofu.BloomPass( 1.05 );
-      var effectFilm = new Tofu.FilmPass( 0.15, 0.15, 1500, false );
+      var effectFocus = new Tofu.ShaderPass(Tofu.FocusShader);
+      var portSize = xrViewer.getPortSize();
+      effectFocus.uniforms.screenWidth.value = portSize.width;
+      effectFocus.uniforms.screenHeight.value = portSize.height;
 
-      var effectFocus = new Tofu.ShaderPass( Tofu.FocusShader );
-      effectFocus.uniforms[ "screenWidth" ].value = WIDTH;
-      effectFocus.uniforms[ "screenHeight" ].value = HEIGHT;
-      // effectFocus.renderToScreen = true;
-
-      // xrViewer.graphicsLayer.addPass( renderModel );
-      xrViewer.graphicsLayer.addPass( effectBloom );
-      xrViewer.graphicsLayer.addPass( effectFilm );
-      xrViewer.graphicsLayer.addPass( effectFocus );
+      layer3d.addPass(effectBloom);
+      layer3d.addPass(effectFilm);
+      layer3d.addPass(effectFocus);
 
       xrViewer.start();
 
-      var startVec = new THREE.Vector2(0, 0);
-      var endVec = new THREE.Vector2(0, 0);
-      var canFlip = false;
-      var hadDown = false;
-      xrViewer.interactionManager.on('touchstart', start);
-      xrViewer.interactionManager.on('touchmove', move);
-      xrViewer.interactionManager.on('touchend', end);
+      xrViewer.on('vrmodeChange', function() {
+        var portSize = xrViewer.getPortSize();
+        effectFocus.uniforms.screenWidth.value = portSize.width;
+        effectFocus.uniforms.screenHeight.value = portSize.height;
+      });
 
-      xrViewer.interactionManager.on('mousedown', start);
-      xrViewer.interactionManager.on('mousemove', move);
-      xrViewer.interactionManager.on('mouseup', end);
-      function start(ev) {
-        var originalEvent = ev.data.originalEvent;
-        if (originalEvent.touches && originalEvent.touches.length >= 2) return;
-        if (originalEvent.touches) {
-          startVec.x = originalEvent.touches[0].pageX;
-          startVec.y = originalEvent.touches[0].pageY;
-        } else {
-          hadDown = true;
-          startVec.x = originalEvent.pageX;
-          startVec.y = originalEvent.pageY;
-        }
-      }
-      function move(ev) {
-        var originalEvent = ev.data.originalEvent;
-        if (originalEvent.touches && originalEvent.touches.length >= 2) return;
-        originalEvent.preventDefault();
-        if (originalEvent.touches) {
-          endVec.x = originalEvent.touches[0].pageX - startVec.x;
-          endVec.y = originalEvent.touches[0].pageY - startVec.y;
-        } else if (hadDown) {
-          endVec.x = originalEvent.pageX - startVec.x;
-          endVec.y = originalEvent.pageY - startVec.y;
-        }
-      }
-      function end() {
-        console.log(endVec);
-        if (Math.abs(endVec.y) >= 100 && canFlip) {
-          if (endVec.y > 0) {
-            morphStars.pre();
-          } else {
-            morphStars.next();
-          }
-        }
-        hadDown = false;
-        endVec.set(0, 0);
-      }
+      // var startVec = new THREE.Vector2(0, 0);
+      // var endVec = new THREE.Vector2(0, 0);
+      // var canFlip = false;
+      // var hadDown = false;
+      // xrViewer.interactionManager.on('touchstart', start);
+      // xrViewer.interactionManager.on('touchmove', move);
+      // xrViewer.interactionManager.on('touchend', end);
+
+      // xrViewer.interactionManager.on('mousedown', start);
+      // xrViewer.interactionManager.on('mousemove', move);
+      // xrViewer.interactionManager.on('mouseup', end);
+      // function start(ev) {
+      //   var originalEvent = ev.data.originalEvent;
+      //   if (originalEvent.touches && originalEvent.touches.length >= 2) return;
+      //   if (originalEvent.touches) {
+      //     startVec.x = originalEvent.touches[0].pageX;
+      //     startVec.y = originalEvent.touches[0].pageY;
+      //   } else {
+      //     hadDown = true;
+      //     startVec.x = originalEvent.pageX;
+      //     startVec.y = originalEvent.pageY;
+      //   }
+      // }
+      // function move(ev) {
+      //   var originalEvent = ev.data.originalEvent;
+      //   if (originalEvent.touches && originalEvent.touches.length >= 2) return;
+      //   originalEvent.preventDefault();
+      //   if (originalEvent.touches) {
+      //     endVec.x = originalEvent.touches[0].pageX - startVec.x;
+      //     endVec.y = originalEvent.touches[0].pageY - startVec.y;
+      //   } else if (hadDown) {
+      //     endVec.x = originalEvent.pageX - startVec.x;
+      //     endVec.y = originalEvent.pageY - startVec.y;
+      //   }
+      // }
+      // function end() {
+      //   console.log(endVec);
+      //   if (Math.abs(endVec.y) >= 100 && canFlip) {
+      //     if (endVec.y > 0) {
+      //       morphStars.pre();
+      //     } else {
+      //       morphStars.next();
+      //     }
+      //   }
+      //   hadDown = false;
+      //   endVec.set(0, 0);
+      // }
 
       function onWindowResize() {
         WIDTH = window.innerWidth;
         HEIGHT = window.innerHeight;
-        effectFocus.uniforms[ "screenWidth" ].value = WIDTH;
-        effectFocus.uniforms[ "screenHeight" ].value = HEIGHT;
-        xrViewer.camera.aspect = WIDTH / HEIGHT;
-        xrViewer.camera.updateProjectionMatrix();
-        xrViewer.renderer.setSize(WIDTH, HEIGHT);
+        // effectFocus.uniforms[ "screenWidth" ].value = WIDTH;
+        // effectFocus.uniforms[ "screenHeight" ].value = HEIGHT;
+        // xrViewer.camera.aspect = WIDTH / HEIGHT;
+        // xrViewer.camera.updateProjectionMatrix();
+        // xrViewer.renderer.setSize(WIDTH, HEIGHT);
+        var portSize = xrViewer.getPortSize();
+        effectFocus.uniforms.screenWidth.value = portSize.width;
+        effectFocus.uniforms.screenHeight.value = portSize.height;
+
+        xrViewer.setSize(WIDTH, HEIGHT);
       }
 
-      function sensor() {
-        var preLon = 0;
-        var preLat = 0;
-        var nowLon = 0;
-        var nowLat = 0;
-        xrViewer.sensorCTL.on('deviceorientation', function(info) {
-          var lonSpace = info.lon - preLon;
-          var compensate = 0;
-          if (lonSpace > 180) compensate = 360;
-          if (lonSpace < -180) compensate = -360;
-          preLon += compensate;
-          nowLon = Utils.clamp(nowLon + (info.lon - preLon) * 0.2, -6, 6);
-          nowLat = Utils.clamp(nowLat + (info.lat - preLat) * 0.2, -3, 3);
-          preLon = info.lon;
-          preLat = info.lat;
+      // function sensor() {
+      //   var preLon = 0;
+      //   var preLat = 0;
+      //   var nowLon = 0;
+      //   var nowLat = 0;
+      //   xrViewer.sensorCTL.on('deviceorientation', function(info) {
+      //     var lonSpace = info.lon - preLon;
+      //     var compensate = 0;
+      //     if (lonSpace > 180) compensate = 360;
+      //     if (lonSpace < -180) compensate = -360;
+      //     preLon += compensate;
+      //     nowLon = Utils.clamp(nowLon + (info.lon - preLon) * 0.2, -6, 6);
+      //     nowLat = Utils.clamp(nowLat + (info.lat - preLat) * 0.2, -3, 3);
+      //     preLon = info.lon;
+      //     preLat = info.lat;
 
-          smooth.goto(Utils.DTR(-nowLat), Utils.DTR(-nowLon));
-        });
-      }
+      //     smooth.goto(Utils.DTR(-nowLat), Utils.DTR(-nowLon));
+      //   });
+      // }
 
-      function mousemove() {
-        xrViewer.interactionManager.on('mousemove', function(ev) {
-          var global = ev.data.global;
-          smooth.goto(Utils.DTR(global.y * -3), Utils.DTR(global.x * 3));
-        })
-      }
+      // function mousemove() {
+      //   xrViewer.interactionManager.on('mousemove', function(ev) {
+      //     var global = ev.data.global;
+      //     smooth.goto(Utils.DTR(global.y * -3), Utils.DTR(global.x * 3));
+      //   })
+      // }
 
       /**
        * 帧率监控工具
