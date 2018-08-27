@@ -96,6 +96,6 @@
     }
   },
   "dependencies": {
-    "three.interaction": "0.0.7"
+    "three.interaction": "0.1.0"
   }
 }

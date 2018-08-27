@@ -1,4 +1,4 @@
-import { PerspectiveCamera } from 'three';
+import { PerspectiveCamera, Vector4 } from 'three';
 import Layer from './Layer';
 
 class ARLayer extends Layer {
@@ -135,14 +135,10 @@ class ARLayer extends Layer {
    * @param {WebGLRender} renderer renderer context
    * @param {object} session renderer session
    */
-  render(renderer, session) {
+  render(renderer) {
     if (this.autoClear) this.clear(renderer, this.effectPack.renderTarget);
-    const { sx, sy, rtw, rth } = this.updateViewport();
-    const { x, y, z, w } = session.viewport;
 
-    renderer.setViewport(sx, sy, rtw, rth);
     renderer.render(this.scene, this.camera, this.effectPack.renderTarget);
-    renderer.setViewport(x, y, z, w);
   }
 
   /**
@@ -152,8 +148,9 @@ class ARLayer extends Layer {
    */
   setSize(width, height) {
     this.effectPack.setSize(width, height);
-    // this.camera.aspect = width / height;
-    // this.camera.updateProjectionMatrix();
+
+    const { sx, sy, rtw, rth } = this.updateViewport();
+    this.effectPack.renderTarget.viewport = new Vector4(sx, sy, rtw, rth);
   }
 }
 

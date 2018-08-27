@@ -107,8 +107,8 @@
   var arController = null;
   var video = document.getElementById('v');
 
-  var aaa = new Tofu.TexturePrimer(video, { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat });
-  layer2d.add(aaa.pigment);
+  var texturePrimer = new Tofu.TexturePrimer(video, { targetAspect: WIDTH / HEIGHT });
+  layer2d.add(texturePrimer);
 
   function tick() {
     if (!arController) {
@@ -151,7 +151,6 @@
     effectFocus.uniforms.screenWidth.value = WIDTH;
     effectFocus.uniforms.screenHeight.value = HEIGHT;
     arViewer.setSize(WIDTH, HEIGHT);
-    // arViewer.updateViewport();
   }
   </script>
 

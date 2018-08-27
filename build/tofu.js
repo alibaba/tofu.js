@@ -6493,25 +6493,10 @@ var ARLayer = function (_Layer) {
 
   }, {
     key: 'render',
-    value: function render(renderer, session) {
+    value: function render(renderer) {
       if (this.autoClear) this.clear(renderer, this.effectPack.renderTarget);
 
-      var _updateViewport = this.updateViewport(),
-          sx = _updateViewport.sx,
-          sy = _updateViewport.sy,
-          rtw = _updateViewport.rtw,
-          rth = _updateViewport.rth;
-
-      var _session$viewport = session.viewport,
-          x = _session$viewport.x,
-          y = _session$viewport.y,
-          z = _session$viewport.z,
-          w = _session$viewport.w;
-
-
-      renderer.setViewport(sx, sy, rtw, rth);
       renderer.render(this.scene, this.camera, this.effectPack.renderTarget);
-      renderer.setViewport(x, y, z, w);
     }
 
     /**
@@ -6524,125 +6509,17 @@ var ARLayer = function (_Layer) {
     key: 'setSize',
     value: function setSize(width, height) {
       this.effectPack.setSize(width, height);
-      // this.camera.aspect = width / height;
-      // this.camera.updateProjectionMatrix();
+
+      var _updateViewport = this.updateViewport(),
+          sx = _updateViewport.sx,
+          sy = _updateViewport.sy,
+          rtw = _updateViewport.rtw,
+          rth = _updateViewport.rth;
+
+      this.effectPack.renderTarget.viewport = new three.Vector4(sx, sy, rtw, rth);
     }
   }]);
   return ARLayer;
-}(Layer);
-
-var PrimerLayer = function (_Layer) {
-  inherits(PrimerLayer, _Layer);
-
-  function PrimerLayer(options) {
-    classCallCheck(this, PrimerLayer);
-
-    var _this = possibleConstructorReturn(this, (PrimerLayer.__proto__ || Object.getPrototypeOf(PrimerLayer)).call(this, options));
-
-    var _options$frameWidth = options.frameWidth,
-        frameWidth = _options$frameWidth === undefined ? 480 : _options$frameWidth,
-        _options$frameHeight = options.frameHeight,
-        frameHeight = _options$frameHeight === undefined ? 640 : _options$frameHeight;
-
-    /**
-     * video frame width
-     * @member {Number}
-     */
-
-    _this.frameWidth = frameWidth;
-
-    /**
-     * video frame height
-     * @member {Number}
-     */
-    _this.frameHeight = frameHeight;
-
-    // init update viewport for ar-video-frame
-    _this.updateViewport();
-
-    /**
-     * camera for this 2D context
-     *
-     * @member {OrthographicCamera}
-     */
-    _this.camera = new three.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-    return _this;
-  }
-
-  /**
-   * adjust viewport, when frameWidth frameHeight or renderer.getSize had change
-   * @return {Object} view port
-   */
-
-
-  createClass(PrimerLayer, [{
-    key: 'updateViewport',
-    value: function updateViewport() {
-      var _effectPack = this.effectPack,
-          width = _effectPack.width,
-          height = _effectPack.height;
-
-      var rw = width / this.frameWidth;
-      var rh = height / this.frameHeight;
-      var ratio = Math.max(rw, rh);
-      var rtw = this.frameWidth * ratio;
-      var rth = this.frameHeight * ratio;
-
-      var sx = 0;
-      var sy = 0;
-
-      if (rw < rh) {
-        sx = -(rtw - width) / 2;
-      } else if (rw > rh) {
-        sy = -(rth - height) / 2;
-      }
-
-      // this.renderer.setViewport(sx, sy, rtw, rth);
-      return { sx: sx, sy: sy, rtw: rtw, rth: rth };
-    }
-
-    /**
-     * render all scene
-     * @param {WebGLRender} renderer renderer context
-     * @param {object} session renderer session
-     */
-
-  }, {
-    key: 'render',
-    value: function render(renderer, session) {
-      if (this.autoClear) this.clear(renderer, this.effectPack.renderTarget);
-
-      var _updateViewport = this.updateViewport(),
-          sx = _updateViewport.sx,
-          sy = _updateViewport.sy,
-          rtw = _updateViewport.rtw,
-          rth = _updateViewport.rth;
-
-      var _session$viewport = session.viewport,
-          x = _session$viewport.x,
-          y = _session$viewport.y,
-          z = _session$viewport.z,
-          w = _session$viewport.w;
-
-
-      renderer.setViewport(sx, sy, rtw, rth);
-      renderer.render(this.scene, this.camera, this.effectPack.renderTarget);
-      renderer.setViewport(x, y, z, w);
-    }
-
-    /**
-     * resize layer size when viewport has change
-     * @param {number} width layer buffer width
-     * @param {number} height layer buffer height
-     */
-
-  }, {
-    key: 'setSize',
-    value: function setSize(width, height) {
-      this.effectPack.setSize(width, height);
-    }
-  }]);
-  return PrimerLayer;
 }(Layer);
 
 var XRLayer = function (_Layer) {
@@ -6778,128 +6655,110 @@ var XRLayer = function (_Layer) {
   return XRLayer;
 }(Layer);
 
-var LANDSCAPE_MAP = {
-  NONE: 0,
-  CW: Utils.DTR(-90),
-  CCW: Utils.DTR(90)
-};
+var PrimerLayer = function (_Layer) {
+  inherits(PrimerLayer, _Layer);
+
+  function PrimerLayer(options) {
+    classCallCheck(this, PrimerLayer);
+
+    /**
+     * camera for this 2D context
+     *
+     * @member {OrthographicCamera}
+     */
+    var _this = possibleConstructorReturn(this, (PrimerLayer.__proto__ || Object.getPrototypeOf(PrimerLayer)).call(this, options));
+
+    _this.camera = new three.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    return _this;
+  }
+
+  /**
+   * render all scene
+   * @param {WebGLRender} renderer renderer context
+   * @param {object} session renderer session
+   */
+
+
+  createClass(PrimerLayer, [{
+    key: 'render',
+    value: function render(renderer) {
+      if (this.autoClear) this.clear(renderer, this.effectPack.renderTarget);
+      renderer.render(this.scene, this.camera, this.effectPack.renderTarget);
+    }
+
+    /**
+     * resize layer size when viewport has change
+     * @param {number} width layer buffer width
+     * @param {number} height layer buffer height
+     */
+
+  }, {
+    key: 'setSize',
+    value: function setSize(width, height) {
+      this.effectPack.setSize(width, height);
+      this.scene.children.forEach(function (child) {
+        child.setSize && child.setSize(width, height);
+      });
+    }
+  }]);
+  return PrimerLayer;
+}(Layer);
 
 /**
  * base primer class, provide primering paint
  */
 
-var Primer = function () {
+var Primer = function (_Mesh) {
+  inherits(Primer, _Mesh);
+
   /**
    * post some config to primer
-   * @param {*} _ have not be used
+   * @param {*} geo have not be used
+   * @param {*} mat config primer status
    * @param {*} options config primer status
    */
-  function Primer(_, options) {
+  function Primer(geo, mat, options) {
     classCallCheck(this, Primer);
 
-    options = options || {};
+    var _this = possibleConstructorReturn(this, (Primer.__proto__ || Object.getPrototypeOf(Primer)).call(this, geo, mat));
+
+    var _options$frameAspect = options.frameAspect,
+        frameAspect = _options$frameAspect === undefined ? 1 : _options$frameAspect,
+        _options$targetAspect = options.targetAspect,
+        targetAspect = _options$targetAspect === undefined ? 1 : _options$targetAspect,
+        _options$backgroundSi = options.backgroundSize,
+        backgroundSize = _options$backgroundSi === undefined ? 'COVER' : _options$backgroundSi;
 
     /**
-     * frame landscape orientation
-     * @member {Number}
-     * @private
+     * frame aspect, same with texture aspect (width / height)
      */
-    this.landscape = Utils.isString(options.landscape) && LANDSCAPE_MAP[options.landscape] ? LANDSCAPE_MAP[options.landscape] : LANDSCAPE_MAP.CW;
+
+    _this.frameAspect = frameAspect;
 
     /**
-     * this frame need to flip with y-axis
-     * @member {Boolean}
-     * @private
+     * viewport aspect, same with viewport aspect (width / height)
      */
-    this.flip = Utils.isBoolean(options.flip) ? options.flip : true;
+    _this.targetAspect = targetAspect;
 
     /**
-     * uv matrix
-     * @member {Matrix3}
-     * @private
+     * background aspect, fill with 'COVER' or 'CONTAIN'
      */
-    this.uvMatrix = new three.Matrix3();
-
-    /**
-     * primer tag
-     * @member {Boolean}
-     */
-    this.isPrimer = true;
-
-    /**
-     * this primer is enable
-     * @member {Boolean}
-     */
-    this.enabled = true;
-
-    /**
-     * the parent of this parent
-     * @member {Layer}
-     * @private
-     */
-    this.parent = null;
-
-    /**
-     * scene for this 2D context
-     * @member {Scene}
-     * @private
-     */
-    this.scene = new three.Scene();
-
-    /**
-     * camera for this 2D context
-     * @member {OrthographicCamera}
-     * @private
-     */
-    this.camera = new three.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-
-    /**
-     * geometry for this 2D context
-     * @member {PlaneBufferGeometry}
-     * @private
-     */
-    this.pigmentGeo = new three.PlaneBufferGeometry(2, 2);
-
-    /**
-     * whether auto-cover to target viewport
-     * @member {Boolean}
-     */
-    this.autoCover = options.autoCover || false;
-
-    if (this.autoCover && options.targetAspect) {
-      this.setTargetAspect(options.targetAspect);
-    }
+    _this.backgroundSize = backgroundSize;
+    return _this;
   }
 
   /**
-   * update timeline
+   * set the target viewport aspect
+   * @param {Number} targetAspect target viewport aspect
    */
 
 
   createClass(Primer, [{
-    key: 'updateTimeline',
-    value: function updateTimeline() {}
-
-    /**
-     * render function, need overwrite by sub-class
-     */
-
-  }, {
-    key: 'render',
-    value: function render() {
-      console.warn('should be overwrite by sub-class');
-    }
-
-    /**
-     * set the target viewport aspect
-     * @param {Number} aspect target viewport aspect
-     */
-
-  }, {
-    key: 'setTargetAspect',
-    value: function setTargetAspect(aspect) {
-      this.targetAspect = aspect;
-      if (this.autoCover) this.needsUpdateAttributes = true;
+    key: 'setAspect',
+    value: function setAspect(targetAspect) {
+      console.trace('aaa');
+      this.targetAspect = targetAspect;
+      if (this.loaded) this._updateAttributes();
     }
 
     /**
@@ -6910,31 +6769,15 @@ var Primer = function () {
   }, {
     key: '_updateAttributes',
     value: function _updateAttributes() {
-      if (!this.needsUpdateAttributes) return;
-
       var _cs2 = this._cs(),
           width = _cs2.width,
           height = _cs2.height;
 
-      this._setPositions(this.pigmentGeo.attributes.position, width, height);
-      this.needsUpdateAttributes = false;
+      this._setPositions(this.geometry.attributes.position, width, height);
     }
 
     /**
-     * update aspect itself
-     * @param {Number} aspect target viewport aspect
-     * @private
-     */
-
-  }, {
-    key: '_setAspect',
-    value: function _setAspect(aspect) {
-      this.aspect = aspect;
-      if (this.autoCover) this.needsUpdateAttributes = true;
-    }
-
-    /**
-     * calculation the size for geometry in this targetAspect
+     * calculation the size for geometry in this frameAspect
      * @return {Object} size
      * @private
      */
@@ -6942,14 +6785,54 @@ var Primer = function () {
   }, {
     key: '_cs',
     value: function _cs() {
-      var scale = this.aspect / this.targetAspect;
+      var scale = this.frameAspect / this.targetAspect;
       var size = {
         width: 1,
         height: 1
       };
-      if (this.targetAspect > this.aspect) {
+      if (this.backgroundSize === 'COVER') {
+        this._cover(size, scale);
+      } else if (this.backgroundSize === 'CONTAIN') {
+        this._contain(size, scale);
+      } else {
+        this._cover(size, scale);
+      }
+      return size;
+    }
+
+    /**
+     * calculate background size with 'COVER' mode
+     * @param {*} size size
+     * @param {*} scale scale
+     * @return {Object} size
+     * @private
+     */
+
+  }, {
+    key: '_cover',
+    value: function _cover(size, scale) {
+      if (this.targetAspect > this.frameAspect) {
         size.height = 1 / scale;
-      } else if (this.targetAspect < this.aspect) {
+      } else {
+        size.width = scale;
+      }
+      return size;
+    }
+
+    /**
+     * calculate background size with 'CONTAIN' mode
+     * @param {*} size size
+     * @param {*} scale scale
+     * @return {Object} size
+     * @private
+     */
+
+  }, {
+    key: '_contain',
+    value: function _contain(size, scale) {
+      if (this.frameAspect > this.targetAspect) {
+        size.height = 1 / scale;
+      } else {
         size.width = scale;
       }
       return size;
@@ -6977,56 +6860,19 @@ var Primer = function () {
     }
 
     /**
-     * correct uv buffer
-     * @param {BufferAttribute} uv uv bufferAttribute
-     * @return {BufferAttribute} corrected BufferAttribute
+     * resize layer size when viewport has change
+     * @param {number} width layer buffer width
+     * @param {number} height layer buffer height
      */
 
   }, {
-    key: '_correctUv',
-    value: function _correctUv(uv) {
-      var v1 = new three.Vector3();
-      this.uvMatrix.identity();
-      this.uvMatrix.translate(-0.5, -0.5);
-      this.uvMatrix.rotate(this.landscape);
-      if (this.flip) this.uvMatrix.scale(1, -1);
-      this.uvMatrix.translate(0.5, 0.5);
-      for (var i = 0, l = uv.count; i < l; i++) {
-        v1.x = uv.getX(i);
-        v1.y = uv.getY(i);
-        v1.z = 1;
-
-        v1.applyMatrix3(this.uvMatrix);
-        uv.setXY(i, v1.x, v1.y);
-      }
-      uv.needsUpdate = true;
-      return uv;
-    }
-
-    /**
-     * get autoCover status
-     */
-
-  }, {
-    key: 'autoCover',
-    get: function get$$1() {
-      return this._autoCover;
-    }
-
-    /**
-     * set autoCover status
-     * @param {Boolean} autoCover whether autoCover or not
-     */
-    ,
-    set: function set$$1(autoCover) {
-      if (autoCover !== this.autoCover) {
-        this._autoCover = autoCover;
-        if (autoCover) this.needsUpdateAttributes = true;
-      }
+    key: 'setSize',
+    value: function setSize(width, height) {
+      this.setAspect(width / height);
     }
   }]);
   return Primer;
-}();
+}(three.Mesh);
 
 var YUVShader = {
 
@@ -7071,6 +6917,12 @@ var FORMAT_MAP = {
   5: YCbCrShader
 };
 
+var LANDSCAPE_MAP = {
+  NONE: 0,
+  CW: Utils.DTR(-90),
+  CCW: Utils.DTR(90)
+};
+
 /**
  * camera-primer, for ali webar framework
  */
@@ -7100,11 +6952,32 @@ var CameraPrimer = function (_Primer) {
         depthWrite = _ref$depthWrite === undefined ? false : _ref$depthWrite;
 
     /**
-     * cache the displayTarget
-     * @member {DisplayTarget}
+     * frame landscape orientation
+     * @member {Number}
+     * @private
      */
 
 
+    _this.landscape = Utils.isString(options.landscape) && LANDSCAPE_MAP[options.landscape] ? LANDSCAPE_MAP[options.landscape] : LANDSCAPE_MAP.CW;
+
+    /**
+     * this frame need to flip with y-axis
+     * @member {Boolean}
+     * @private
+     */
+    _this.flip = Utils.isBoolean(options.flip) ? options.flip : true;
+
+    /**
+     * uv matrix
+     * @member {Matrix3}
+     * @private
+     */
+    _this.uvMatrix = new three.Matrix3();
+
+    /**
+     * cache the displayTarget
+     * @member {DisplayTarget}
+     */
     _this.displayTarget = displayTarget;
 
     /**
@@ -7242,6 +7115,33 @@ var CameraPrimer = function (_Primer) {
       this.update();
       renderer.render(this.scene, this.camera, rednerTarget);
     }
+
+    /**
+     * correct uv buffer
+     * @param {BufferAttribute} uv uv bufferAttribute
+     * @return {BufferAttribute} corrected BufferAttribute
+     */
+
+  }, {
+    key: '_correctUv',
+    value: function _correctUv(uv) {
+      var v1 = new three.Vector3();
+      this.uvMatrix.identity();
+      this.uvMatrix.translate(-0.5, -0.5);
+      this.uvMatrix.rotate(this.landscape);
+      if (this.flip) this.uvMatrix.scale(1, -1);
+      this.uvMatrix.translate(0.5, 0.5);
+      for (var i = 0, l = uv.count; i < l; i++) {
+        v1.x = uv.getX(i);
+        v1.y = uv.getY(i);
+        v1.z = 1;
+
+        v1.applyMatrix3(this.uvMatrix);
+        uv.setXY(i, v1.x, v1.y);
+      }
+      uv.needsUpdate = true;
+      return uv;
+    }
   }]);
   return CameraPrimer;
 }(Primer);
@@ -7263,8 +7163,6 @@ var TexturePrimer = function (_Primer) {
   function TexturePrimer(frame, options) {
     classCallCheck(this, TexturePrimer);
 
-    var _this = possibleConstructorReturn(this, (TexturePrimer.__proto__ || Object.getPrototypeOf(TexturePrimer)).call(this, frame, options));
-
     var _ref = options || {},
         _ref$color = _ref.color,
         color = _ref$color === undefined ? 0xffffff : _ref$color,
@@ -7272,27 +7170,49 @@ var TexturePrimer = function (_Primer) {
         depthTest = _ref$depthTest === undefined ? false : _ref$depthTest,
         _ref$depthWrite = _ref.depthWrite,
         depthWrite = _ref$depthWrite === undefined ? false : _ref$depthWrite,
-        minFilter = _ref.minFilter,
-        magFilter = _ref.magFilter,
-        format = _ref.format;
+        _ref$minFilter = _ref.minFilter,
+        minFilter = _ref$minFilter === undefined ? three.LinearFilter : _ref$minFilter,
+        _ref$magFilter = _ref.magFilter,
+        magFilter = _ref$magFilter === undefined ? three.LinearFilter : _ref$magFilter,
+        _ref$format = _ref.format,
+        format = _ref$format === undefined ? three.RGBFormat : _ref$format;
 
-    _this.texture = Utils.isString(frame) ? new three.TextureLoader().load(frame) : frame.tagName === 'VIDEO' ? new three.VideoTexture(frame) : frame.tagName === 'CANVAS' ? new three.CanvasTexture(frame) : frame.tagName === 'IMG' ? new three.Texture(frame) : null;
+    var texture = Utils.isString(frame) ? new three.TextureLoader().load(frame) : frame.tagName === 'VIDEO' ? new three.VideoTexture(frame) : frame.tagName === 'CANVAS' ? new three.CanvasTexture(frame) : frame.tagName === 'IMG' ? new three.Texture(frame) : null;
+
+    /**
+     * geometry for this 2D context
+     * @member {PlaneBufferGeometry}
+     * @private
+     */
+    var geo = new three.PlaneBufferGeometry(2, 2);
+
+    /**
+     * material for this 2D context
+     * @member {MeshBasicMaterial}
+     * @private
+     */
+    var mat = new three.MeshBasicMaterial({
+      color: new three.Color(color),
+      map: texture,
+      depthTest: depthTest,
+      depthWrite: depthWrite
+    });
+
+    /**
+     * this primer used texture
+     */
+    var _this = possibleConstructorReturn(this, (TexturePrimer.__proto__ || Object.getPrototypeOf(TexturePrimer)).call(this, geo, mat, options));
+
+    _this.texture = texture;
 
     if (minFilter) _this.texture.minFilter = minFilter;
     if (magFilter) _this.texture.magFilter = magFilter;
     if (format) _this.texture.format = format;
 
-    _this.pigmentMat = new three.MeshBasicMaterial({
-      color: new three.Color(color),
-      map: _this.texture,
-      depthTest: depthTest,
-      depthWrite: depthWrite
-    });
-
-    _this.pigment = new three.Mesh(_this.pigmentGeo, _this.pigmentMat);
-    _this.pigment.frustumCulled = false;
-
-    _this.scene.add(_this.pigment);
+    /**
+     * texture had loaded ?
+     */
+    _this.loaded = false;
 
     _this._gainFrameSize();
     return _this;
@@ -7311,35 +7231,16 @@ var TexturePrimer = function (_Primer) {
       var image = this.texture.image;
       if (!image) return;
       if (image.width > 0 && image.height > 0) {
-        this._setAspect(image.width / image.height);
+        this.loaded = true;
+        this.frameAspect = image.width / image.height;
+        this._updateAttributes();
       } else {
         image.addEventListener('load', function () {
-          _this2._setAspect(image.width / image.height);
+          _this2.loaded = true;
+          _this2.frameAspect = image.width / image.height;
+          _this2._updateAttributes();
         });
       }
-    }
-
-    /**
-     * update positions attribute
-     */
-
-  }, {
-    key: 'update',
-    value: function update() {
-      if (this.autoCover) this._updateAttributes();
-    }
-
-    /**
-     * render this primer
-     * @param {WebGLRenderer} renderer put webgl renderer
-     * @param {WebGLRenderTarget} rednerTarget render to which buffer
-     */
-
-  }, {
-    key: 'render',
-    value: function render(renderer, rednerTarget) {
-      this.update();
-      renderer.render(this.scene, this.camera, rednerTarget);
     }
   }]);
   return TexturePrimer;
@@ -10226,8 +10127,8 @@ exports.ARGlue = ARGlue;
 exports.Viewer = Viewer;
 exports.Layer = Layer;
 exports.ARLayer = ARLayer;
-exports.PrimerLayer = PrimerLayer;
 exports.XRLayer = XRLayer;
+exports.PrimerLayer = PrimerLayer;
 exports.Primer = Primer;
 exports.CameraPrimer = CameraPrimer;
 exports.TexturePrimer = TexturePrimer;

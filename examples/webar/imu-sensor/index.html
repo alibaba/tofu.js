@@ -101,18 +101,18 @@
     });
 
     var fxaaPass = new Tofu.ShaderPass( THREE.FXAAShader );
-    fxaaPass.uniforms[ "resolution" ].value = new THREE.Vector2( 1 / WIDTH, 1 / HEIGHT );
+    fxaaPass.uniforms.resolution.value = new THREE.Vector2( 1 / WIDTH, 1 / HEIGHT );
     // var hBlur = new Tofu.ShaderPass( THREE.HorizontalBlurShader );
     // var vBlur = new Tofu.ShaderPass( THREE.VerticalBlurShader );
-    // hBlur.uniforms[ "h" ].value = 1 / WIDTH;
-    // vBlur.uniforms[ "v" ].value = 1 / HEIGHT;
+    // hBlur.uniforms.h.value = 1 / WIDTH;
+    // vBlur.uniforms.v.value = 1 / HEIGHT;
 
     var effectBloom = new Tofu.BloomPass( 0.75 );
     var effectFilm = new Tofu.FilmPass( 0.5, 0.5, 1500, false );
 
     effectFocus = new Tofu.ShaderPass( Tofu.FocusShader );
-    effectFocus.uniforms[ "screenWidth" ].value = 640;
-    effectFocus.uniforms[ "screenHeight" ].value = 480;
+    effectFocus.uniforms.screenWidth.value = 640;
+    effectFocus.uniforms.screenHeight.value = 480;
 
     xrViewer.compositor.addPass( fxaaPass );
     // xrViewer.compositor.addPass( hBlur );
@@ -199,8 +199,8 @@
     function onWindowResize() {
       WIDTH = window.innerWidth;
       HEIGHT = window.innerHeight;
-      effectFocus.uniforms[ "screenWidth" ].value = WIDTH;
-      effectFocus.uniforms[ "screenHeight" ].value = HEIGHT;
+      effectFocus.uniforms.screenWidth.value = WIDTH;
+      effectFocus.uniforms.screenHeight.value = HEIGHT;
       xrViewer.camera.aspect = WIDTH / HEIGHT;
       xrViewer.camera.updateProjectionMatrix();
       xrViewer.renderer.setSize(WIDTH, HEIGHT);
