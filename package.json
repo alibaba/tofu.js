@@ -1,6 +1,6 @@
 {
   "name": "tofu.js",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "a helper three.js library for building UC-AR",
   "main": "./build/tofu.js",
   "module": "./esm/index.js",
