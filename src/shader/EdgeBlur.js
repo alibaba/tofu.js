@@ -1,6 +1,6 @@
-import {
-  Color,
-} from 'three';
+// import {
+//   Color,
+// } from 'three';
 
 /**
  * @author alteredq / http://alteredqualia.com/
