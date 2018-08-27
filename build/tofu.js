@@ -5711,39 +5711,6 @@ var InteractionManager = function (_EventDispatcher) {
     }
 
     /**
-     * Maps x and y coords from a DOM object and maps them correctly to the three.js view. The
-     * resulting value is stored in the point. This takes into account the fact that the DOM
-     * element could be scaled and positioned anywhere on the screen.
-     *
-     * @param  {Vector2} point - the point that the result will be stored in
-     * @param  {number} x - the x coord of the position to map
-     * @param  {number} y - the y coord of the position to map
-     */
-
-  }, {
-    key: 'mapPositionToPoint',
-    value: function mapPositionToPoint(point, x, y) {
-      var rect = void 0;
-
-      // IE 11 fix
-      if (!this.interactionDOMElement.parentElement) {
-        rect = {
-          x: 0,
-          y: 0,
-          left: 0,
-          top: 0,
-          width: 0,
-          height: 0
-        };
-      } else {
-        rect = this.interactionDOMElement.getBoundingClientRect();
-      }
-
-      point.x = (x - rect.left) / rect.width * 2 - 1;
-      point.y = -((y - rect.top) / rect.height) * 2 + 1;
-    }
-
-    /**
      * This function is provides a neat way of crawling through the scene graph and running a
      * specified function on all interactive objects it finds. It will also take care of hit
      * testing the interactive objects and passes the hit across in the function.
@@ -5868,7 +5835,7 @@ var InteractionManager = function (_EventDispatcher) {
 
       var interactionData = this.getInteractionDataForPointerId(events[0]);
 
-      var interactionEvent = this.configureInteractionEventForDOMEvent(this.eventData, event, interactionData);
+      var interactionEvent = this.configureInteractionEventForDOMEvent(this.eventData, events[0], interactionData);
 
       interactionEvent.data.originalEvent = originalEvent;
 
@@ -5924,21 +5891,21 @@ var InteractionManager = function (_EventDispatcher) {
       var eventLen = events.length;
 
       for (var i = 0; i < eventLen; i++) {
-        var _event = events[i];
+        var event = events[i];
 
-        var interactionData = this.getInteractionDataForPointerId(_event);
+        var interactionData = this.getInteractionDataForPointerId(event);
 
-        var interactionEvent = this.configureInteractionEventForDOMEvent(this.eventData, _event, interactionData);
+        var interactionEvent = this.configureInteractionEventForDOMEvent(this.eventData, event, interactionData);
 
         interactionEvent.data.originalEvent = originalEvent;
 
         this.processInteractive(interactionEvent, this.scene, this.processPointerDown, true);
 
         this.emit('pointerdown', interactionEvent);
-        if (_event.pointerType === 'touch') {
+        if (event.pointerType === 'touch') {
           this.emit('touchstart', interactionEvent);
-        } else if (_event.pointerType === 'mouse' || _event.pointerType === 'pen') {
-          var isRightButton = _event.button === 2;
+        } else if (event.pointerType === 'mouse' || event.pointerType === 'pen') {
+          var isRightButton = event.button === 2;
 
           this.emit(isRightButton ? 'rightdown' : 'mousedown', this.eventData);
         }
@@ -6004,11 +5971,11 @@ var InteractionManager = function (_EventDispatcher) {
       var eventAppend = originalEvent.target !== this.interactionDOMElement ? 'outside' : '';
 
       for (var i = 0; i < eventLen; i++) {
-        var _event2 = events[i];
+        var event = events[i];
 
-        var interactionData = this.getInteractionDataForPointerId(_event2);
+        var interactionData = this.getInteractionDataForPointerId(event);
 
-        var interactionEvent = this.configureInteractionEventForDOMEvent(this.eventData, _event2, interactionData);
+        var interactionEvent = this.configureInteractionEventForDOMEvent(this.eventData, event, interactionData);
 
         interactionEvent.data.originalEvent = originalEvent;
 
@@ -6017,13 +5984,13 @@ var InteractionManager = function (_EventDispatcher) {
 
         this.emit(cancelled ? 'pointercancel' : 'pointerup' + eventAppend, interactionEvent);
 
-        if (_event2.pointerType === 'mouse' || _event2.pointerType === 'pen') {
-          var isRightButton = _event2.button === 2;
+        if (event.pointerType === 'mouse' || event.pointerType === 'pen') {
+          var isRightButton = event.button === 2;
 
           this.emit(isRightButton ? 'rightup' + eventAppend : 'mouseup' + eventAppend, interactionEvent);
-        } else if (_event2.pointerType === 'touch') {
+        } else if (event.pointerType === 'touch') {
           this.emit(cancelled ? 'touchcancel' : 'touchend' + eventAppend, interactionEvent);
-          this.releaseInteractionDataForPointerId(_event2.pointerId, interactionData);
+          this.releaseInteractionDataForPointerId(event.pointerId, interactionData);
         }
       }
     }
@@ -6187,20 +6154,20 @@ var InteractionManager = function (_EventDispatcher) {
       var eventLen = events.length;
 
       for (var i = 0; i < eventLen; i++) {
-        var _event3 = events[i];
+        var event = events[i];
 
-        var interactionData = this.getInteractionDataForPointerId(_event3);
+        var interactionData = this.getInteractionDataForPointerId(event);
 
-        var interactionEvent = this.configureInteractionEventForDOMEvent(this.eventData, _event3, interactionData);
+        var interactionEvent = this.configureInteractionEventForDOMEvent(this.eventData, event, interactionData);
 
         interactionEvent.data.originalEvent = originalEvent;
 
-        var interactive = _event3.pointerType === 'touch' ? this.moveWhenInside : true;
+        var interactive = event.pointerType === 'touch' ? this.moveWhenInside : true;
 
         this.processInteractive(interactionEvent, this.scene, this.processPointerMove, interactive);
         this.emit('pointermove', interactionEvent);
-        if (_event3.pointerType === 'touch') this.emit('touchmove', interactionEvent);
-        if (_event3.pointerType === 'mouse' || _event3.pointerType === 'pen') this.emit('mousemove', interactionEvent);
+        if (event.pointerType === 'touch') this.emit('touchmove', interactionEvent);
+        if (event.pointerType === 'mouse' || event.pointerType === 'pen') this.emit('mousemove', interactionEvent);
       }
 
       if (events[0].pointerType === 'mouse') {
@@ -6413,6 +6380,39 @@ var InteractionManager = function (_EventDispatcher) {
         interactionData._reset();
         this.interactionDataPool.push(interactionData);
       }
+    }
+
+    /**
+     * Maps x and y coords from a DOM object and maps them correctly to the three.js view. The
+     * resulting value is stored in the point. This takes into account the fact that the DOM
+     * element could be scaled and positioned anywhere on the screen.
+     *
+     * @param  {Vector2} point - the point that the result will be stored in
+     * @param  {number} x - the x coord of the position to map
+     * @param  {number} y - the y coord of the position to map
+     */
+
+  }, {
+    key: 'mapPositionToPoint',
+    value: function mapPositionToPoint(point, x, y) {
+      var rect = void 0;
+
+      // IE 11 fix
+      if (!this.interactionDOMElement.parentElement) {
+        rect = {
+          x: 0,
+          y: 0,
+          left: 0,
+          top: 0,
+          width: 0,
+          height: 0
+        };
+      } else {
+        rect = this.interactionDOMElement.getBoundingClientRect();
+      }
+
+      point.x = (x - rect.left) / rect.width * 2 - 1;
+      point.y = -((y - rect.top) / rect.height) * 2 + 1;
     }
 
     /**
