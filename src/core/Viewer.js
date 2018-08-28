@@ -164,7 +164,7 @@ class Viewer extends EventDispatcher {
    */
   update() {
     this.timeline();
-    const snippet = this.snippet;
+    const snippet = this.timeScale * this.snippet;
 
     this.emit('pretimeline', {
       snippet,
@@ -189,12 +189,6 @@ class Viewer extends EventDispatcher {
    * @private
    */
   updateTimeline(snippet) {
-    snippet = this.timeScale * snippet;
-
-    this.emit('pretimeline', {
-      snippet,
-    });
-
     let i = 0;
     const layers = this.layers;
     const length = layers.length;
@@ -202,10 +196,6 @@ class Viewer extends EventDispatcher {
       layers[i].updateTimeline(snippet);
       i++;
     }
-
-    this.emit('posttimeline', {
-      snippet,
-    });
   }
 
   /**
