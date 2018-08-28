@@ -1,19 +1,19 @@
 {
-  "_from": "three",
+  "_from": "three@^0.92.0",
   "_id": "three@0.92.0",
   "_inBundle": false,
   "_integrity": "sha1-jT0fWviQ5i2n9MtF0gwJ+lEFfc0=",
   "_location": "/three",
   "_phantomChildren": {},
   "_requested": {
-    "type": "tag",
+    "type": "range",
     "registry": true,
-    "raw": "three",
+    "raw": "three@^0.92.0",
     "name": "three",
     "escapedName": "three",
-    "rawSpec": "",
+    "rawSpec": "^0.92.0",
     "saveSpec": null,
-    "fetchSpec": "latest"
+    "fetchSpec": "^0.92.0"
   },
   "_requiredBy": [
     "#DEV:/",
@@ -21,7 +21,7 @@
   ],
   "_resolved": "https://registry.npmjs.org/three/-/three-0.92.0.tgz",
   "_shasum": "8d3d1f5af890e62da7f4cb45d20c09fa51057dcd",
-  "_spec": "three",
+  "_spec": "three@^0.92.0",
   "_where": "/Users/jason82/Documents/webfrontend/github/my-repo/tofu.js",
   "author": {
     "name": "mrdoob"

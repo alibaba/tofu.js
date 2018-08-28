@@ -2445,6 +2445,10 @@ var MattingShader = {
   fragmentShader: "\n  uniform float hueStart;\n  uniform float hueEnd;\n  uniform float lightnessStart;\n  uniform float lightnessEnd;\n\n  uniform sampler2D tDiffuse;\n\n  varying vec2 vUv;\n\n  vec3 rgb2hsv(vec3 c){\n    vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);\n    vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));\n    vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));\n\n    float d = q.x - min(q.w, q.y);\n    float e = 1.0e-10;\n    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);\n  }\n\n  void main() {\n    float lightnessCenter = (lightnessStart + lightnessEnd) / 2.0;\n    float lightnessRadius = (lightnessEnd - lightnessStart) / 2.0;\n\n    vec4 rgbColor = texture2D( tDiffuse, vUv );\n\n    vec3 hsv = rgb2hsv(rgbColor.rgb);\n\n    float alpha = 1.0;\n\n    // if (hsv.x > hueStart && hsv.x < hueEnd) {\n      float distance = abs(hsv.z - lightnessCenter) / lightnessRadius;\n      alpha = clamp(distance, 0.0, 1.0);\n    // }\n    gl_FragColor = vec4(rgbColor.rgb, alpha * alpha);\n\n  }"
 };
 
+// import {
+//   Color,
+// } from 'three';
+
 /**
  * @author alteredq / http://alteredqualia.com/
  *
@@ -2465,9 +2469,9 @@ var EdgeBlurShader = {
 
   },
 
-  vertexShader: '\n  varying vec2 vUv;\n  void main() {\n    vUv = uv;\n    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );\n  }',
+  vertexShader: "\n  varying vec2 vUv;\n  void main() {\n    vUv = uv;\n    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );\n  }",
 
-  fragmentShader: '\n  uniform float cKernel[9];\n\n  uniform vec2 frameSize;\n\n  uniform sampler2D tDiffuse;\n\n  varying vec2 vUv;\n\n  void main() {\n    vec2 onePixel = vec2(1.0, 1.0) / frameSize;\n\n    vec4 rgbColor =\n      texture2D(tDiffuse, vUv + onePixel * vec2(-1, -1)) * cKernel[0] +\n      texture2D(tDiffuse, vUv + onePixel * vec2( 0, -1)) * cKernel[1] +\n      texture2D(tDiffuse, vUv + onePixel * vec2( 1, -1)) * cKernel[2] +\n      texture2D(tDiffuse, vUv + onePixel * vec2(-1,  0)) * cKernel[3] +\n      texture2D(tDiffuse, vUv + onePixel * vec2( 0,  0)) * cKernel[4] +\n      texture2D(tDiffuse, vUv + onePixel * vec2( 1,  0)) * cKernel[5] +\n      texture2D(tDiffuse, vUv + onePixel * vec2(-1,  1)) * cKernel[6] +\n      texture2D(tDiffuse, vUv + onePixel * vec2( 0,  1)) * cKernel[7] +\n      texture2D(tDiffuse, vUv + onePixel * vec2( 1,  1)) * cKernel[8] ;\n\n    gl_FragColor = rgbColor;\n  }'
+  fragmentShader: "\n  uniform float cKernel[9];\n\n  uniform vec2 frameSize;\n\n  uniform sampler2D tDiffuse;\n\n  varying vec2 vUv;\n\n  void main() {\n    vec2 onePixel = vec2(1.0, 1.0) / frameSize;\n\n    vec4 rgbColor =\n      texture2D(tDiffuse, vUv + onePixel * vec2(-1, -1)) * cKernel[0] +\n      texture2D(tDiffuse, vUv + onePixel * vec2( 0, -1)) * cKernel[1] +\n      texture2D(tDiffuse, vUv + onePixel * vec2( 1, -1)) * cKernel[2] +\n      texture2D(tDiffuse, vUv + onePixel * vec2(-1,  0)) * cKernel[3] +\n      texture2D(tDiffuse, vUv + onePixel * vec2( 0,  0)) * cKernel[4] +\n      texture2D(tDiffuse, vUv + onePixel * vec2( 1,  0)) * cKernel[5] +\n      texture2D(tDiffuse, vUv + onePixel * vec2(-1,  1)) * cKernel[6] +\n      texture2D(tDiffuse, vUv + onePixel * vec2( 0,  1)) * cKernel[7] +\n      texture2D(tDiffuse, vUv + onePixel * vec2( 1,  1)) * cKernel[8] ;\n\n    gl_FragColor = rgbColor;\n  }"
 };
 
 var MattingPass = function (_Pass) {
@@ -5751,7 +5755,7 @@ var Viewer = function (_EventDispatcher) {
     key: 'update',
     value: function update() {
       this.timeline();
-      var snippet = this.snippet;
+      var snippet = this.timeScale * this.snippet;
 
       this.emit('pretimeline', {
         snippet: snippet
@@ -5779,12 +5783,6 @@ var Viewer = function (_EventDispatcher) {
   }, {
     key: 'updateTimeline',
     value: function updateTimeline(snippet) {
-      snippet = this.timeScale * snippet;
-
-      this.emit('pretimeline', {
-        snippet: snippet
-      });
-
       var i = 0;
       var layers = this.layers;
       var length = layers.length;
@@ -5792,10 +5790,6 @@ var Viewer = function (_EventDispatcher) {
         layers[i].updateTimeline(snippet);
         i++;
       }
-
-      this.emit('posttimeline', {
-        snippet: snippet
-      });
     }
 
     /**
