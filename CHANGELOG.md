@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.6.3"></a>
+## [0.6.3](https://github.com/alibaba/tofu.js/compare/v0.6.2...v0.6.3) (2018-08-28)
+
+
+### Bug Fixes
+
+* **update:** fixed update emit twice timeline event ([f526c83](https://github.com/alibaba/tofu.js/commit/f526c83))
+
+
+
 <a name="0.6.2"></a>
 ## [0.6.2](https://github.com/alibaba/tofu.js/compare/v0.6.1...v0.6.2) (2018-08-27)
 
