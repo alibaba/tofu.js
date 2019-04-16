@@ -1,0 +1,72 @@
+{
+  "_from": "boids.js@latest",
+  "_id": "boids.js@0.0.3",
+  "_inBundle": false,
+  "_integrity": "sha512-P1aeqCG5ukxTfYuIiOaKgnU466EiWXYfHoAJxeLi9BRfkYA6Ry44euc/K0cvYDsQO2mEDvYS1mVAZF0lokaJ+w==",
+  "_location": "/boids.js",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "boids.js@latest",
+    "name": "boids.js",
+    "escapedName": "boids.js",
+    "rawSpec": "latest",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#DEV:/",
+    "#USER"
+  ],
+  "_resolved": "https://registry.npmjs.org/boids.js/-/boids.js-0.0.3.tgz",
+  "_shasum": "a4d5176fd1edb09837bee2ae7a4f3aa9bd0b7e07",
+  "_spec": "boids.js@latest",
+  "_where": "/Users/jason82/Documents/webfrontend/github/my-repo/tofu.js",
+  "author": "",
+  "bundleDependencies": false,
+  "config": {
+    "npmsrcify": {
+      "modules": [
+        "dat.gui",
+        "stats.js",
+        "three"
+      ],
+      "output": "./demos/lib"
+    }
+  },
+  "deprecated": false,
+  "description": "boids algorithm, fly like a flock of birds",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-env": "^1.7.0",
+    "dat.gui": "^0.7.2",
+    "eslint": "^4.19.1",
+    "eslint-config-egg": "^7.0.0",
+    "http-server": "^0.11.1",
+    "npmsrcify": "0.1.0",
+    "rollup": "^0.59.2",
+    "rollup-plugin-babel": "^3.0.4",
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-watch": "^4.3.1",
+    "standard-version": "^4.4.0",
+    "stats.js": "^0.17.0",
+    "three": "^0.92.0"
+  },
+  "license": "MIT",
+  "main": "./build/boids.js",
+  "module": "./build/boids.module.js",
+  "name": "boids.js",
+  "scripts": {
+    "build": "rollup -c",
+    "build:dev": "rollup -c -w",
+    "extract": "npmsrcify extract",
+    "http": "hs -o",
+    "postver": "git push --follow-tags origin master && npm publish",
+    "prever": "npm run build && npm run extract && git add -A && git commit -m 'release: release a new version'",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "ver": "standard-version -m 'chore(release): v%s'"
+  },
+  "version": "0.0.3"
+}

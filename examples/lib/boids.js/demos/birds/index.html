@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>three.js canvas - geometry - birds</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <style>
+      body {
+        color: #808080;
+        font-family:Monospace;
+        font-size:13px;
+        text-align:center;
+
+        background-color: #ffffff;
+        margin: 0px;
+        overflow: hidden;
+      }
+
+      #info {
+        position: absolute;
+        top: 0px; width: 100%;
+        padding: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="bluesky"></canvas>
+
+    <script src="../lib/three/build/three.js"></script>
+    <script src="../../build/boids.js"></script>
+    <script src="./js/bird.js"></script>
+
+    <script>
+      var SCREEN_WIDTH = window.innerWidth,
+      SCREEN_HEIGHT = window.innerHeight,
+      SCREEN_WIDTH_HALF = SCREEN_WIDTH  / 2,
+      SCREEN_HEIGHT_HALF = SCREEN_HEIGHT / 2;
+
+      var camera, scene, renderer,
+      birds, bird;
+
+      var boid, boids;
+
+      init();
+      animate();
+
+      function init() {
+        camera = new THREE.PerspectiveCamera(75, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 10000);
+        camera.position.z = 450;
+
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x41b882);
+
+        birds = [];
+        boids = [];
+
+        for ( var i = 0; i < 200; i ++ ) {
+          bird = birds[i] = new THREE.Mesh(new Bird(), new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide }));
+          bird.phase = Math.floor(Math.random() * 62.83);
+          bird.position.set(Math.random() * 400 - 200, Math.random() * 400 - 200, Math.random() * 400 - 200);
+
+          boid = boids[i] = new JC.Boid({
+            position: bird.position,
+            rotation: bird.rotation,
+            velocity: new THREE.Vector3(Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1),
+          });
+          boid.enableWalls = true;
+          boid.setWorldWall(new JC.CubeWall(new THREE.Vector3(-300, -300, -300), new THREE.Vector3(300, 300, 300)));
+
+          scene.add(bird);
+        }
+
+        renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bluesky'), antialias: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+
+        window.addEventListener('resize', onWindowResize, false);
+        window.addEventListener('mousemove', onDocumentMouseMove, false);
+      }
+
+      function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      }
+
+      function onDocumentMouseMove( event ) {
+        var vector = new THREE.Vector3(event.clientX - SCREEN_WIDTH_HALF, - event.clientY + SCREEN_HEIGHT_HALF, 0);
+        for (var i = 0, il = boids.length; i < il; i++) {
+          boid = boids[i];
+          vector.z = boid.position.z;
+          boid.repulse(vector);
+        }
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+        render();
+      }
+
+      function render() {
+        for (var i = 0, il = birds.length; i < il; i++) {
+
+          boid = boids[i];
+          boid.update(boids);
+
+          bird = birds[i];
+          bird.phase = (bird.phase + ( Math.max( 0, bird.rotation.z ) + 0.1 )) % 62.83;
+          bird.geometry.vertices[5].y = bird.geometry.vertices[4].y = Math.sin(bird.phase) * 5;
+          bird.geometry.verticesNeedUpdate = true;
+
+        }
+
+        renderer.render(scene, camera);
+      }
+
+    </script>
+
+  </body>
+</html>

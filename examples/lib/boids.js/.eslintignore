@@ -1,0 +1,7 @@
+node_modules/**
+build/**
+esm/**
+examples/**
+docs/**
+test/**
+karma.conf.js

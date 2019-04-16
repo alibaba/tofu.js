@@ -1,0 +1,216 @@
+<html>
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+    <title>DEMO VR</title>
+    <style>
+      * {
+        margin: 0;
+      }
+
+      body {
+        position: relative;
+        background: #000;
+      }
+    </style>
+    <!-- <script src="//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
+    <script>
+      new VConsole();
+    </script> -->
+  </head>
+
+  <body>
+
+    <canvas id="webgl"></canvas>
+    <script src="../../lib/three/build/three.js"></script>
+    <script src="../../lib/shaders/FXAAShader.js"></script>
+    <script src="../../lib/stats.js/build/stats.min.js"></script>
+    <script src="../../lib/dat.gui/build/dat.gui.js"></script>
+    <script src="../../lib/boids.js/build/boids.js"></script>
+    <script src="./shaders/CustomRGBShiftShader.js"></script>
+    <script src="./shaders/NoiseShader.js"></script>
+    <script src="./shaders/SpaceShader.js"></script>
+    <script src="./shaders/SuperShader.js"></script>
+    <script src="./shaders/TiltShiftShader.js"></script>
+    <script src="./js/utils.js"></script>
+    <script src="./js/butterfly.js"></script>
+    <script src="../../../build/tofu.js"></script>
+    <script>
+      window.addEventListener('resize', onWindowResize, false);
+
+      var WIDTH = window.innerWidth;
+      var HEIGHT = window.innerHeight;
+      var xrViewer = new Tofu.Viewer({
+        canvas: '#webgl',
+        width: WIDTH,
+        height: HEIGHT,
+      });
+      const layer3d = xrViewer.createLayer(Tofu.XRLayer, {
+        fov: 70,
+        near: 0.01,
+        far: 1000,
+      });
+      // xrViewer.setEventLayer(layer3d);
+      layer3d.camera.position.set(0, 0, 300);
+      layer3d.camera.lookAt(0, 0, 0);
+      
+      
+      for (var i = 0; i < 150; i++) {
+
+        var col = new THREE.Color();
+        var sat = Tofu.Utils.random(0.6,1);
+        var lightness = Tofu.Utils.random(0.2,0.6);
+        col.setHSL( Tofu.Utils.random(0.,1), sat, lightness);
+        var meshMaterial = new THREE.MeshPhongMaterial({
+          side: THREE.DoubleSide,
+          color: col,
+          shininess: 10,
+          specular: 0x50473b,
+        });
+
+        var size = Tofu.Utils.random(2, 10);
+        var pos = Utils.randomVec3(600);
+        var meshGeom = new THREE.PlaneGeometry( size, size, 1, 1);
+        var mesh = new THREE.Mesh( meshGeom, meshMaterial );
+			  mesh.rotation.setFromVector3(Utils.randomVec3(1));
+        mesh.on('pretimeline', function() {
+          this.rotation.x += 0.02;
+          this.rotation.y += 0.01;
+          this.rotation.z += 0.01;
+          //slow drift
+          this.position.y += 0.2;
+
+          if (this.position.y > 600) this.position.y = -600;
+        });
+        mesh.position.copy(pos);
+        layer3d.add(mesh);
+      }
+
+
+      var butterflys = [];
+      var boids = [];
+      for (var i = 0; i < 50; i++) {
+        var butterfly = new Butterfly();
+        butterfly.phase = Math.floor(Math.random() * 62.83);
+        butterfly.position.copy(Utils.randomVec3(400));
+        butterflys.push(butterfly);
+
+        var boid = boids[i] = new JC.Boid({
+          position: butterfly.position,
+          rotation: butterfly.rotation,
+          velocity: Utils.randomVec3(1),
+          enableWalls: true,
+          maxSpeed: 2,
+          maxSteerForce: 0.05,
+        });
+        boid.setWorldWall(new JC.CubeWall(new THREE.Vector3(-400, -400, -400), new THREE.Vector3(400, 400, 400)));
+
+        layer3d.add(butterfly);
+      }
+
+      // var aaa = new Butterfly();
+      // aaa.scale.set(4,4,4);
+      // layer3d.add(aaa);
+
+      //LIGHTS
+      var ambientLight = new THREE.AmbientLight( 0x333333 );
+      layer3d.add( ambientLight );
+
+      var lights = [];
+
+      pLights1 = new THREE.PointLight( 0xffffff, 2, 700 ); //origin light
+      pLights1.position.set( 0, 0, 0 );
+      layer3d.add( pLights1 );
+
+      pLights2 = new THREE.PointLight( 0xffffff, 1, 1000 ); //cam light
+      pLights2.position.set( 0, 0,  1000 );
+      layer3d.add( pLights2 );
+
+      dLights1 = new THREE.DirectionalLight( 0xffffff, 1 ); //front light
+      dLights1.position.set( 0, 0, 1 );
+      layer3d.add( dLights1 );
+
+      dLights2 = new THREE.DirectionalLight( 0xffffff, 1 ); //up light
+      dLights2.position.set( 0, 1, 0 );
+      layer3d.add( dLights2 );
+      
+
+      //create passes
+      var skyPass = new Tofu.ShaderPass(THREE.SpaceShader);
+      skyPass.uniforms.opacity.value = 0.15;
+
+      //FXAA smooths out jaggies
+      var fxaaPass = new Tofu.ShaderPass( THREE.FXAAShader );
+	    fxaaPass.uniforms.resolution.value = new THREE.Vector2(1/WIDTH, 1/HEIGHT);
+
+      var rgbPass = new Tofu.ShaderPass( THREE.CustomRGBShiftShader );
+	    rgbPass.uniforms.amount.value = 0.02;
+
+      //SuperPass adds glow and vignette
+      var superPass = new Tofu.ShaderPass( THREE.SuperShader );
+	    superPass.uniforms.glowAmount.value = 0.3;
+	    superPass.uniforms.glowSize.value = 2;
+	    superPass.uniforms.vigOffset.value = 1.3;
+	    superPass.uniforms.saturation.value = 0;
+	    superPass.uniforms.contrast.value = 0;
+	    superPass.uniforms.brightness.value = 0;
+
+      var noisePass = new Tofu.ShaderPass( THREE.NoiseShader );
+	    noisePass.uniforms.amount.value = 0.08;
+      noisePass.uniforms.speed.value = 0.5;
+
+      var tiltShiftPass = new Tofu.ShaderPass( THREE.CustomTiltShiftShader );
+	    tiltShiftPass.uniforms.focusPos.value = 0.5;
+	    tiltShiftPass.uniforms.range.value = 0.5;
+	    tiltShiftPass.uniforms.offset.value = 0.9;
+      tiltShiftPass.uniforms.strength.value = 0.02;
+
+
+      xrViewer.addPass( skyPass );
+      xrViewer.addPass( fxaaPass );
+      xrViewer.addPass( tiltShiftPass );
+      xrViewer.addPass( superPass );
+      xrViewer.addPass( rgbPass );
+      xrViewer.addPass( noisePass );
+
+
+      xrViewer.start();
+
+      function onWindowResize() {
+        xrViewer.setSize(window.innerWidth, window.innerHeight);
+      }
+
+      /**
+       * 帧率监控工具
+       */
+      var stats = new Stats();
+      stats.domElement.style.position = 'absolute';
+      stats.domElement.style.top = '0px';
+      document.body.appendChild(stats.domElement);
+      xrViewer.on('postrender', function (info) {
+        var snippet = info.snippet / 10000;
+        skyPass.uniforms.time.value += snippet * 10;
+        noisePass.uniforms.time.value += snippet;
+
+        for (var i = 0, il = butterflys.length; i < il; i++) {
+
+          boid = boids[i];
+          boid.update(boids);
+
+          butterfly = butterflys[i];
+          butterfly.phase = (butterfly.phase + ( Math.max( 0, butterfly.rotation.z ) + 0.1 )) % 62.83;
+          butterfly.fly();
+          // butterfly.geometry.vertices[5].y = butterfly.geometry.vertices[4].y = Math.sin(butterfly.phase) * 5;
+          // butterfly.geometry.verticesNeedUpdate = true;
+
+        }
+
+        stats.update();
+      })
+    </script>
+
+  </body>
+
+  </html>

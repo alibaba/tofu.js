@@ -52,6 +52,7 @@
     "babel-core": "^6.26.3",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-env": "^1.7.0",
+    "boids.js": "0.0.3",
     "chai": "^4.1.2",
     "chalk": "^2.3.0",
     "dat.gui": "^0.7.1",
@@ -79,6 +80,7 @@
     "npmsrcify": {
       "modules": [
         "dat.gui",
+        "boids.js",
         "stats.js",
         "three"
       ],

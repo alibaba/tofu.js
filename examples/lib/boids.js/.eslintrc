@@ -1,0 +1,18 @@
+{
+  "extends": ["eslint-config-egg"],
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "globals": {
+    "RAF": true,
+    "CAF": true
+  },
+  "rules": {
+    "no-bitwise": 0
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  }
+}
