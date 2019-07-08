@@ -1,0 +1,135 @@
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Cache-Control" content="no-cache">
+  <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+  <title>DEMO AR</title>
+  <style>
+    * {
+      margin: 0;
+    }
+
+    body {
+      position: relative;
+      background: #000;
+    }
+
+    #webar, #webar-render {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    canvas {
+      width: 100%;
+      height: auto;
+    }
+
+  </style>
+</head>
+<body>
+  <div id="webar"></div>
+  <canvas id="webar-render"></canvas>
+  <div class="bottom-buttons"></div>
+  <script src="../../lib/three/build/three.js"></script>
+  <script src="../../../build/tofu.js?a=11"></script>
+  <script src="./js/blinkdot.js?a12s"></script>
+  <script src="./js/straightline.js"></script>
+  <script src="./js/web-ar.js"></script>
+  <script>
+    var WIDTH = window.innerWidth;
+    var HEIGHT = window.innerHeight;
+    var viewportRatio = window.innerWidth / window.innerHeight;
+    WebAR.getWebCameraAsync({ facing: 0, quality: 3 })
+    .then(webCamera => webCamera.openAsync())
+    .then(webCamera => {
+      webCamera.createDisplayTarget('webar', {
+        autoResize: false,
+        aspectRatio: viewportRatio
+      }).resume();
+    });
+
+
+    // viewer.start();
+
+    var scene = new THREE.Scene();
+    var camera = new THREE.OrthographicCamera(-WIDTH / 2, WIDTH / 2, HEIGHT / 2, -HEIGHT / 2, -1000, 10000);
+
+    var renderer = new THREE.WebGLRenderer({
+      canvas: document.querySelector('#webar-render'),
+      alpha: true,
+      premultipliedAlpha: true,
+    });
+    renderer.setSize( WIDTH, HEIGHT );
+    renderer.setPixelRatio(window.devicePixelRatio);
+
+    var noiseDots = [];
+    var tt = 0;
+    function getNoisePos(nt) {
+      nt = nt || Date.now();
+      if (nt <= tt) return noiseDots;
+      tt = nt + 2000 + Math.random() * 1000;
+      noiseDots.length = 0;
+      for (var i = 0; i < 100; i++) {
+        var x = Math.random() * 200 -100;
+        var y = Math.random() * 400 -200;
+        noiseDots.push({
+          x: x,
+          y: y
+        });
+      }
+      return noiseDots;
+    };
+
+    function pickOnePoint(ps) {
+      var candidate = Tofu.Utils.random(ps);
+      for (var i = 0; i < dots.length; i++) {
+        var position = dots[i].mesh.position;
+        var x = position.x - candidate.x;
+        var y = position.y - candidate.y;
+        if (Math.sqrt(x * x + y * y) < 20) {
+          candidate = pickOnePoint(ps);
+          break;
+        }
+      }
+      return candidate;
+    }
+
+
+    var dots = [];
+    var initPos = getNoisePos();
+    for (var i = 0; i < 30; i++) {
+      var dot = new BlinkDot(Math.random() > 0.4, pickOnePoint(initPos));
+      dots.push(dot);
+      scene.add(dot.mesh);
+    }
+
+    // var path = new StraightLine( [ new THREE.Vector3(0, 30, 0), new THREE.Vector3(60, 0, 0), new THREE.Vector3(100, 60, 0) ] );
+    // var geometry = new THREE.TubeBufferGeometry( path, 100, 0.6, 2, false );
+    // var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+    // var mesh = new THREE.Mesh( geometry, material );
+    // scene.add( mesh );
+
+    var pt = Date.now();
+    function loop() {
+      var nt = Date.now();
+      var snippet = nt - pt;
+      pt = nt;
+      dots.forEach(function (dot) {
+        if (!dot.alive) {
+          dot.reset(pickOnePoint(getNoisePos()));
+        }
+        dot.update(snippet);
+      });
+      renderer.render(scene, camera);
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+
+
+  </script>
+</body>
+</html>

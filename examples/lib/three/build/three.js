@@ -26253,7 +26253,7 @@
 
 			for ( j = 0; j <= radialSegments; j ++ ) {
 
-				var v = j / radialSegments * Math.PI * 2;
+				var v = j / radialSegments * Math.PI * 2 + Math.PI / 2;
 
 				var sin = Math.sin( v );
 				var cos = - Math.cos( v );
