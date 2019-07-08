@@ -21,7 +21,7 @@ import Utils from '../utils/Utils';
  * @param {Number} [options.updateStyle=false] need update canvas style size.
  * @param {Number} [options.pixelRatio=1] render buffer resolution.
  * @param {Boolean} [options.autoClear=true] whether the renderer should automatically clear its output before rendering a frame.
- * @param {Boolean} [options.alpha=false] whether the canvas contains an alpha (transparency) buffer or not.
+ * @param {Boolean} [options.alpha=true] whether the canvas contains an alpha (transparency) buffer or not.
  * @param {Boolean} [options.antialias=false] whether to perform antialiasing.
  * @param {String} [options.precision='highp'] Shader precision, Can be `highp`, `mediump` or `lowp`.
  * @param {Boolean} [options.premultipliedAlpha=true] whether the renderer will assume that colors have premultiplied alpha.

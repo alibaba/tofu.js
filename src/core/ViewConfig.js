@@ -10,7 +10,7 @@ function setDefault(check, value, spare) {
  * @private
  * @param {Object} options custom config for WebGLRenderer
  * @param {String|canvas} options.canvas `canvas-dom` or canvas `css-selector`
- * @param {Boolean} [options.alpha=false] whether the canvas contains an alpha (transparency) buffer or not.
+ * @param {Boolean} [options.alpha=true] whether the canvas contains an alpha (transparency) buffer or not.
  * @param {Boolean} [options.antialias=false] whether to perform antialiasing.
  * @param {String} [options.precision='highp'] Shader precision, Can be `highp`, `mediump` or `lowp`.
  * @param {Boolean} [options.premultipliedAlpha=true] whether the renderer will assume that colors have premultiplied alpha.
