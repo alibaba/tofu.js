@@ -50,7 +50,7 @@
     "rollup-plugin-babel": "^3.0.4",
     "rollup-plugin-node-resolve": "^3.3.0",
     "rollup-watch": "^4.3.1",
-    "standard-version": "^4.4.0",
+    "standard-version": "^8.0.1",
     "stats.js": "^0.17.0",
     "three": "^0.92.0"
   },
