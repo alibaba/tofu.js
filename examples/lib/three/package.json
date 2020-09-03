@@ -41,7 +41,7 @@
     "qunit": "^2.5.1",
     "rollup": "^0.57.1",
     "rollup-watch": "^4.0.0",
-    "serve": "~6.5.3",
+    "serve": "~11.3.2",
     "uglify-js": "^3.0.23"
   },
   "directories": {
