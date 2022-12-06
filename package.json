@@ -58,7 +58,7 @@
     "dat.gui": "^0.7.1",
     "eslint": "^4.19.1",
     "eslint-config-egg": "^5.1.1",
-    "http-server": "^0.10.0",
+    "http-server": "^14.1.1",
     "husky": "^0.14.3",
     "jsdoc": "^3.5.5",
     "karma": "^1.7.1",
